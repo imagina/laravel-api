@@ -41,7 +41,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
             $query = $this->applyFiltersToQuery($query, $filters, $params);
             $query = $this->orderQuery(
                 $query,
-                $params->order,
+                $params->order ?? null,
                 $filters->noSortOrder ?? false,
                 $params->orderByRaw ?? null
             );
@@ -52,7 +52,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
         //Get response
         $response = !empty($params->page)
             ? $query->paginate($params->take ?? 12, ['*'], null, $params->page)
-            : ($params->take ? $query->take($params->take)->get() : $query->get());
+            : (isset($params->take) ? $query->take($params->take)->get() : $query->get());
 
         //Event return model
         $this->dispatchesEvents(['eventName' => 'retrievedIndex', 'data' => [
@@ -337,8 +337,8 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
         $model = $this->getItemsBy((object)['filter' => (object)$validation])->first();
         $modelData = array_merge($validation, $data);
         //update Or Create the record
-        if ($model) $this->updateBy($model->id, $modelData);
-        else $this->create($modelData);
+        if ($model) $model = $this->updateBy($model->id, $modelData);
+        else $model = $this->create($modelData);
         //Response
         return $model;
     }
