@@ -24,7 +24,7 @@ docker exec laravel_api_app php artisan key:generate
 
 # Step 3: Generate Laravel app key
 echo "🚀 Installing Octane..."
-docker exec laravel_api_app php artisan octane:install
+docker exec laravel_api_app php artisan octane:install --server=swoole
 
 # Step 4: Run migrations
 echo "🧬 Running migrations..."
