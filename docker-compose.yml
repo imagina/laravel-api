@@ -10,13 +10,13 @@ services:
     volumes:
       - ./:/var/www/html
     ports:
-      - "9000:9000"
+      - "8000:8000"
     depends_on:
       - mysql
       - redis
     networks:
       - laravel
-    command: php artisan octane:start --server=swoole --host=0.0.0.0 --port=8000
+    entrypoint: ["sh", "/var/www/html/scripts/entrypoint.sh"]
 
   web:
     image: nginx:alpine
@@ -37,13 +37,14 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: base
-      MYSQL_USER: base
-      MYSQL_PASSWORD: base
+      MYSQL_DATABASE: laravel-api
+      MYSQL_USER: laravel-api
+      MYSQL_PASSWORD: laravel-api
     ports:
       - "3307:3306"
     volumes:
       - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - laravel
 

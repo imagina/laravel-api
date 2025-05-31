@@ -10,8 +10,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "imagina/icore": "dev-main",
+        "imagina/iworkshop": "dev-main",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/octane": "^2.9",
+        "laravel/passport": "^13.0",
+        "laravel/tinker": "^2.10.1",
+        "mcamara/laravel-localization": "^2.3",
+        "nwidart/laravel-modules": "^12.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -62,6 +68,11 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ]
         }
     },
     "config": {
@@ -70,9 +81,26 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/imagina/iworkshop",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/imagina/icore",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }
