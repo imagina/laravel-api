@@ -27,12 +27,20 @@ echo "🚀 Installing Octane..."
 docker exec laravel_api_fpm php artisan octane:install --server=swoole
 
 # Step 4: Run migrations
-echo "🧬 Running migrations & seeds..."
+echo "🧬 Running migrations"
 docker exec laravel_api_fpm php artisan migrate
 
-# Step 5: Storage link (optional)
+# Step 5: Run Seeders Modules
+echo "🧬 Running Seeder Modules"
+docker exec laravel_api_fpm php artisan module:seed --all
+
+# Step 6: Storage link (optional)
 echo "🔗 Linking storage folder..."
 docker exec laravel_api_fpm php artisan storage:link
+
+# Step 7: Passport
+echo "🔗 Installing Passport..."
+docker exec laravel_api_fpm php artisan install:api --passport
 
 echo "🔄 Restarting container with Octane..."
 docker-compose restart app-octane
