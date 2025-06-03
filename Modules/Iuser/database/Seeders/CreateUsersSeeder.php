@@ -5,16 +5,18 @@ namespace Modules\Iuser\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Iuser\Repositories\UserRepository;
-
+use Modules\Iuser\Repositories\RoleRepository;
 
 class CreateUsersSeeder extends Seeder
 {
 
     private $userRepository;
+    private $roleRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -50,8 +52,13 @@ class CreateUsersSeeder extends Seeder
             $user = $this->userRepository->create($data);
 
             //TO CHECK: //In seeder , repo validations "beforeCreate" are not applied :/
-            if($user)
-                $user->roles()->attach(1);//Sync with Super Admin role
+            if($user){
+                $params = json_decode(json_encode(["filter" => ["field" => "slug"]]));
+                $role = $this->roleRepository->getItem("super-admin", $params);
+                if(!empty($role)){
+                    $user->roles()->attach($role->id);
+                }
+            }
         }
 
     }
