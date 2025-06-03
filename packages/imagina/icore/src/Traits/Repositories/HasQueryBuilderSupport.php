@@ -51,11 +51,11 @@ trait HasQueryBuilderSupport
             $filterNameSnake = camelToSnake($filterName);
             $filterValue = $filters->$filterName;
 
-            if (array_key_exists($filterNameSnake, $modelFillable)) {
+            if (in_array($filterNameSnake, $modelFillable)) {
                 $query = FilterQueryBuilder::apply($query, $filterValue, $filterNameSnake);
             }
 
-            if (array_key_exists($filterNameSnake, $translatableAttributes)) {
+            if (in_array($filterNameSnake, $translatableAttributes)) {
                 $query->whereHas('translations', function ($q) use ($filters, $filterNameSnake, $filterValue) {
                     $q->where('locale', $filters->locale ?? app()->getLocale());
                     FilterQueryBuilder::apply($q, $filterValue, $filterNameSnake);
@@ -63,7 +63,7 @@ trait HasQueryBuilderSupport
             }
 
             $relationPath = explode('.', $filterName);
-            if (array_key_exists($relationPath[0], $modelRelations)) {
+            if (in_array($relationPath[0], $modelRelations)) {
                 $query = FilterQueryBuilder::apply($query, (object)[
                     'where' => $modelRelations[$relationPath[0]]['relation'],
                     'value' => $filterValue

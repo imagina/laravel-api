@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class FilterQueryBuilder
 {
-    public static function apply(Builder $query, object $filterData, string|array $fieldName, ?Model $model = null): Builder
+    public static function apply(Builder $query, object|string $filterData, string|array $fieldName, ?Model $model = null): Builder
     {
         $filterData = self::normalizeFilterValue($fieldName, $filterData);
         $filterWhere = $filterData->where ?? null;
@@ -35,7 +35,7 @@ class FilterQueryBuilder
         };
     }
 
-    protected static function normalizeFilterValue(string $field, mixed $value): object|array
+    protected static function normalizeFilterValue(string $field, mixed $value): object|array|string
     {
         if ($field === 'id') {
             return (object)['where' => 'in', 'value' => (array)$value];
@@ -45,7 +45,7 @@ class FilterQueryBuilder
             return (object)['where' => 'null'];
         }
 
-        if ($value->type === 'date') {
+        if (isset($value->type) && $value->type === 'date') {
             $start = Carbon::parse($value->from)->startOfDay(); // 2021-06-01 00:00:00
             $end = Carbon::parse($value->to)->endOfDay();     // 2021-06-01 23:59:59
             return (object)['where' => 'between', 'value' => [$start, $end]];
