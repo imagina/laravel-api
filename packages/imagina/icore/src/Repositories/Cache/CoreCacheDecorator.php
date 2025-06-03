@@ -151,6 +151,6 @@ abstract class CoreCacheDecorator extends BaseCacheDecorator implements BaseRepo
     public function updateOrCreate(array $validation, array $data): Model
     {
         $this->clearCache();
-        return $this->repository->updateOrCreate($validationData, $data);
+        return $this->repository->updateOrCreate($validation, $data);
     }
 }
