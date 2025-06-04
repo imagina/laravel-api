@@ -48,13 +48,12 @@ class CreateRolesSeeder extends Seeder
     private function createSuperAdminRol():void
     {
         $roleData = [
-            'name' => 'Super Admin',
-            'slug' => 'super-admin',
+            'system_name' => 'super-admin',
             'en' => ['title' => trans("iuser::roles.types.super admin",[],"en")],
             'es' => ['title' => trans("iuser::roles.types.super admin",[],"es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['slug'=>'super-admin'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name'=>'super-admin'],$roleData);
     }
 
     /**
@@ -63,13 +62,12 @@ class CreateRolesSeeder extends Seeder
     private function createUserRol():void
     {
         $roleData = [
-            'name' => 'User',
-            'slug' => 'user',
+            'system_name' => 'user',
             'en' => ['title' => trans("iuser::roles.types.user",[],"en")],
             'es' => ['title' => trans("iuser::roles.types.user",[],"es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['slug'=>'user'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name'=>'user'],$roleData);
     }
 
     /**
@@ -79,13 +77,12 @@ class CreateRolesSeeder extends Seeder
     {
 
         $roleData = [
-            'name' => 'Admin',
-            'slug' => 'admin',
+            'system_name' => 'admin',
             'en' => ['title' => trans("iuser::roles.types.admin",[],"en")],
             'es' => ['title' => trans("iuser::roles.types.admin",[],"es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['slug'=>'admin'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name'=>'admin'],$roleData);
 
         //Set all permissions
         $this->setAllPermissions($role);
