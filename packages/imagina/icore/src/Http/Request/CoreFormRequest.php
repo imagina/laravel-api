@@ -5,6 +5,7 @@ namespace Imagina\Icore\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Contracts\Validation\Validator;
 
 abstract class CoreFormRequest extends FormRequest
 {
@@ -13,21 +14,21 @@ abstract class CoreFormRequest extends FormRequest
      *
      * @var string
      */
-    protected $translationsAttributesKey = 'validation.attributes.';
+    protected string $translationsAttributesKey = 'validation.attributes.';
 
     /**
      * Current processed locale
      *
      * @var string
      */
-    protected $localeKey;
+    protected string $localeKey;
 
     /**
      * Return an array of rules for translatable fields
      *
      * @return array
      */
-    public function translationRules()
+    public function translationRules(): array
     {
         return [];
     }
@@ -37,17 +38,15 @@ abstract class CoreFormRequest extends FormRequest
      *
      * @return array
      */
-    public function translationMessages()
+    public function translationMessages(): array
     {
         return [];
     }
 
     /**
-     * Get the validator instance for the request.
-     *
-     * @return \Illuminate\Validation\Validator
+     * @return Validator
      */
-    protected function getValidatorInstance()
+    protected function getValidatorInstance(): Validator
     {
         $factory = $this->container->make('Illuminate\Validation\Factory');
         if (method_exists($this, 'validator')) {
@@ -63,13 +62,13 @@ abstract class CoreFormRequest extends FormRequest
         foreach ($this->requiredLocales() as $localeKey => $locale) {
             $this->localeKey = $localeKey;
             foreach ($this->container->call([$this, 'translationRules']) as $attribute => $rule) {
-                $key = $localeKey.'.'.$attribute;
+                $key = $localeKey . '.' . $attribute;
                 $rules[$key] = $rule;
-                $attributes[$key] = trans($translationsAttributesKey.$attribute);
+                $attributes[$key] = trans($translationsAttributesKey . $attribute);
             }
 
             foreach ($this->container->call([$this, 'translationMessages']) as $attributeAndRule => $message) {
-                $messages[$localeKey.'.'.$attributeAndRule] = $message;
+                $messages[$localeKey . '.' . $attributeAndRule] = $message;
             }
         }
 
@@ -84,7 +83,7 @@ abstract class CoreFormRequest extends FormRequest
     /**
      * @return array
      */
-    public function withTranslations()
+    public function withTranslations(): array
     {
         $results = $this->all();
         $translations = [];
@@ -93,16 +92,17 @@ abstract class CoreFormRequest extends FormRequest
             $translations[$key] = $this->get($key);
         }
         $results['translations'] = $translations;
-        Arr::forget($results, $locales);
+        Arr::forget($results, $locales ?? []);
 
         return $results;
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function requiredLocales()
+    public function requiredLocales(): array
     {
+        //TODO: Change by Localization
         return LaravelLocalization::getSupportedLocales();
     }
 
@@ -112,13 +112,13 @@ abstract class CoreFormRequest extends FormRequest
      *
      * @return string
      */
-    private function getTranslationsAttributesKey()
+    private function getTranslationsAttributesKey(): string
     {
-        return rtrim($this->translationsAttributesKey, '.').'.';
+        return rtrim($this->translationsAttributesKey, '.') . '.';
     }
 
-  public function getValidator()
-  {
-      return $this->getValidatorInstance();
-  }
+    public function getValidator(): Validator
+    {
+        return $this->getValidatorInstance();
+    }
 }

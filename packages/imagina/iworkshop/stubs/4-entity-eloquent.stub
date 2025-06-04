@@ -10,14 +10,14 @@ class $CLASS_NAME$ extends CoreModel
   use Translatable;
 
   protected $table = '$LOWERCASE_MODULE_NAME$__$PLURAL_LOWERCASE_CLASS_NAME$';
-  public $transformer = 'Modules\$MODULE_NAME$\Transformers\$CLASS_NAME$Transformer';
-  public $repository = 'Modules\$MODULE_NAME$\Repositories\$CLASS_NAME$Repository';
-  public $requestValidation = [
+  public string $transformer = 'Modules\$MODULE_NAME$\Transformers\$CLASS_NAME$Transformer';
+  public string $repository = 'Modules\$MODULE_NAME$\Repositories\$CLASS_NAME$Repository';
+  public array $requestValidation = [
       'create' => 'Modules\$MODULE_NAME$\Http\Requests\Create$CLASS_NAME$Request',
       'update' => 'Modules\$MODULE_NAME$\Http\Requests\Update$CLASS_NAME$Request',
     ];
   //Instance external/internal events to dispatch with extraData
-  public $dispatchesEventsWithBindings = [
+  public array $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
     'created' => [],
     'creating' => [],
@@ -26,6 +26,6 @@ class $CLASS_NAME$ extends CoreModel
     'deleting' => [],
     'deleted' => []
   ];
-  public $translatedAttributes = [];
+  public array $translatedAttributes = [];
   protected $fillable = [];
 }

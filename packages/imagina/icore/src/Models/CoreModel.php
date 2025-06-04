@@ -18,7 +18,7 @@ class CoreModel extends Model
     use HasOptionalTraits, hasEventsWithBindings;/*AuditTrait, hasEventsWithBindings, RevisionableTrait, SingleFlaggable, HasUniqueFields,
        HasCacheClearable,*/
 
-    function getFillables()
+    function getFillables(): array
     {
         return $this->fillable;
     }
@@ -27,7 +27,7 @@ class CoreModel extends Model
      * Use the custom query builder.
      *
      */
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): CustomBuilder
     {
         return new CustomBuilder($query);
     }
@@ -36,14 +36,14 @@ class CoreModel extends Model
      * Filter valid relations for eager loading.
      *
      */
-    public function filterValidRelations($relations)
+    public function filterValidRelations($relations): array
     {
         $relations = is_array($relations) ? $relations : func_get_args();
 
         return array_filter($relations, function ($relation) use ($relations) {
             if (is_string($relation)) $relation = explode('.', $relation)[0];
             return !is_string($relation) || method_exists($this, $relation) ||
-                in_array($relation, static::$optionalTraitsRelations); //This depent of HasOptionalTraits trait
+                in_array($relation, static::$optionalTraitsRelations); //This depends on HasOptionalTraits trait
         });
     }
 }
