@@ -31,7 +31,7 @@ class MakeEntityCommand extends Command
                 'destination' => $this->appFolderPath . "Http/Controllers/Api/{$this->entityName}ApiController.php"
             ],
             [
-                'stub' => '5-create-s',
+                'stub' => '5-create-request',
                 'destination' => $this->appFolderPath . "Http/Requests/Create{$this->entityName}Request.php"
             ],
             [
