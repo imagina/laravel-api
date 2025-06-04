@@ -31,7 +31,7 @@ class IuserServiceProvider extends ServiceProvider
 
     protected string $name = 'Iuser';
 
-    protected string $nameLower = '$LOWERCASE_MODULE$';
+    protected string $nameLower = 'iuser';
 
     /**
      * Boot the application events.
