@@ -34,6 +34,13 @@ class Role extends CoreModel
         'permissions',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'permissions' => 'json'
+        ];
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class,'iuser__role_user');
