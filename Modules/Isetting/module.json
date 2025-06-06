@@ -4,7 +4,7 @@
     "alias": "isetting",
     "description": "manage isetting",
     "keywords": ["isetting"],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "Modules\\Isetting\\Providers\\IsettingServiceProvider"
     ],
