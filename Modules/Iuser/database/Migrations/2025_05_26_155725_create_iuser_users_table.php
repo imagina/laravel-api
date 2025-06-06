@@ -17,7 +17,7 @@ return new class extends Migration
          * BASIC TABLE
          */
         Schema::create('iuser__users', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

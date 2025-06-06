@@ -116,4 +116,9 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    /*
+     * The table used for users.
+     */
+    'table' => 'iuser__users'
 ];
