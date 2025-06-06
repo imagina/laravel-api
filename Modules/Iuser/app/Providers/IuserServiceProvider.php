@@ -22,7 +22,7 @@ use Modules\Iuser\Repositories\RoleRepository;
 use Modules\Iuser\Models\Role;
 // append-use-bindings
 
-
+use Modules\Iuser\Http\Middleware\AuthCan;
 
 
 class IuserServiceProvider extends ServiceProvider
@@ -33,17 +33,32 @@ class IuserServiceProvider extends ServiceProvider
 
     protected string $nameLower = 'iuser';
 
+    protected $middleware = [
+        'auth-can' =>  AuthCan::class
+    ];
+
     /**
      * Boot the application events.
      */
     public function boot(): void
     {
+        $this->registerMiddleware();
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+    }
+
+    /**
+     * Register the middleware.
+     */
+    private function registerMiddleware()
+    {
+        foreach ($this->middleware as $name => $class) {
+            $this->app['router']->aliasMiddleware($name, $class);
+        }
     }
 
     /**
