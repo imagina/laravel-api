@@ -12,7 +12,7 @@ use Modules\Iuser\Services\AuthService;
 
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthApiController extends CoreApiController
 {
@@ -42,18 +42,40 @@ class AuthApiController extends CoreApiController
 
             //Validate user and password
             if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw new \Exception('Unauthorized', 401);
+                throw new \Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
             }
 
-            //Create Passport token
-            $tokenResult = $user->createToken('authToken');
+            //Get
+            $tokenData = $this->authService->getToken("password", $data);
 
             $response = ['data' => [
                 'user' => $user,
-                'token' => $tokenResult,
-                //'userToken' => $tokenResult->accessToken,
-                //'expiresDate' => $tokenResult->token->expires_at
+                'token' => $tokenData
             ]];
+        } catch (\Exception $e) {
+            $status = $this->getHttpStatusCode($e);
+            $response = $this->getErrorResponse($e);
+        }
+
+        //Return response
+        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+    }
+
+    /**
+     * Refresh Token
+     */
+    public function refreshToken(Request $request)
+    {
+        try {
+
+            //Validate request
+            $data = $request->input('attributes') ?? [];
+            $this->validateWithModelRules($data, 'refreshToken');
+
+            //Get
+            $tokenData = $this->authService->getToken("refresh_token", $data);
+
+            $response = ['data' => [$tokenData]];
         } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);

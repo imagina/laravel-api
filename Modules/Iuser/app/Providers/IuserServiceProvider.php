@@ -24,6 +24,8 @@ use Modules\Iuser\Models\Role;
 
 use Modules\Iuser\Http\Middleware\AuthCan;
 
+use Laravel\Passport\Passport;
+use Carbon\CarbonInterval;
 
 class IuserServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,7 @@ class IuserServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerMiddleware();
+        $this->registerPassportConfigurations();
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
@@ -59,6 +62,19 @@ class IuserServiceProvider extends ServiceProvider
         foreach ($this->middleware as $name => $class) {
             $this->app['router']->aliasMiddleware($name, $class);
         }
+    }
+
+    /**
+     * Register Passport configurations.
+     */
+    protected function registerPassportConfigurations(): void
+    {
+
+        Passport::enablePasswordGrant();
+
+        //TODO - pasar valor a settings
+        Passport::tokensExpireIn(CarbonInterval::hours(1));
+        Passport::refreshTokensExpireIn(CarbonInterval::days(7));
     }
 
     /**
@@ -95,7 +111,7 @@ class IuserServiceProvider extends ServiceProvider
      */
     public function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/'.$this->nameLower);
+        $langPath = resource_path('lang/modules/' . $this->nameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->nameLower);
@@ -118,9 +134,9 @@ class IuserServiceProvider extends ServiceProvider
 
             foreach ($iterator as $file) {
                 if ($file->isFile() && $file->getExtension() === 'php') {
-                    $config = str_replace($configPath.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $config = str_replace($configPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
                     $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
-                    $segments = explode('.', $this->nameLower.'.'.$config_key);
+                    $segments = explode('.', $this->nameLower . '.' . $config_key);
 
                     // Remove duplicated adjacent segments
                     $normalized = [];
@@ -155,14 +171,14 @@ class IuserServiceProvider extends ServiceProvider
      */
     public function registerViews(): void
     {
-        $viewPath = resource_path('views/modules/'.$this->nameLower);
+        $viewPath = resource_path('views/modules/' . $this->nameLower);
         $sourcePath = module_path($this->name, '$resources/views$');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
     }
 
     /**
@@ -177,8 +193,8 @@ class IuserServiceProvider extends ServiceProvider
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            if (is_dir($path.'/modules/'.$this->nameLower)) {
-                $paths[] = $path.'/modules/'.$this->nameLower;
+            if (is_dir($path . '/modules/' . $this->nameLower)) {
+                $paths[] = $path . '/modules/' . $this->nameLower;
             }
         }
 
@@ -188,21 +204,21 @@ class IuserServiceProvider extends ServiceProvider
     private function registerBindings(): void
     {
 
-$this->app->bind(UserRepository::class, function () {
-    $repository = new EloquentUserRepository(new User());
+        $this->app->bind(UserRepository::class, function () {
+            $repository = new EloquentUserRepository(new User());
 
-    return config('app.cache')
-        ? new CacheUserDecorator($repository)
-        : $repository;
-});
-$this->app->bind(RoleRepository::class, function () {
-    $repository = new EloquentRoleRepository(new Role());
+            return config('app.cache')
+                ? new CacheUserDecorator($repository)
+                : $repository;
+        });
+        $this->app->bind(RoleRepository::class, function () {
+            $repository = new EloquentRoleRepository(new Role());
 
-    return config('app.cache')
-        ? new CacheRoleDecorator($repository)
-        : $repository;
-});
-// append-bindings
+            return config('app.cache')
+                ? new CacheRoleDecorator($repository)
+                : $repository;
+        });
+        // append-bindings
 
 
 
