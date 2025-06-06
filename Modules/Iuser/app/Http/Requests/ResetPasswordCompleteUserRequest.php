@@ -3,6 +3,7 @@
 namespace Modules\Iuser\Http\Requests;
 
 use Imagina\Icore\Http\Request\CoreFormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class ResetPasswordCompleteUserRequest extends CoreFormRequest
 {
@@ -15,7 +16,7 @@ class ResetPasswordCompleteUserRequest extends CoreFormRequest
         ];
     }
 
-    public function translationRules()
+    public function translationRules(): array
     {
         return [];
     }
@@ -30,13 +31,13 @@ class ResetPasswordCompleteUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function translationMessages()
+    public function translationMessages(): array
     {
         return [];
     }
 
-    public function getValidator(){
+    public function getValidator(): Validator
+    {
         return $this->getValidatorInstance();
     }
-
 }
