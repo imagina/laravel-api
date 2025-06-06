@@ -1,6 +1,6 @@
 <?php
 
-namespace Imagina\Icore\Support;
+namespace Imagina\Icore\Traits\Controller;
 
 use Exception;
 use Illuminate\Http\Request;

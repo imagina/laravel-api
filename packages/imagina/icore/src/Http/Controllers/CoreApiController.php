@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Imagina\Icore\Transformers\CoreResource;
 use Illuminate\Database\Eloquent\Model;
 use Imagina\Icore\Repositories\CoreRepository;
-use Imagina\Icore\Support\CoreApiControllerHelpers;
+use Imagina\Icore\Traits\Controller\CoreApiControllerHelpers;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class CoreApiController
@@ -239,10 +239,8 @@ abstract class CoreApiController
     }
 
     /**
-     * Controller to request all model dashboard
-     *
-     * @param $entityClass
-     * @return mixed
+     * @param Request $request
+     * @return JsonResponse
      */
     public function dashboardIndex(Request $request): JsonResponse
     {
