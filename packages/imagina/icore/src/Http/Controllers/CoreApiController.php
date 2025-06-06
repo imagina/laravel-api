@@ -2,81 +2,24 @@
 
 namespace Imagina\Icore\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Imagina\Icore\Transformers\CoreResource;
 use Illuminate\Database\Eloquent\Model;
 use Imagina\Icore\Repositories\CoreRepository;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use Imagina\Icore\Support\CoreApiControllerHelpers;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class CoreApiController
 {
+    use CoreApiControllerHelpers;
+
     public function __construct(
         protected Model          $model,
         protected CoreRepository $modelRepository)
     {
-    }
-
-    public function getParamsRequest(Request $request): object
-    {
-        return (object)[
-            'order' => $request->input('order'),
-            'page' => $request->input('page', 1),
-            'take' => $request->input('take', 12),
-            'filter' => (object)(json_decode($request->input('filter', '[]'), true) ?? []),
-            'include' => array_filter(explode(',', $request->input('include', '')), fn($val) => $val !== ''),
-            'fields' => array_filter(explode(',', $request->input('fields', '')), fn($val) => $val !== ''),
-        ];
-    }
-
-    protected function getHttpStatusCode(\Exception $e): int
-    {
-        $validCodes = [204, 400, 401, 403, 404, 406, 409, 422, 502, 503, 504];
-        $code = $e->getCode();
-
-        return in_array($code, $validCodes) ? $code : 500;
-    }
-
-    public function getErrorResponse(\Exception $e): array
-    {
-        return [
-            'messages' => [['message' => $e->getMessage(), 'type' => 'error']],
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ];
-    }
-
-    protected function validateWithModelRules(array $data, string $action): void
-    {
-        //TODO: Validate translatable rules
-        $class = $this->model->requestValidation[$action] ?? null;
-
-        if ($class && class_exists($class)) {
-            $rules = new $class($data);
-            /** @var \Illuminate\Foundation\Http\FormRequest $formRequest */
-            $rules->setContainer(app());
-            if (method_exists($rules, 'getValidator')) {
-                $validator = $rules->getValidator();
-            } else {
-                $validator = Validator::make($rules->all(), $rules->rules(), $rules->messages());
-            }
-
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-        }
-    }
-
-    public function pageTransformer($data): array
-    {
-        return [
-            'total' => $data->total(),
-            'lastPage' => $data->lastPage(),
-            'perPage' => $data->perPage(),
-            'currentPage' => $data->currentPage(),
-        ];
     }
 
     /**
@@ -101,13 +44,12 @@ abstract class CoreApiController
             //Response
             $response = ['data' => CoreResource::transformData($model)];
             DB::commit(); //Commit to Data Base
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback(); //Rollback to Data Base
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_CREATED);
     }
 
     /**
@@ -127,15 +69,13 @@ abstract class CoreApiController
             //Response
             $response = ['data' => $this->modelRepository->getItemsByTransformed($models, $params)];
 
-            //If request pagination add meta-page
             if ($params->page) $response['meta'] = ['page' => $this->pageTransformer($models)];
-        } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+        } catch (Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -154,18 +94,17 @@ abstract class CoreApiController
 
             //Throw exception if no found item
             if (!$model) {
-                throw new \Exception('Item not found', 404);
+                throw new Exception('Item not found', Response::HTTP_NOT_FOUND);
             }
 
             //Response
             $response = ['data' => CoreResource::transformData($model)];
-        } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+        } catch (Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -193,19 +132,18 @@ abstract class CoreApiController
             $model = $this->modelRepository->updateBy($criteria, $modelData, $params);
 
             //Throw exception if no found item
-            if (!$model) throw new \Exception('Item not found', 404);
+            if (!$model) throw new Exception('Item not found', Response::HTTP_NOT_FOUND);
 
             //Response
             $response = ['data' => CoreResource::transformData($model)];
             DB::commit(); //Commit to DataBase
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback(); //Rollback to Data Base
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -232,14 +170,13 @@ abstract class CoreApiController
             //Response
             $response = ['data' => 'Item deleted'];
             DB::commit(); //Commit to Data Base
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback(); //Rollback to Data Base
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -258,19 +195,18 @@ abstract class CoreApiController
             $model = $this->modelRepository->restoreBy($criteria, $params);
 
             //Throw exception if no found item
-            if (!$model) throw new \Exception('Item not found', 404);
+            if (!$model) throw new Exception('Item not found', Response::HTTP_NOT_FOUND);
 
             //Response
             $response = ['data' => CoreResource::transformData($model)];
             DB::commit(); //Commit to Data Base
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback(); //Rollback to Data Base
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -293,14 +229,13 @@ abstract class CoreApiController
             //Response
             $response = ['data' => CoreResource::transformData($bulkOrderResult)];
             DB::commit(); //Commit to DataBase
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback(); //Rollback to Data Base
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -320,12 +255,11 @@ abstract class CoreApiController
 
             //Response
             $response = ['data' => $dashboardData];
-        } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = ['messages' => [['message' => $this->getErrorMessage($e), 'type' => 'error']]];
+        } catch (Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response, $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 }
