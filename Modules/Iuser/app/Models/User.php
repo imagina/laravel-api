@@ -15,11 +15,12 @@ use Laravel\Passport\Contracts\OAuthenticatable;
 //use App\Notifications\ResetPasswordNotification;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Modules\Iuser\Traits\RolePermissionTrait;
 
 class User extends Authenticatable implements OAuthenticatable
 {
 
-    use HasApiTokens, HasFactory, Notifiable, HasOptionalTraits, hasEventsWithBindings;
+    use HasApiTokens, HasFactory, Notifiable, HasOptionalTraits, hasEventsWithBindings, RolePermissionTrait;
 
     protected $table = 'iuser__users';
     public $transformer = 'Modules\Iuser\Transformers\UserTransformer';
@@ -108,6 +109,7 @@ class User extends Authenticatable implements OAuthenticatable
 
         //$this->notify(new ResetPasswordNotification($url));
     }
+
 
 
 }

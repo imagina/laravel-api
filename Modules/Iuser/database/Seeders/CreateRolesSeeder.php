@@ -85,7 +85,7 @@ class CreateRolesSeeder extends Seeder
         $role = $this->roleRepository->updateOrCreate(['system_name'=>'admin'],$roleData);
 
         //Set all permissions
-        $this->setAllPermissions($role);
+        //$this->setAllPermissions($role);
 
     }
 
