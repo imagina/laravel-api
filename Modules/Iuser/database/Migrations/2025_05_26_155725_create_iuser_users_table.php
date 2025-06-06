@@ -31,7 +31,6 @@ return new class extends Migration
             $table->boolean('is_guest')->default(false);
 
             $table->timestamps();
-
         });
 
         /**
@@ -63,9 +62,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('iusers__users');
-        Schema::dropIfExists('iusers__password_reset_tokens');
-        Schema::dropIfExists('iusers__sessions');
+        Schema::dropIfExists('iuser__users');
+        Schema::dropIfExists('iuser__password_reset_tokens');
+        Schema::dropIfExists('iuser__sessions');
     }
-
 };
