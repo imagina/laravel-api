@@ -11,13 +11,14 @@ use Modules\Iuser\Repositories\UserRepository;
 use Modules\Iuser\Services\AuthService;
 
 use Illuminate\Support\Facades\Password;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthApiController extends CoreApiController
 {
 
     protected $authService;
 
-    public function __construct(User $model, UserRepository $modelRepository,AuthService $authService)
+    public function __construct(User $model, UserRepository $modelRepository, AuthService $authService)
     {
         parent::__construct($model, $modelRepository);
         $this->authService = $authService;
@@ -29,7 +30,6 @@ class AuthApiController extends CoreApiController
     public function login(Request $request)
     {
         try {
-
             //Validate request
             $data = $request->input('attributes') ?? [];
             $this->validateWithModelRules($data, 'login');
@@ -59,12 +59,11 @@ class AuthApiController extends CoreApiController
             ]];
 
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -83,12 +82,11 @@ class AuthApiController extends CoreApiController
             $response = ['data' => 'Logout successful'];
 
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -103,13 +101,13 @@ class AuthApiController extends CoreApiController
             $this->validateWithModelRules($data, 'resetPassword');
 
             //Process reset password
-            $result = Password::sendResetLink(['email'=>$data['email']]);
+            $result = Password::sendResetLink(['email' => $data['email']]);
 
             //TODO: Traducciones
-            if($result === Password::ResetLinkSent){
+            if ($result === Password::ResetLinkSent) {
                 //status = passwords.sent
                 $message = "We have emailed your password reset link";
-            }else{
+            } else {
                 //status = passwords.throttled
                 $message = "Please wait before retrying";
             }
@@ -117,12 +115,11 @@ class AuthApiController extends CoreApiController
             $response = ['data' => $message];
 
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -149,23 +146,22 @@ class AuthApiController extends CoreApiController
             );
 
             //TODO: Traducciones
-            if($result === Password::PasswordReset){
+            if ($result === Password::PasswordReset) {
                 //status = passwords.reset
                 $message = "Password reset successfully.";
-            }else{
+            } else {
                 //status = passwords.token
                 $message = "Invalid information";
             }
 
             $response = ['data' => $message];
 
-         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+        } catch (\Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
 }
