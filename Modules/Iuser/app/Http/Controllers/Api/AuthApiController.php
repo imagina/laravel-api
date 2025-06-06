@@ -11,13 +11,15 @@ use Modules\Iuser\Repositories\UserRepository;
 use Modules\Iuser\Services\AuthService;
 
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthApiController extends CoreApiController
 {
 
     protected $authService;
 
-    public function __construct(User $model, UserRepository $modelRepository,AuthService $authService)
+    public function __construct(User $model, UserRepository $modelRepository, AuthService $authService)
     {
         parent::__construct($model, $modelRepository);
         $this->authService = $authService;
@@ -34,30 +36,24 @@ class AuthApiController extends CoreApiController
             $data = $request->input('attributes') ?? [];
             $this->validateWithModelRules($data, 'login');
 
-            //Validations Credentials and Login
-            if (!Auth::attempt($data))
+            //Get user by email
+            $params = json_decode(json_encode(["filter" => ["field" => "email"]]));
+            $user = $this->modelRepository->getItem($data['email'], $params);
+
+            //Validate user and password
+            if (!$user || !Hash::check($data['password'], $user->password)) {
                 throw new \Exception('Unauthorized', 401);
+            }
 
-            //TODO: Esta es una opcion , no se si sea necesaria
-            //El middleware web debe estar habilitado en la ruta del login API.
-            /* if (Auth::guard('web')->attempt($credentials)) {
-                $request->session()->regenerate();
-            } */
-
-            //Authentication passed
-            $user = auth()->user();
+            //Create Passport token
             $tokenResult = $user->createToken('authToken');
 
-            //TODO: No generó error pero habria que probar en frontend
-            //Session in Blade
-            $this->authService->logUserIn($user);
-
             $response = ['data' => [
-                'userData' => $user,
-                'userToken' => $tokenResult->accessToken,
-                'expiresDate' => $tokenResult->token->expires_at
+                'user' => $user,
+                'token' => $tokenResult,
+                //'userToken' => $tokenResult->accessToken,
+                //'expiresDate' => $tokenResult->token->expires_at
             ]];
-
         } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);
@@ -74,14 +70,10 @@ class AuthApiController extends CoreApiController
     {
         try {
 
-            $user = auth()->user();
+            $user = Auth::user();
             $user->token()->revoke(); //Revoke the token
 
-            //Session in Blade
-            $this->authService->logUserOut($user);
-
             $response = ['data' => 'Logout successful'];
-
         } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);
@@ -103,19 +95,18 @@ class AuthApiController extends CoreApiController
             $this->validateWithModelRules($data, 'resetPassword');
 
             //Process reset password
-            $result = Password::sendResetLink(['email'=>$data['email']]);
+            $result = Password::sendResetLink(['email' => $data['email']]);
 
             //TODO: Traducciones
-            if($result === Password::ResetLinkSent){
+            if ($result === Password::ResetLinkSent) {
                 //status = passwords.sent
                 $message = "We have emailed your password reset link";
-            }else{
+            } else {
                 //status = passwords.throttled
                 $message = "Please wait before retrying";
             }
 
             $response = ['data' => $message];
-
         } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);
@@ -149,17 +140,16 @@ class AuthApiController extends CoreApiController
             );
 
             //TODO: Traducciones
-            if($result === Password::PasswordReset){
+            if ($result === Password::PasswordReset) {
                 //status = passwords.reset
                 $message = "Password reset successfully.";
-            }else{
+            } else {
                 //status = passwords.token
                 $message = "Invalid information";
             }
 
             $response = ['data' => $message];
-
-         } catch (\Exception $e) {
+        } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);
         }
@@ -167,5 +157,4 @@ class AuthApiController extends CoreApiController
         //Return response
         return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
     }
-
 }
