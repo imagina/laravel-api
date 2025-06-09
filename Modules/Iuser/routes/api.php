@@ -50,6 +50,10 @@ Route::prefix('/iuser/v1')->group(function () {
         Route::post('/login', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'login'])
             ->name($locale . '.api.iuser.auth.login');
 
+        //Login-client
+        Route::post('/login-client', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'loginClient'])
+            ->name($locale . '.api.iuser.auth.login-client');
+
         //Token Refresh
         Route::post('/refresh-token', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'refreshToken'])
             ->name($locale . '.api.iuser.auth.refresh-token');

@@ -26,7 +26,7 @@ class AuthApiController extends CoreApiController
     }
 
     /**
-     * Login
+     * Login User
      */
     public function login(Request $request)
     {
@@ -52,6 +52,41 @@ class AuthApiController extends CoreApiController
                 'user' => $user,
                 'token' => $tokenData
             ]];
+        } catch (\Exception $e) {
+            $status = $this->getHttpStatusCode($e);
+            $response = $this->getErrorResponse($e);
+        }
+
+        //Return response
+        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+    }
+
+    /**
+     * Login Client
+     * You can create some logins to diferents clients
+     * This token only can access with a especific Middleware (EnsureClientIsResourceOwner::class)
+     */
+    public function loginClient(Request $request)
+    {
+        try {
+
+            $data = $request->input('attributes') ?? [];
+
+            //Add data
+            $dataVal = [
+                'clientId' => $data['client_id'] ?? env('PASSPORT_CLIENT_ID') ?? null,
+                'clientSecret' => $data['client_secret'] ?? env('PASSPORT_CLIENT_SECRET') ?? null
+            ];
+
+            //Validation
+            if (is_null($dataVal['clientId']) || is_null($dataVal['clientSecret'])) {
+                throw new \Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
+            }
+
+            //Get
+            $tokenData = $this->authService->getToken("client_credentials", $dataVal);
+
+            $response = ['data' => [$tokenData]];
         } catch (\Exception $e) {
             $status = $this->getHttpStatusCode($e);
             $response = $this->getErrorResponse($e);

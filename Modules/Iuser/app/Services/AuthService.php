@@ -19,9 +19,9 @@ class AuthService
         //Base Attributes
         $attributes = [
             'grant_type' => $type,
-            'client_id' => env('PASSPORT_PASSWORD_CLIENT_ID'),
-            'client_secret' => env('PASSPORT_PASSWORD_CLIENT_SECRET'),
-            'scope' => ''
+            'client_id' => $data['clientId'] ?? env('PASSPORT_PASSWORD_CLIENT_ID'),
+            'client_secret' => $data['clientSecret'] ?? env('PASSPORT_PASSWORD_CLIENT_SECRET'),
+            'scope' => $data['scope'] ?? ''
         ];
 
         //Validation By Type
