@@ -32,8 +32,15 @@ trait CoreApiControllerHelpers
      */
     public function getErrorResponse(Exception $e): array
     {
-        $code = $e->getCode();
-        if ($code < 100 || $code >= 600) $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        if ($e instanceof \Illuminate\Validation\ValidationException) {
+            $code = Response::HTTP_BAD_REQUEST;
+        } else {
+            $code = $e->getCode();
+            if ($code < 100 || $code >= 600) {
+                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+            }
+        }
 
         $payload = [
             'messages' => $e->getMessage(),
