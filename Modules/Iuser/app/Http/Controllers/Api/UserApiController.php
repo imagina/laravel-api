@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Modules\Iuser\Models\User;
 use Modules\Iuser\Repositories\UserRepository;
 use Modules\Iuser\Services\UserService;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserApiController extends CoreApiController
 {
@@ -54,12 +55,11 @@ class UserApiController extends CoreApiController
                 ];
             }
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
 

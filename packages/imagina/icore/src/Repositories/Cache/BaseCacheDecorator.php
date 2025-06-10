@@ -155,8 +155,8 @@ abstract class BaseCacheDecorator implements BaseRepository
 
         // 4. Add the query if present
         if ($query !== null) {
-            $keyData['query_sql'] = method_exists($query, 'toSql') ? $query->toSql() : null;
-            $keyData['query_bindings'] = method_exists($query, 'getBindings') ? $query->getBindings() : null;
+            $keyData['query_sql'] = $query->toSql();
+            $keyData['query_bindings'] = $query->getBindings();
         }
 
         // 5. Add params if present

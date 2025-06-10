@@ -82,7 +82,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
     public function getItem(string|int $criteria, ?object $params = null, ?Builder $query = null): Model|Builder|null
     {
         $params = $params ?? (object)[];
-        $filters = $params->filter ?? (object)[];
+        $filters = (object)($params->filter ?? []);
 
         if (!$query) {
             $query = $this->model->query();
