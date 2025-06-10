@@ -53,7 +53,7 @@ class CreateUsersSeeder extends Seeder
 
             //TO CHECK: //In seeder , repo validations "beforeCreate" are not applied :/
             if($user){
-                $params = json_decode(json_encode(["filter" => ["field" => "slug"]]));
+                $params = json_decode(json_encode(["filter" => ["field" => "system_name"]]));
                 $role = $this->roleRepository->getItem("super-admin", $params);
                 if(!empty($role)){
                     $user->roles()->attach($role->id);

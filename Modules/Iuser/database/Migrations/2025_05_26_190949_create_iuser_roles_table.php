@@ -16,9 +16,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             // Your fields...
-            $table->string('slug');
-            $table->string('name');
-            //$table->text('permissions')->nullable();
+            $table->string('system_name');
             $table->json('permissions')->nullable();
 
             // Audit fields

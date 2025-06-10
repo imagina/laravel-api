@@ -5,11 +5,13 @@ namespace Modules\Iuser\Http\Requests;
 use Imagina\Icore\Http\Request\CoreFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class UpdateUserRequest extends CoreFormRequest
+class RefreshTokenUserRequest extends CoreFormRequest
 {
     public function rules()
     {
-        return [];
+        return [
+            'token' => 'required|string',
+        ];
     }
 
     public function translationRules(): array

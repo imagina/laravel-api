@@ -9,35 +9,35 @@ use Modules\Iuser\Http\Controllers\Api\RoleApiController;
 Route::prefix('/iuser/v1')->group(function () {
 
     Route::apiCrud([
-      'module' => 'iuser',
-      'prefix' => 'users',
-      'controller' => UserApiController::class,
-      'permission' => 'iuser.users',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
-      'customRoutes' => [ // Include custom routes if needed
-        [
-            'method' => 'post', // get,post,put....
-            'path' => '/register', // Route Path
-            'uses' => 'register', //Name of the controller method to use
-            'middleware' => [] // if not set up middleware, auth:api will be the default
-       ]
-      ]
+        'module' => 'iuser',
+        'prefix' => 'users',
+        'controller' => UserApiController::class,
+        'permission' => 'iuser.users',
+        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'customRoutes' => [ // Include custom routes if needed
+            [
+                'method' => 'post', // get,post,put....
+                'path' => '/register', // Route Path
+                'uses' => 'register', //Name of the controller method to use
+                'middleware' => [] // if not set up middleware, auth:api will be the default
+            ]
+        ]
 
     ]);
     Route::apiCrud([
-      'module' => 'iuser',
-      'prefix' => 'roles',
-      'controller' => RoleApiController::class,
-      'permission' => 'iuser.roles',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
-      // 'customRoutes' => [ // Include custom routes if needed
-      //  [
-      //    'method' => 'post', // get,post,put....
-      //    'path' => '/some-path', // Route Path
-      //    'uses' => 'ControllerMethodName', //Name of the controller method to use
-      //    'middleware' => [] // if not set up middleware, auth:api will be the default
-      //  ]
-      // ]
+        'module' => 'iuser',
+        'prefix' => 'roles',
+        'controller' => RoleApiController::class,
+        'permission' => 'iuser.roles',
+        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        // 'customRoutes' => [ // Include custom routes if needed
+        //  [
+        //    'method' => 'post', // get,post,put....
+        //    'path' => '/some-path', // Route Path
+        //    'uses' => 'ControllerMethodName', //Name of the controller method to use
+        //    'middleware' => [] // if not set up middleware, auth:api will be the default
+        //  ]
+        // ]
     ]);
 
     /**
@@ -48,24 +48,31 @@ Route::prefix('/iuser/v1')->group(function () {
 
         //Login
         Route::post('/login', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'login'])
-            ->name($locale.'api.iuser.auth.login');
+            ->name($locale . '.api.iuser.auth.login');
+
+        //Login-client
+        Route::post('/login-client', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'loginClient'])
+            ->name($locale . '.api.iuser.auth.login-client');
+
+        //Token Refresh
+        Route::post('/refresh-token', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'refreshToken'])
+            ->name($locale . '.api.iuser.auth.refresh-token');
 
         //Logout
         Route::post('/logout', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'logout'])
-            ->name($locale.'api.iuser.auth.logout')
+            ->name($locale . '.api.iuser.auth.logout')
             ->middleware('auth:api');
 
         //Reset Process
         Route::post('/reset', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'reset'])
-            ->name($locale.'api.iuser.auth.reset');
+            ->name($locale . '.api.iuser.auth.reset');
         //'middleware' => ['captcha'], //TODO: Check if captcha is needed
 
         Route::post('/reset-complete', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'resetComplete'])
-            ->name($locale.'api.iuser.auth.reset-complete');
-
+            ->name($locale . '.api.iuser.auth.reset-complete');
     });
 
 
-// append
+    // append
 
 });

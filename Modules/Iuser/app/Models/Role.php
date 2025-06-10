@@ -30,10 +30,16 @@ class Role extends CoreModel
         'title'
     ];
     protected $fillable = [
-        'slug',
-        'name',
+        'system_name',
         'permissions',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'permissions' => 'json'
+        ];
+    }
 
     public function users()
     {

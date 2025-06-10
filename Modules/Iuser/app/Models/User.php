@@ -15,11 +15,12 @@ use Laravel\Passport\Contracts\OAuthenticatable;
 //use App\Notifications\ResetPasswordNotification;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Modules\Iuser\Traits\RolePermissionTrait;
 
 class User extends Authenticatable implements OAuthenticatable
 {
 
-    use HasApiTokens, HasFactory, Notifiable, HasOptionalTraits, hasEventsWithBindings;
+    use HasApiTokens, HasFactory, Notifiable, HasOptionalTraits, hasEventsWithBindings, RolePermissionTrait;
 
     protected $table = 'iuser__users';
     public $transformer = 'Modules\Iuser\Transformers\UserTransformer';
@@ -28,6 +29,7 @@ class User extends Authenticatable implements OAuthenticatable
         'create' => 'Modules\Iuser\Http\Requests\CreateUserRequest',
         'update' => 'Modules\Iuser\Http\Requests\UpdateUserRequest',
         'login' => 'Modules\Iuser\Http\Requests\LoginUserRequest',
+        'refreshToken' => 'Modules\Iuser\Http\Requests\RefreshTokenUserRequest',
         'resetPassword' => 'Modules\Iuser\Http\Requests\ResetPasswordUserRequest',
         'resetPasswordComplete' => 'Modules\Iuser\Http\Requests\ResetPasswordCompleteUserRequest',
     ];
@@ -78,13 +80,13 @@ class User extends Authenticatable implements OAuthenticatable
         ];
     }
 
-     /**
+    /**
      * ATTRIBUTES
      */
     protected function email(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value) => strtolower($value)
+            set: fn(string $value) => strtolower($value)
         );
     }
 
@@ -93,7 +95,7 @@ class User extends Authenticatable implements OAuthenticatable
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class,'iuser__role_user')->withTimestamps();
+        return $this->belongsToMany(Role::class, 'iuser__role_user')->withTimestamps();
     }
 
 
@@ -108,6 +110,4 @@ class User extends Authenticatable implements OAuthenticatable
 
         //$this->notify(new ResetPasswordNotification($url));
     }
-
-
 }

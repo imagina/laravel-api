@@ -11,6 +11,7 @@ use Modules\Iuser\Repositories\UserRepository;
 use Modules\Iuser\Services\AuthService;
 
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthApiController extends CoreApiController
@@ -25,7 +26,7 @@ class AuthApiController extends CoreApiController
     }
 
     /**
-     * Login
+     * Login User
      */
     public function login(Request $request)
     {
@@ -34,30 +35,81 @@ class AuthApiController extends CoreApiController
             $data = $request->input('attributes') ?? [];
             $this->validateWithModelRules($data, 'login');
 
-            //Validations Credentials and Login
-            if (!Auth::attempt($data))
-                throw new \Exception('Unauthorized', 401);
+            //Get user by email
+            $params = json_decode(json_encode(["filter" => ["field" => "email"]]));
+            $user = $this->modelRepository->getItem($data['email'], $params);
 
-            //TODO: Esta es una opcion , no se si sea necesaria
-            //El middleware web debe estar habilitado en la ruta del login API.
-            /* if (Auth::guard('web')->attempt($credentials)) {
-                $request->session()->regenerate();
-            } */
+            //Validate user and password
+            if (!$user || !Hash::check($data['password'], $user->password)) {
+                throw new \Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
+            }
 
-            //Authentication passed
-            $user = auth()->user();
-            $tokenResult = $user->createToken('authToken');
-
-            //TODO: No generó error pero habria que probar en frontend
-            //Session in Blade
-            $this->authService->logUserIn($user);
+            //Get
+            $tokenData = $this->authService->getToken("password", $data);
 
             $response = ['data' => [
-                'userData' => $user,
-                'userToken' => $tokenResult->accessToken,
-                'expiresDate' => $tokenResult->token->expires_at
+                'user' => $user,
+                'token' => $tokenData
             ]];
+        } catch (\Exception $e) {
+            $status = $this->getHttpStatusCode($e);
+            $response = $this->getErrorResponse($e);
+        }
 
+        //Return response
+        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+    }
+
+    /**
+     * Login Client
+     * You can create some logins to diferents clients
+     * This token only can access with a especific Middleware (EnsureClientIsResourceOwner::class)
+     */
+    public function loginClient(Request $request)
+    {
+        try {
+
+            $data = $request->input('attributes') ?? [];
+
+            //Add data
+            $dataVal = [
+                'clientId' => $data['client_id'] ?? env('PASSPORT_CLIENT_ID') ?? null,
+                'clientSecret' => $data['client_secret'] ?? env('PASSPORT_CLIENT_SECRET') ?? null
+            ];
+
+            //Validation
+            if (is_null($dataVal['clientId']) || is_null($dataVal['clientSecret'])) {
+                throw new \Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
+            }
+
+            //Get
+            $tokenData = $this->authService->getToken("client_credentials", $dataVal);
+
+            $response = ['data' => [$tokenData]];
+        } catch (\Exception $e) {
+            $status = $this->getHttpStatusCode($e);
+            $response = $this->getErrorResponse($e);
+        }
+
+        //Return response
+        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+    }
+
+    /**
+     * Refresh Token
+     */
+    public function refreshToken(Request $request)
+    {
+        try {
+
+            //Validate request
+            $data = $request->input('attributes') ?? [];
+            $this->validateWithModelRules($data, 'refreshToken');
+
+            //Get
+            $tokenData = $this->authService->getToken("refresh_token", $data);
+
+            $response = ['data' => [$tokenData]];
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
@@ -73,14 +125,10 @@ class AuthApiController extends CoreApiController
     {
         try {
 
-            $user = auth()->user();
+            $user = Auth::user();
             $user->token()->revoke(); //Revoke the token
 
-            //Session in Blade
-            $this->authService->logUserOut($user);
-
             $response = ['data' => 'Logout successful'];
-
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
@@ -113,7 +161,6 @@ class AuthApiController extends CoreApiController
             }
 
             $response = ['data' => $message];
-
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
@@ -155,7 +202,6 @@ class AuthApiController extends CoreApiController
             }
 
             $response = ['data' => $message];
-
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
@@ -163,5 +209,4 @@ class AuthApiController extends CoreApiController
         //Return response
         return response()->json($response, $status ?? Response::HTTP_OK);
     }
-
 }

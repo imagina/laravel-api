@@ -183,8 +183,7 @@ class RouterGenerator
      */
     private function getApiRouteMiddleware($route, $params): array
     {
-        //TODO: get the auth middlewares
-        return [];
+
         //Return the middleware
         if (isset($params['middleware'][$route])) return $params['middleware'][$route];
 
@@ -203,9 +202,6 @@ class RouterGenerator
             'bulk' => "$prefix.bulk",
         ];
 
-        $defaultRouteMiddleware = ["auth:api"];
-        if (isset($permissions[$route])) $defaultRouteMiddleware[] = $permissions[$route];
-        //Return the default middleware to the route
-        return $defaultRouteMiddleware;
+        return (array)($permissions[$route] ?? []);
     }
 }
