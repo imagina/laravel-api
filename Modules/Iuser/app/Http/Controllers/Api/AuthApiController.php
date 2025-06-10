@@ -52,12 +52,11 @@ class AuthApiController extends CoreApiController
                 'token' => $tokenData
             ]];
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
@@ -87,12 +86,11 @@ class AuthApiController extends CoreApiController
 
             $response = ['data' => [$tokenData]];
         } catch (\Exception $e) {
-            $status = $this->getHttpStatusCode($e);
-            $response = $this->getErrorResponse($e);
+            [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
-        return response()->json($response ?? ['data' => 'Request successful'], $status ?? 200);
+        return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
     /**
