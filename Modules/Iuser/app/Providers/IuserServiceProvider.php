@@ -73,7 +73,9 @@ class IuserServiceProvider extends ServiceProvider
         Passport::enablePasswordGrant();
 
         //TODO - pasar valor a settings
-        Passport::tokensExpireIn(CarbonInterval::hours(1));
+        $hours = app()->environment('local') ? 12 : 1;
+
+        Passport::tokensExpireIn(CarbonInterval::hours($hours));
         Passport::refreshTokensExpireIn(CarbonInterval::days(7));
     }
 
