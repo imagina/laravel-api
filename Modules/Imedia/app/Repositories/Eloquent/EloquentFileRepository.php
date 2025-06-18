@@ -74,39 +74,4 @@ class EloquentFileRepository extends EloquentCoreRepository implements FileRepos
         //Response
         return $model;
     }
-
-    /**
-     * @param string|int $criteria
-     * @param object|null $params
-     * @return bool
-     */
-    public function deleteBy(string|int $criteria, ?object $params = null): bool
-    {
-        //Instance Query
-        $query = $this->model->query();
-
-        //Check field name to criteria
-        if (isset($params->filter->field)) $field = $params->filter->field;
-
-        //Include trashed records | SoftDeletes
-        //if ($this->hasSoftDeletes()) $query->withTrashed();
-
-        //get model
-        $model = $query->where($field ?? 'id', $criteria)->first();
-
-        //Event deleting model
-        $this->dispatchesEvents(['eventName' => 'deleting', 'criteria' => $criteria, 'model' => $model]);
-
-        //Delete Model
-        if ($model) {
-            if (isset($params->filter->forceDelete) && $this->hasSoftDeletes()) $model->forceDelete();
-            else $model->delete();
-        }
-
-        //Event deleted model
-        $this->dispatchesEvents(['eventName' => 'deleted', 'criteria' => $criteria]);
-
-        //Response
-        return true;
-    }
 }

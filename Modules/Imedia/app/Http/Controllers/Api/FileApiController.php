@@ -63,7 +63,6 @@ class FileApiController extends CoreApiController
                 }
             }
 
-            //TODO - Por ahora esta es la respuesta de cuando crea un file/folder etc
 
             //Response
             $response = ['data' => CoreResource::transformData($savedModel)];

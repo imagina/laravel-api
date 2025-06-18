@@ -23,4 +23,24 @@ class FileHelper
         $name = \Str::slug($name);
         return $name . strtolower($extension);
     }
+
+    /**
+     * Get path for the Thumbnail
+     */
+    public static function getPathFor(string $filename, $label, $extension, $folderId = 0)
+    {
+
+        //Delete extension
+        $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
+
+        if ($folderId !== 0) {
+            dd("CASO FOLDER");
+            /* $parent = app(FolderRepository::class)->findFolder($folderId);
+            if ($parent !== null) {
+                return $parent->path->getRelativeUrl() . '/' . $filename;
+            } */
+        }
+
+        return config('imedia.files-path') . "{$pathInfo}-{$label}.{$extension}";
+    }
 }

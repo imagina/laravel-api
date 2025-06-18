@@ -6,6 +6,8 @@ use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Modules\Imedia\Support\FileHelper;
 
 class File extends CoreModel
 {
@@ -75,6 +77,48 @@ class File extends CoreModel
 
             //Case Private |TODO: Pasar los minutos a un setting
             return $disk->temporaryUrl($this->path, now()->addMinutes(5));
+        });
+    }
+
+    public function thumbnails(): Attribute
+    {
+        return Attribute::get(function () {
+
+            //Validation Not Image
+            if (!$this->isImage()) return null;
+
+            //Get Attributes
+            $thumbs = json_decode(config('imedia.defaultThumbnails'));
+            $filename = $this->filename;
+            $visibility = $this->visibility;
+
+            //Get Disk
+            $disk = Storage::disk($this->disk);
+
+            //Expiration to Private Files
+            $expiration = Carbon::now()->addMinutes(5); //TODO OJO
+
+            return collect($thumbs)->mapWithKeys(function ($data, $label) use ($disk, $filename, $visibility, $expiration) {
+
+
+                //TODO | Case: External
+                /* if (!in_array($this->disk, array_keys(config("filesystems.disks"))))
+                    return app("Modules\Media\Services\\" . ucfirst($this->disk) . "Service")->getThumbnail($this, $label); */
+
+
+                //Validate the attribute has_thumbnail
+                if (!$this->has_thumbnails)
+                    return [$label => $this->url];
+
+                //Case Base
+                $thumbPath = FileHelper::getPathFor($filename, $label, $data->format);
+                if ($visibility == "public")
+                    $url = $disk->url($thumbPath);
+                else
+                    $url = $disk->temporaryUrl($thumbPath, $expiration);
+
+                return [$label => $url];
+            })->toArray();
         });
     }
 
