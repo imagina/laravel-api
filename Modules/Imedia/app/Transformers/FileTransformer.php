@@ -20,7 +20,7 @@ class FileTransformer extends CoreResource
     public function modelAttributes($request): array
     {
 
-        return = [
+        return [
             'isImage' => $this->isImage(),
             'isVideo' => $this->isVideo(),
             'url' => $this->url ?? "#",

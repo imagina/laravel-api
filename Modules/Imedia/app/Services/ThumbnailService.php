@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Intervention\Image\Laravel\Facades\Image;
 use Modules\Imedia\Support\ImageHelper;
+use Modules\Imedia\Support\FileHelper;
 
 class ThumbnailService
 {
@@ -48,7 +49,7 @@ class ThumbnailService
             rewind($tempStream);
 
             //Final Path
-            $thumbPath = $this->getPathFor($filename, $label, $config->format);
+            $thumbPath =  FileHelper::getPathFor($filename, $label, $config->format);
 
             //Write in Disk
             Storage::disk($disk)->writeStream($thumbPath, $tempStream, [
@@ -57,26 +58,6 @@ class ThumbnailService
 
             fclose($tempStream);
         }
-    }
-
-    /**
-     * Get Path
-     */
-    private function getPathFor(string $filename, $label, $extension, $folderId = 0)
-    {
-
-        //Delete extension
-        $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
-
-        if ($folderId !== 0) {
-            dd("CASO FOLDER");
-            /* $parent = app(FolderRepository::class)->findFolder($folderId);
-            if ($parent !== null) {
-                return $parent->path->getRelativeUrl() . '/' . $filename;
-            } */
-        }
-
-        return config('imedia.files-path') . "{$pathInfo}-{$label}.{$extension}";
     }
 
     /**
@@ -100,7 +81,7 @@ class ThumbnailService
 
             $format = $preset->format;
             //Get Path
-            $thumbPath = $this->getPathFor($filename, $label, $format);
+            $thumbPath = FileHelper::getPathFor($filename, $label, $format);
             //Save Path
             $pathsToDelete[] = $thumbPath;
         }
