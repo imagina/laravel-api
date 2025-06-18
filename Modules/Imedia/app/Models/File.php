@@ -4,6 +4,8 @@ namespace Modules\Imedia\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class File extends CoreModel
 {
@@ -42,7 +44,8 @@ class File extends CoreModel
         'folder_id',
         'has_watermark',
         'has_thumbnails',
-        'disk'
+        'disk',
+        'visibility'
     ];
 
     /**
@@ -56,9 +59,23 @@ class File extends CoreModel
                 //$disk = is_null($this->disk) ? setting('media::filesystem', null, config('asgard.media.config.filesystem')) : $this->disk;
                 //return new MediaPath($value, $disk, $this->organization_id, $this);
 
-                return $value . "guayaba";
+                return $value;
             }
         );
+    }
+
+    public function url(): Attribute
+    {
+        return Attribute::get(function () {
+            $disk = Storage::disk($this->disk);
+
+            if ($this->visibility === 'public') {
+                return $disk->url($this->path);
+            }
+
+            //Case Private |TODO: Pasar los minutos a un setting
+            return $disk->temporaryUrl($this->path, now()->addMinutes(5));
+        });
     }
 
     /**
@@ -77,5 +94,10 @@ class File extends CoreModel
         } else {
             return in_array(pathinfo($this->path, PATHINFO_EXTENSION), $imageExtensions);
         }
+    }
+
+    public function isVideo()
+    {
+        return str_starts_with($this->mimetype, 'video/');
     }
 }

@@ -27,7 +27,7 @@ class FileStoreService
     /**
      * Usedby: FileApiController
      */
-    public function storeFromMultipart(UploadedFile $file, array $options = []): File
+    public function storeFromMultipart(UploadedFile $file, array $options = [], $data = null): File
     {
         //Validations Format
         $this->validationsFile($file);
@@ -35,6 +35,7 @@ class FileStoreService
         //Extra Attributes
         $fileData['originalName'] = $file->getClientOriginalName();
         $fileData['size'] = $file->getFileInfo()->getSize();
+        $fileData['visibility'] = $data['visibility'] ?? 'public';
 
         //General Method
         return $this->processAndStore($file->getRealPath(), $file->getClientOriginalExtension(), $file->getMimeType(), $options, $fileData);
@@ -123,7 +124,7 @@ class FileStoreService
         //Store in Disk
         if ($shouldStore) {
             Storage::disk($disk)->writeStream($path, $stream, [
-                'visibility' => 'public', //TODO | Falta gestionar lo de los privados
+                'visibility' => $fileData['visibility'],
                 'mimetype' => $mimetype,
             ]);
         }
@@ -137,7 +138,8 @@ class FileStoreService
             'filesize' => $fileData['size'],
             'folder_id' => $parentId ?? 0,
             'is_folder' => 0,
-            'disk' => $disk
+            'disk' => $disk,
+            'visibility' => $fileData['visibility']
         ];
         $file = $this->fileRepository->create($dataToSave);
 

@@ -50,7 +50,6 @@ class FileApiController extends CoreApiController
             //Get model data
             $modelData = $request->input('attributes') ?? [];
 
-
             if (isset($modelData['name'])) {
                 //Process Folder
                 $savedModel = $this->folderService->store($modelData);
@@ -58,7 +57,7 @@ class FileApiController extends CoreApiController
                 //Proccess File
                 if ($request->hasFile('file')) {
                     $file = $request->file('file');
-                    $savedModel = $this->fileStoreService->storeFromMultipart($file);
+                    $savedModel = $this->fileStoreService->storeFromMultipart($file, [], $modelData);
                 } else {
                     throw new \Exception(Response::$statusTexts[Response::HTTP_NOT_FOUND], Response::HTTP_NOT_FOUND);
                 }

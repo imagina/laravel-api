@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('has_watermark')->default(false);
             $table->boolean("has_thumbnails")->default(false);
             $table->string('disk')->nullable();
+            $table->string('visibility')->default('public');
 
             // Audit fields
             $table->timestamps();
