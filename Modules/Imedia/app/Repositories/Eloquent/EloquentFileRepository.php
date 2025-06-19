@@ -47,6 +47,15 @@ class EloquentFileRepository extends EloquentCoreRepository implements FileRepos
          *
          */
 
+
+        //Validation Visibility
+        $user = \Auth::user();
+        $permission = 'imedia.files.index-all';
+        if (!$user->hasPermission($permission)) {
+            $query->where('visibility', 'public');
+        }
+
+
         //Response
         return $query;
     }

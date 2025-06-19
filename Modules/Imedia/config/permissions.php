@@ -14,6 +14,12 @@ return [
             'onlyFor' => [],
             'defaultAccess' => []
         ],
+        'index-all' => [
+            'title' =>   'imedia::files.index-all resource',
+            'description' => 'imedia::files.index-all.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
         'create' => [
             'title' =>   'imedia::files.create resource',
             'description' => 'imedia::files.create.description',

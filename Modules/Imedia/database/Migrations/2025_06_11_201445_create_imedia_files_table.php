@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('disk')->nullable();
             $table->string('visibility')->default('public');
 
+            $table->foreign('folder_id')->references('id')->on('imedia__files')->onDelete('cascade');
+
             // Audit fields
             $table->timestamps();
             $table->auditStamps();
