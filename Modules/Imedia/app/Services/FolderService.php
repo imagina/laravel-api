@@ -30,7 +30,7 @@ class FolderService
 
         //Get Disk
         $disk = $data['disk'] ?? 's3';
-        $parentId = $data['parent_id'] ?? 0;
+        $parentId = $data['parent_id'] ?? null;
 
         //Save Folder
         $file = $this->saveData($data, $disk, $parentId);
@@ -70,9 +70,10 @@ class FolderService
         $dataToSave = [
             'filename' => $filename,
             'path' => FileHelper::makePath($filename, $parentId),
-            'folder_id' => $data['parent_id'] ?? 0,
+            'folder_id' => $data['parent_id'] ?? null,
             'is_folder' => true,
-            'disk' => $disk
+            'disk' => $disk,
+            'visibility' => $data['visibility'] ?? 'public'
         ];
 
         //Save File

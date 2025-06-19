@@ -27,16 +27,10 @@ class FileHelper
     /**
      * Create path to: Folder, File, Thumbnail
      */
-    public static function makePath(string $filename, $folderId = 0)
+    public static function makePath(string $filename, $folderId = null)
     {
 
-        /* if($type=='thumbnail'){
-            //Delete extension
-            $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
-            $slugName =  "{$pathInfo}-{$label}.{$extension}";
-        } */
-
-        if ($folderId !== 0) {
+        if (!is_null($folderId)) {
             $parent = self::findFolder($folderId);
             if ($parent !== null) {
                 return $parent->path . '/' . $filename;

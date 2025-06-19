@@ -13,7 +13,7 @@ class CreateFolderRequest extends CoreFormRequest
     public function rules(): array
     {
 
-        $parentId = $this->get('parent_id') ?? 0;
+        $parentId = $this->get('parent_id') ?? null;
 
         return [
             'name' => [

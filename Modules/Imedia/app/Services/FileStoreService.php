@@ -38,7 +38,7 @@ class FileStoreService
         $fileData['originalName'] = $file->getClientOriginalName();
         $fileData['size'] = $file->getFileInfo()->getSize();
         $fileData['visibility'] = $data['visibility'] ?? 'public';
-        $fileData['parent_id'] = $data['parent_id'] ?? 0;
+        $fileData['parent_id'] = $data['parent_id'] ?? null;
         //General Method
         return $this->processAndStore($file->getRealPath(), $file->getClientOriginalExtension(), $file->getMimeType(), $options, $fileData);
     }
@@ -120,7 +120,6 @@ class FileStoreService
         }
 
         //Get Data to Path
-        //$path = $this->makePath($fileName, $fileData['parent_id']);
         $path = FileHelper::makePath($fileName, $fileData['parent_id']);
 
         //Create in DB
@@ -196,15 +195,19 @@ class FileStoreService
     private function checkFilenameExist($fileName, $parentId, $disk)
     {
 
-        $params = json_decode(json_encode([
+        $params = [
             "filter" => [
                 "filename" => ["value" => $fileName . "%", "operator" => "like"],
-                "folder_id" => $parentId,
                 "disk" => $disk
             ]
-        ]));
+        ];
 
-        $filesExist = $this->fileRepository->getItemsBy($params);
+        //Validation Parent
+        if (!is_null($parentId)) {
+            $params['filter']['folder_id'] = $parentId;
+        }
+
+        $filesExist = $this->fileRepository->getItemsBy(json_decode(json_encode($params)));
 
         if (count($filesExist) > 0) {
             return $this->getNewUniqueFilename($fileName, $filesExist);
