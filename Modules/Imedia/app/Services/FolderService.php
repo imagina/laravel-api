@@ -25,18 +25,23 @@ class FolderService
     public function store($data)
     {
 
-        //Get Disk
-        $disk = $data['disk'] ?? 's3';
-
         //Validations
         $this->checkValidations($data);
 
+        //Get Disk
+        $disk = $data['disk'] ?? 's3';
+        $parentId = $data['parent_id'] ?? 0;
+
         //Save Folder
-        $savedFile = $this->saveData($data, $disk);
+        $file = $this->saveData($data, $disk, $parentId);
 
-        //TODO - Duda, no veo que se este creando una carpeta en un disco
+        //Save in disk
+        Storage::disk($disk)->makeDirectory($file->path, [
+            'visibility' => $file['visibility']
+        ]);
 
-        return $savedFile;
+        //Return File
+        return $file;
     }
 
 
@@ -56,13 +61,15 @@ class FolderService
     /**
      * Save Data in Database
      */
-    private function saveData($data, $disk)
+    private function saveData($data, $disk, $parentId)
     {
+
+        $filename = $data['name'];
 
         //Fix data to Save
         $dataToSave = [
-            'filename' => $data['name'],
-            'path' => $this->getPath($data),
+            'filename' => $filename,
+            'path' => FileHelper::makePath($filename, $parentId),
             'folder_id' => $data['parent_id'] ?? 0,
             'is_folder' => true,
             'disk' => $disk
@@ -70,39 +77,5 @@ class FolderService
 
         //Save File
         return $this->fileRepository->create($dataToSave);
-    }
-
-    /**
-     *
-     */
-    private function getPath(array $data): string
-    {
-        if (array_key_exists('parent_id', $data)) {
-            $parent = $this->findFolder($data['parent_id']);
-            if ($parent !== null) {
-                dd("GET Relative Path");
-                //TODO
-                //return $parent->path->getRelativeUrl() . '/' . \Str::slug($data['name']);
-            }
-        }
-
-        return config('imedia.files-path') . \Str::slug($data['name']);
-    }
-
-    /**
-     *
-     */
-    public function findFolder($folderId)
-    {
-
-        //return $this->model->where('is_folder', 1)->where('id', $folderId)->first();
-
-        $params = json_decode(json_encode([
-            "filter" => [
-                "is_folder" => 1
-            ]
-        ]));
-
-        return $this->fileRepository->getItem($folderId, $params);
     }
 }

@@ -25,22 +25,39 @@ class FileHelper
     }
 
     /**
-     * Get path for the Thumbnail
+     * Create path to: Folder, File, Thumbnail
      */
-    public static function getPathFor(string $filename, $label, $extension, $folderId = 0)
+    public static function makePath(string $filename, $folderId = 0)
     {
 
-        //Delete extension
-        $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
+        /* if($type=='thumbnail'){
+            //Delete extension
+            $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
+            $slugName =  "{$pathInfo}-{$label}.{$extension}";
+        } */
 
         if ($folderId !== 0) {
-            dd("CASO FOLDER");
-            /* $parent = app(FolderRepository::class)->findFolder($folderId);
+            $parent = self::findFolder($folderId);
             if ($parent !== null) {
-                return $parent->path->getRelativeUrl() . '/' . $filename;
-            } */
+                return $parent->path . '/' . $filename;
+            }
         }
 
-        return config('imedia.files-path') . "{$pathInfo}-{$label}.{$extension}";
+        return config('imedia.files-path') . $filename;
+    }
+
+    /**
+     * Find specific folder
+     */
+    public static function findFolder($folderId)
+    {
+
+        $params = json_decode(json_encode([
+            "filter" => [
+                "is_folder" => 1
+            ]
+        ]));
+
+        return  app("Modules\Imedia\Repositories\FileRepository")->getItem($folderId, $params);
     }
 }

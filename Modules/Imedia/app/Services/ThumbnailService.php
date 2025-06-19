@@ -32,6 +32,8 @@ class ThumbnailService
 
         //Get Original Image
         $original = Image::read($stream);
+        //Delete extension
+        $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
 
         //Check each thumbnail configuration and create thumbnail in Disk
         foreach ($this->thumbnailConfigs as $label => $config) {
@@ -40,20 +42,25 @@ class ThumbnailService
             //Scale
             $clone->scale($config->width, $config->height);
 
+            //Get Extension
+            $extension = $config->format;
+
             //Get  Encoded Image
-            $encoded = ImageHelper::encodeImage($clone, $config->format, $config->quality);
+            $encoded = ImageHelper::encodeImage($clone,  $extension, $config->quality);
 
             //Create Temporal File
             $tempStream = tmpfile();
             fwrite($tempStream, (string) $encoded);
             rewind($tempStream);
 
+            //Fix Final filename to the path
+            $filename =  "{$pathInfo}-{$label}.{$extension}";
             //Final Path
-            $thumbPath =  FileHelper::getPathFor($filename, $label, $config->format);
+            $thumbPath =  FileHelper::makePath($filename, $file->folder_id);
 
             //Write in Disk
             Storage::disk($disk)->writeStream($thumbPath, $tempStream, [
-                'visibility' => 'public' //TODO | Falta gestionar lo de los privados
+                'visibility' => $file->visibility
             ]);
 
             fclose($tempStream);
@@ -76,12 +83,21 @@ class ThumbnailService
         $filename = $file->filename;
         $pathsToDelete = [];
 
+        //Delete extension
+        $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
+
         //Check Thumbnails
         foreach ((array)$this->thumbnailConfigs as $label => $preset) {
 
-            $format = $preset->format;
+            $extension = $preset->format;
             //Get Path
-            $thumbPath = FileHelper::getPathFor($filename, $label, $format);
+            //$thumbPath = FileHelper::makePath($filename, $label, $format);
+
+
+            //Fix Final filename to the path
+            $filename =  "{$pathInfo}-{$label}.{$extension}";
+            //Final Path
+            $thumbPath =  FileHelper::makePath($filename, $file->folder_id);
             //Save Path
             $pathsToDelete[] = $thumbPath;
         }

@@ -8,6 +8,8 @@ use Validator;
 
 use Modules\Imedia\Models\File;
 use Modules\Imedia\Repositories\FileRepository;
+
+//Helpers
 use Modules\Imedia\Support\FileHelper;
 use Modules\Imedia\Support\ImageHelper;
 
@@ -36,7 +38,7 @@ class FileStoreService
         $fileData['originalName'] = $file->getClientOriginalName();
         $fileData['size'] = $file->getFileInfo()->getSize();
         $fileData['visibility'] = $data['visibility'] ?? 'public';
-
+        $fileData['parent_id'] = $data['parent_id'] ?? 0;
         //General Method
         return $this->processAndStore($file->getRealPath(), $file->getClientOriginalExtension(), $file->getMimeType(), $options, $fileData);
     }
@@ -90,13 +92,12 @@ class FileStoreService
 
         //Get Data From Options
         $disk = $options['disk'] ?? 's3';
-        $parentId = $options['parentId'] ?? 0;
         $imageSize = json_decode(config('imedia.defaultImageSize'));
         $shouldStore = $options['store'] ?? true;
         $generateThumbnails = $options['thumbnails'] ?? true;
 
         //Exist other with the same name
-        $fileName = $this->checkFilenameExist($fileName, $parentId, $disk);
+        $fileName = $this->checkFilenameExist($fileName, $fileData['parent_id'], $disk);
 
         // Resize if image and max size defined
         if (str_starts_with($mimetype, 'image')) {
@@ -119,15 +120,8 @@ class FileStoreService
         }
 
         //Get Data to Path
-        $path = $this->getPathFor($fileName, $parentId);
-
-        //Store in Disk
-        if ($shouldStore) {
-            Storage::disk($disk)->writeStream($path, $stream, [
-                'visibility' => $fileData['visibility'],
-                'mimetype' => $mimetype,
-            ]);
-        }
+        //$path = $this->makePath($fileName, $fileData['parent_id']);
+        $path = FileHelper::makePath($fileName, $fileData['parent_id']);
 
         //Create in DB
         $dataToSave = [
@@ -136,13 +130,22 @@ class FileStoreService
             'extension' => substr(strrchr($fileName, '.'), 1),
             'mimetype' => $mimetype,
             'filesize' => $fileData['size'],
-            'folder_id' => $parentId ?? 0,
+            'folder_id' => $fileData['parent_id'],
             'is_folder' => 0,
             'disk' => $disk,
             'visibility' => $fileData['visibility']
         ];
+
+
         $file = $this->fileRepository->create($dataToSave);
 
+        //Store in Disk
+        if ($shouldStore) {
+            Storage::disk($disk)->writeStream($path, $stream, [
+                'visibility' => $fileData['visibility'],
+                'mimetype' => $mimetype,
+            ]);
+        }
 
         //Process Thumbnails
         $typesWithoutResizeImagesAndCreateThumbnails = config("imedia.typesWithoutResizeImagesAndCreateThumbnails");
@@ -231,22 +234,5 @@ class FileStoreService
         }, 0);
 
         return $fileNameOnly . '_' . ($versionCurrent + 1) . '.' . $extension;
-    }
-
-    /**
-     * Get Path for the File
-     */
-    private function getPathFor(string $filename, $folderId)
-    {
-
-        if ($folderId !== 0) {
-            dd("CASO FOLDER");
-            /* $parent = app(FolderRepository::class)->findFolder($folderId);
-            if ($parent !== null) {
-                return $parent->path->getRelativeUrl() . '/' . $filename;
-            } */
-        }
-
-        return config('imedia.files-path') . $filename;
     }
 }
