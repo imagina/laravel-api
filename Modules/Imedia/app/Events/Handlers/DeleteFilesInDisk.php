@@ -2,6 +2,7 @@
 
 namespace Modules\Imedia\Events\Handlers;
 
+use Illuminate\Support\Facades\Storage;
 
 class DeleteFilesInDisk
 {
@@ -17,7 +18,12 @@ class DeleteFilesInDisk
 
         $model = $params['model'];
 
-        //Delete Thumbnails (Include Main Image)
+        //Validation Folder
+        if ($model->is_folder) {
+            Storage::disk($model->disk)->deleteDirectory($model->path);
+        }
+
+        //Delete File (Main File) and Delete Thumbnails if is an Image
         $delete = app('Modules\Imedia\Services\ThumbnailService')->deleteThumbnails($model);
     }
 }
