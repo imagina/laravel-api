@@ -98,7 +98,10 @@ class File extends CoreModel
             //Expiration to Private Files
             $expiration = Carbon::now()->addMinutes(5); //TODO OJO
 
-            return collect($thumbs)->mapWithKeys(function ($data, $label) use ($disk, $filename, $visibility, $expiration) {
+            //Delete extension
+            $pathInfo = pathinfo($filename, PATHINFO_FILENAME);
+
+            return collect($thumbs)->mapWithKeys(function ($data, $label) use ($disk, $filename, $pathInfo, $visibility, $expiration) {
 
 
                 //TODO | Case: External
@@ -110,8 +113,12 @@ class File extends CoreModel
                 if (!$this->has_thumbnails)
                     return [$label => $this->url];
 
-                //Case Base
-                $thumbPath = FileHelper::getPathFor($filename, $label, $data->format);
+                //Fix Final filename to the path
+                $filename =  "{$pathInfo}-{$label}.{$data->format}";
+                //Final Path
+                $thumbPath = FileHelper::makePath($filename, $this->folder_id);
+
+                //check visibility to get the URL
                 if ($visibility == "public")
                     $url = $disk->url($thumbPath);
                 else
