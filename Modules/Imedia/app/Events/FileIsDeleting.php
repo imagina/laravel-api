@@ -6,7 +6,6 @@ namespace Modules\Imedia\Events;
 
 class FileIsDeleting
 {
-    //public $reservation;
     public $params;
 
     public function __construct($params = null)
