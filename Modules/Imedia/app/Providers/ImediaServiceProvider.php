@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Iuser\Providers;
+namespace Modules\Imedia\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -8,75 +8,39 @@ use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 // Bindings
-use Modules\Iuser\Repositories\Eloquent\EloquentUsersRepository;
-use Modules\Iuser\Repositories\Cache\CacheUsersDecorator;
-use Modules\Iuser\Repositories\UsersRepository;
-use Modules\Iuser\Models\Users;
-use Modules\Iuser\Repositories\Eloquent\EloquentUserRepository;
-use Modules\Iuser\Repositories\Cache\CacheUserDecorator;
-use Modules\Iuser\Repositories\UserRepository;
-use Modules\Iuser\Models\User;
-use Modules\Iuser\Repositories\Eloquent\EloquentRoleRepository;
-use Modules\Iuser\Repositories\Cache\CacheRoleDecorator;
-use Modules\Iuser\Repositories\RoleRepository;
-use Modules\Iuser\Models\Role;
+use Modules\Imedia\Repositories\Eloquent\EloquentFileRepository;
+use Modules\Imedia\Repositories\Cache\CacheFileDecorator;
+use Modules\Imedia\Repositories\FileRepository;
+use Modules\Imedia\Models\File;
+use Modules\Imedia\Repositories\Eloquent\EloquentZoneRepository;
+use Modules\Imedia\Repositories\Cache\CacheZoneDecorator;
+use Modules\Imedia\Repositories\ZoneRepository;
+use Modules\Imedia\Models\Zone;
 // append-use-bindings
 
-use Modules\Iuser\Http\Middleware\AuthCan;
 
-use Laravel\Passport\Passport;
-use Carbon\CarbonInterval;
 
-class IuserServiceProvider extends ServiceProvider
+class ImediaServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = 'Iuser';
+    protected string $name = 'Imedia';
 
-    protected string $nameLower = 'iuser';
-
-    protected $middleware = [
-        'auth-can' =>  AuthCan::class
-    ];
+    protected string $nameLower = 'imedia';
 
     /**
      * Boot the application events.
      */
     public function boot(): void
     {
-        $this->registerMiddleware();
-        $this->registerPassportConfigurations();
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
-    }
 
-    /**
-     * Register the middleware.
-     */
-    private function registerMiddleware()
-    {
-        foreach ($this->middleware as $name => $class) {
-            $this->app['router']->aliasMiddleware($name, $class);
-        }
-    }
-
-    /**
-     * Register Passport configurations.
-     */
-    protected function registerPassportConfigurations(): void
-    {
-
-        Passport::enablePasswordGrant();
-
-        //TODO - pasar valor a settings
-        $hours = app()->environment('local') ? 12 : 1;
-
-        Passport::tokensExpireIn(CarbonInterval::hours($hours));
-        Passport::refreshTokensExpireIn(CarbonInterval::days(7));
+        //TODO- Agregar registerAwsCredentials
     }
 
     /**
@@ -205,23 +169,21 @@ class IuserServiceProvider extends ServiceProvider
 
     private function registerBindings(): void
     {
-
-        $this->app->bind(UserRepository::class, function () {
-            $repository = new EloquentUserRepository(new User());
+        $this->app->bind(FileRepository::class, function () {
+            $repository = new EloquentFileRepository(new File());
 
             return config('app.cache')
-                ? new CacheUserDecorator($repository)
+                ? new CacheFileDecorator($repository)
                 : $repository;
         });
-        $this->app->bind(RoleRepository::class, function () {
-            $repository = new EloquentRoleRepository(new Role());
+        $this->app->bind(ZoneRepository::class, function () {
+            $repository = new EloquentZoneRepository(new Zone());
 
             return config('app.cache')
-                ? new CacheRoleDecorator($repository)
+                ? new CacheZoneDecorator($repository)
                 : $repository;
         });
         // append-bindings
-
 
 
     }
