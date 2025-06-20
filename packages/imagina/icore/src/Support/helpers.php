@@ -1,5 +1,7 @@
 <?php
 
+use Nwidart\Modules\Facades\Module;
+
 if (!function_exists('snakeToCamel')) {
     function snakeToCamel(string $input): string
     {
@@ -19,5 +21,13 @@ if (!function_exists('camelToSnake')) {
                 : lcfirst($match);
         }
         return implode('_', $ret);
+    }
+}
+
+if (!function_exists('isModuleEnabled')) {
+
+    function isModuleEnabled(string $moduleName): bool
+    {
+        return Module::isEnabled($moduleName);
     }
 }
