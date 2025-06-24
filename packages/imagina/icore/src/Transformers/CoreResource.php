@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Modules\Imedia\Transformers\FileTransformer;
 
 class CoreResource extends JsonResource
 {
@@ -76,7 +77,7 @@ class CoreResource extends JsonResource
     public function mergeTranslated(array $response): array
     {
         if (!$this->resource->relationLoaded('translations')) return $response;
-        $languages = LaravelLocalization::getSupportedLocales();// Get site languages
+        $languages = LaravelLocalization::getSupportedLocales(); // Get site languages
         $translatable = array_filter(($this->translatedAttributes ?? []), fn($val) => $val !== 'locale');
 
         foreach ($translatable as $field) {
@@ -129,6 +130,14 @@ class CoreResource extends JsonResource
                     $response,
                     $this->resource->formatFillableToModel($fillableData)
                 );
+            }
+
+            //Format files relations
+            if (($relationName == 'files') && method_exists($this->resource, 'mediaFiles')) {
+                //Add files relations
+                $response["files"] = FileTransformer::collection($this->files);
+                //Add media Files
+                if (method_exists($this->resource, 'mediaFiles')) $response['mediaFiles'] = $this->mediaFiles();
             }
 
             // TODO: put again media a revisionable relations manage?
