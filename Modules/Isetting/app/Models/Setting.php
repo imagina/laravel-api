@@ -36,9 +36,7 @@ class Setting extends CoreModel
      * Media Fillable
      */
     public $mediaFillable = [
-        'setting' => [
-            'mainimage' => 'single'
-        ]
+        'mainimage' => 'single'
     ];
 
     /**
