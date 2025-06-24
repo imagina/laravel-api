@@ -38,9 +38,6 @@ public $mediaFillable = [
 - Add relation:
 
 ```php
-
-use Imagina\Icore\Relations\EmptyRelation;
-
 /**
 * Relation Media
 * Make the Many To Many Morph
@@ -50,7 +47,7 @@ public function files()
     if (isModuleEnabled('Imedia')) {
         return app(\Modules\Imedia\Relations\FilesRelation::class)->resolve($this);
     }
-    return new EmptyRelation();
+    return new \Imagina\Icore\Relations\EmptyRelation();
 }
 ```
 
