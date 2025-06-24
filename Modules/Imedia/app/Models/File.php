@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Modules\Imedia\Support\FileHelper;
+use Modules\Imedia\Support\FileCollection;
 
 class File extends CoreModel
 {
@@ -150,5 +151,13 @@ class File extends CoreModel
     public function isVideo()
     {
         return str_starts_with($this->mimetype, 'video/');
+    }
+
+    /**
+     * Implementation to Relations in transformers in Modules.
+     */
+    public function newCollection(array $models = []): FileCollection
+    {
+        return new FileCollection($models);
     }
 }
