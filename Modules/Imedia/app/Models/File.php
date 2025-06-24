@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Modules\Imedia\Support\FileHelper;
+use Modules\Imedia\Support\FileCollection;
 
 class File extends CoreModel
 {
@@ -135,9 +136,9 @@ class File extends CoreModel
     public function isImage()
     {
         //TODO - EL Setting no funca
-        //$imageExtensions = (array)json_decode(setting('media::allowedImageTypes', null, config("imedia.allowedImageTypes")));
+        //$imageExtensions = (array)json_decode(setting('imedia::allowedImageTypes', null, config("imedia.allowedImageTypes")));
         $imageExtensions = (array)json_decode(config("imedia.allowedImageTypes"));
-
+        //dd(setting('imedia::allowedImageTypes'));
         // Case external disk
         if (isset($this->disk) && !in_array($this->disk, array_keys(config("filesystems.disks")))) {
             $dataExternalImg = app("Modules\Media\Services\\" . ucfirst($this->disk) . "Service")->getDataFromUrl($this->path);
@@ -150,5 +151,13 @@ class File extends CoreModel
     public function isVideo()
     {
         return str_starts_with($this->mimetype, 'video/');
+    }
+
+    /**
+     * Implementation to Relations in transformers in Modules.
+     */
+    public function newCollection(array $models = []): FileCollection
+    {
+        return new FileCollection($models);
     }
 }

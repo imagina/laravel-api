@@ -2,15 +2,13 @@
 
 namespace Modules\Imedia\Events;
 
-//use Modules\Imedia\Entities\File;
 
-class FileIsDeleting
+class DeleteMedia
 {
     public $params;
 
     public function __construct($params = null)
     {
-        // $this->file = $file;
         $this->params = $params;
     }
 }

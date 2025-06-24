@@ -54,4 +54,15 @@ class FileHelper
 
         return  app("Modules\Imedia\Repositories\FileRepository")->getItem($folderId, $params);
     }
+
+    /**
+     *
+     */
+    public static function validateMediaDefaultPath($path)
+    {
+        //If path include word ad replace by media default path to prevent issues with ad blockers
+        if (str_contains(strtolower($path), 'ad')) $path = "modules/imedia/img/file/default.jpg";
+        //Response
+        return $path;
+    }
 }
