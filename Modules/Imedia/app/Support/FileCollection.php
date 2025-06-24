@@ -17,7 +17,8 @@ class FileCollection extends Collection
         $files = $this; //Get files
         $classInfo = $this->getClassInfo($resource);
         //Get media fillable
-        $mediaFillable = $zones[$classInfo["entityName"]] ?? [];
+        $mediaFillable = $zones ?? [];
+
         $response = []; //Default response
 
         //To each Zone (MediaFillable) - Transform Files

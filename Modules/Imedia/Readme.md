@@ -22,16 +22,14 @@
 ];
 ```
 
-- Add the zones and replace "entity" with the name of the entity
+- Add the zones
 
 ```php
 /**
 * Media Fillable
 */
 public $mediaFillable = [
-    'entity' => [
-        'mainimage' => 'single'
-    ]
+    'mainimage' => 'single'
 ];
 ```
 
