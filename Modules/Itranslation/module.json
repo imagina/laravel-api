@@ -1,0 +1,12 @@
+
+{
+    "name": "Itranslation",
+    "alias": "itranslation",
+    "description": "manage itranslation",
+    "keywords": ["itranslation"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Itranslation\\Providers\\ItranslationServiceProvider"
+    ],
+    "files": []
+}
