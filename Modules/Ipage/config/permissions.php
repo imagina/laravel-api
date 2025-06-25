@@ -1,40 +1,40 @@
 <?php
 
 return [
-    'iuser.users' => [
+    'ipage.pages' => [
         'manage' => [
-            'title' =>  'iuser::users.manage.title',
-            'description' => 'iuser::users.manage.description',
+            'title' =>  'ipage::pages.manage.title',
+            'description' => 'ipage::pages.manage.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
         ],
         'index' => [
-            'title' =>  'iuser::users.list.title',
-            'description' => 'iuser::users.list.description',
+            'title' =>  'ipage::pages.list.title',
+            'description' => 'ipage::pages.list.description',
             'onlyFor' => [],
             'defaultAccess' => []
         ],
         'create' => [
-            'title' =>  'iuser::users.create.title',
-            'description' => 'iuser::users.create.description',
+            'title' =>  'ipage::pages.create.title',
+            'description' => 'ipage::pages.create.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
         ],
         'edit' => [
-            'title' =>  'iuser::users.edit.title',
-            'description' => 'iuser::users.edit.description',
+            'title' =>  'ipage::pages.edit.title',
+            'description' => 'ipage::pages.edit.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
         ],
         'destroy' => [
-            'title' =>  'iuser::users.destroy.title',
-            'description' => 'iuser::users.destroy.description',
+            'title' =>  'ipage::pages.destroy.title',
+            'description' => 'ipage::pages.destroy.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
         ],
         'restore' => [
-            'title' =>  'iuser::users.restore.title',
-            'description' => 'iuser::users.restore.description',
+            'title' =>  'ipage::pages.restore.title',
+            'description' => 'ipage::pages.restore.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
         ]

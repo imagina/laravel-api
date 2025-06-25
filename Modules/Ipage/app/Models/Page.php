@@ -29,11 +29,17 @@ class Page extends CoreModel
     //Instance external/internal events to dispatch with extraData
     public array $dispatchesEventsWithBindings = [
         //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
-        'created' => [],
+        'created' => [
+            ['path' => 'Modules\Imedia\Events\CreateMedia']
+        ],
         'creating' => [],
-        'updated' => [],
+        'updated' => [
+            ['path' => 'Modules\Imedia\Events\UpdateMedia']
+        ],
         'updating' => [],
-        'deleting' => [],
+        'deleting' => [
+            ['path' => 'Modules\Imedia\Events\DeleteMedia']
+        ],
         'deleted' => []
     ];
     public array $translatedAttributes = [
@@ -62,6 +68,28 @@ class Page extends CoreModel
         'is_home' => 'boolean',
         'options' => 'json',
     ];
+
+    /**
+     * Media Fillable
+     */
+    public $mediaFillable = [
+        'mainimage' => 'single',
+        'gallery' => 'multiple',
+        'secondaryimage' => 'single',
+        'breadcrumbimage' => 'single'
+    ];
+
+    /**
+     * Relation Media
+     * Make the Many To Many Morph
+     */
+    public function files()
+    {
+        if (isModuleEnabled('Imedia')) {
+            return app(\Modules\Imedia\Relations\FilesRelation::class)->resolve($this);
+        }
+        return new \Imagina\Icore\Relations\EmptyRelation();
+    }
 
     public function getUrlAttribute($locale = null)
     {
