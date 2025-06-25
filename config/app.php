@@ -93,6 +93,10 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'supportedLocales' => [
+        'es' => ['name' => 'Spanish', 'script' => 'Latn', 'native' => 'español']
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
