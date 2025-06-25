@@ -1,5 +1,8 @@
 {
     "Iuser": true,
     "Isetting": true,
+    "Ipage": true,
+    "Imenu": true,
+    "Islider": true,
     "Imedia": true
 }
