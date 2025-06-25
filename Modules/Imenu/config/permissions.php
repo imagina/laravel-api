@@ -2,22 +2,79 @@
 
 return [
     'imenu.menus' => [
-        'manage' => 'imenu::menus.manage resource',
-        'index' => 'imenu::menus.list resource',
-        'create' => 'imenu::menus.create resource',
-        'edit' => 'imenu::menus.edit resource',
-        'destroy' => 'imenu::menus.destroy resource',
-        'restore' => 'imenu::menus.restore resource',
+        'manage' => [
+            'title' =>  'imenu::menus.manage.title',
+            'description' => 'imenu::menus.manage.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'index' => [
+            'title' =>  'imenu::menus.list.title',
+            'description' => 'imenu::menus.list.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'create' => [
+            'title' =>  'imenu::menus.create.title',
+            'description' => 'imenu::menus.create.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'edit' => [
+            'title' =>  'imenu::menus.edit.title',
+            'description' => 'imenu::menus.edit.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'destroy' => [
+            'title' =>  'imenu::menus.destroy.title',
+            'description' => 'imenu::menus.destroy.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'restore' => [
+            'title' =>  'imenu::menus.restore.title',
+            'description' => 'imenu::menus.restore.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ]
     ],
     'imenu.menuitems' => [
-        'manage' => 'imenu::menuitems.manage resource',
-        'index' => 'imenu::menuitems.list resource',
-        'create' => 'imenu::menuitems.create resource',
-        'edit' => 'imenu::menuitems.edit resource',
-        'destroy' => 'imenu::menuitems.destroy resource',
-        'restore' => 'imenu::menuitems.restore resource',
-    ],
-// append
-
-
+        'manage' => [
+            'title' =>  'imenu::menuitems.manage.title',
+            'description' => 'imenu::menuitems.manage.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'index' => [
+            'title' =>  'imenu::menuitems.list.title',
+            'description' => 'imenu::menuitems.list.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'create' => [
+            'title' =>  'imenu::menuitems.create.title',
+            'description' => 'imenu::menuitems.create.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'edit' => [
+            'title' =>  'imenu::menuitems.edit.title',
+            'description' => 'imenu::menuitems.edit.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'destroy' => [
+            'title' =>  'imenu::slides.destroy.title',
+            'description' => 'imenu::slides.destroy.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ],
+        'restore' => [
+            'title' =>  'imenu::menuitems.restore.title',
+            'description' => 'imenu::menuitems.restore.description',
+            'onlyFor' => ['super-admin'],
+            'defaultAccess' => []
+        ]
+    ]
 ];
