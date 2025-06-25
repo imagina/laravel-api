@@ -70,14 +70,13 @@ class ItranslationServiceProvider extends ServiceProvider
      */
     public function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/'.$this->nameLower);
+        $langPath = base_path('resources/lang/modules/' . $this->nameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->nameLower);
-            $this->loadJsonTranslationsFrom($langPath);
         } else {
-            $this->loadTranslationsFrom(module_path($this->name, '$lang$'), $this->nameLower);
-            $this->loadJsonTranslationsFrom(module_path($this->name, '$lang$'));
+            $moduleLangPath = module_path($this->name, 'resources/lang');
+            $this->loadTranslationsFrom($moduleLangPath, 'iuser');
         }
     }
 
@@ -93,9 +92,9 @@ class ItranslationServiceProvider extends ServiceProvider
 
             foreach ($iterator as $file) {
                 if ($file->isFile() && $file->getExtension() === 'php') {
-                    $config = str_replace($configPath.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $config = str_replace($configPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
                     $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
-                    $segments = explode('.', $this->nameLower.'.'.$config_key);
+                    $segments = explode('.', $this->nameLower . '.' . $config_key);
 
                     // Remove duplicated adjacent segments
                     $normalized = [];
@@ -130,14 +129,14 @@ class ItranslationServiceProvider extends ServiceProvider
      */
     public function registerViews(): void
     {
-        $viewPath = resource_path('views/modules/'.$this->nameLower);
+        $viewPath = resource_path('views/modules/' . $this->nameLower);
         $sourcePath = module_path($this->name, '$resources/views$');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
     }
 
     /**
@@ -152,8 +151,8 @@ class ItranslationServiceProvider extends ServiceProvider
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            if (is_dir($path.'/modules/'.$this->nameLower)) {
-                $paths[] = $path.'/modules/'.$this->nameLower;
+            if (is_dir($path . '/modules/' . $this->nameLower)) {
+                $paths[] = $path . '/modules/' . $this->nameLower;
             }
         }
 
@@ -163,13 +162,13 @@ class ItranslationServiceProvider extends ServiceProvider
     private function registerBindings(): void
     {
         $this->app->bind(TranslationRepository::class, function () {
-    $repository = new EloquentTranslationRepository(new Translation());
+            $repository = new EloquentTranslationRepository(new Translation());
 
-    return config('app.cache')
-        ? new CacheTranslationDecorator($repository)
-        : $repository;
-});
-// append-bindings
+            return config('app.cache')
+                ? new CacheTranslationDecorator($repository)
+                : $repository;
+        });
+        // append-bindings
 
     }
 }
