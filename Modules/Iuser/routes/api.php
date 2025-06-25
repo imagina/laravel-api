@@ -44,7 +44,7 @@ Route::prefix('/iuser/v1')->group(function () {
      * Authentication routes
      */
     Route::prefix('/auth')->group(function () {
-        $locale = \LaravelLocalization::setLocale() ?: \App::getLocale();
+        $locale = app()->getLocale();
 
         //Login
         Route::post('/login', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'login'])
