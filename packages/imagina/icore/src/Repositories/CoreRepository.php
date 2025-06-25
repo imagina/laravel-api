@@ -41,7 +41,7 @@ interface CoreRepository extends BaseRepository
      * @param object|null $params
      * @return bool
      */
-    public function deleteBy(string|int $criteria, ?object $params): bool;
+    public function deleteBy(string|int $criteria, ?object $params): ?Model;
 
     /**
      * @param string|int $criteria

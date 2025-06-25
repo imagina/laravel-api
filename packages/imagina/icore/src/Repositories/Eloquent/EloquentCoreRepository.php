@@ -223,7 +223,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
      * @param object|null $params
      * @return bool
      */
-    public function deleteBy(string|int $criteria, ?object $params = null): bool
+    public function deleteBy(string|int $criteria, ?object $params = null): ?Model
     {
         //Instance Query
         $query = $this->model->query();

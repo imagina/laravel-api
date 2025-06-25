@@ -82,7 +82,7 @@ abstract class CoreCacheDecorator extends BaseCacheDecorator implements BaseRepo
      * @param object|null $params
      * @return bool
      */
-    public function deleteBy(string|int $criteria, ?object $params = null): bool
+    public function deleteBy(string|int $criteria, ?object $params = null): ?Model
     {
         $this->clearCache();
         return $this->repository->deleteBy($criteria, $params);
