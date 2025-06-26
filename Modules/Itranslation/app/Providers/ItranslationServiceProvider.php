@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Isetting\Providers;
+namespace Modules\Itranslation\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -8,20 +8,20 @@ use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 // Bindings
-use Modules\Isetting\Repositories\Eloquent\EloquentSettingRepository;
-use Modules\Isetting\Repositories\Cache\CacheSettingDecorator;
-use Modules\Isetting\Repositories\SettingRepository;
-use Modules\Isetting\Models\Setting;
+use Modules\Itranslation\Repositories\Eloquent\EloquentTranslationRepository;
+use Modules\Itranslation\Repositories\Cache\CacheTranslationDecorator;
+use Modules\Itranslation\Repositories\TranslationRepository;
+use Modules\Itranslation\Models\Translation;
 // append-use-bindings
 
 
-class IsettingServiceProvider extends ServiceProvider
+class ItranslationServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = 'Isetting';
+    protected string $name = 'Itranslation';
 
-    protected string $nameLower = 'isetting';
+    protected string $nameLower = 'itranslation';
 
     /**
      * Boot the application events.
@@ -76,7 +76,7 @@ class IsettingServiceProvider extends ServiceProvider
             $this->loadTranslationsFrom($langPath, $this->nameLower);
         } else {
             $moduleLangPath = module_path($this->name, 'resources/lang');
-            $this->loadTranslationsFrom($moduleLangPath, $this->nameLower);
+            $this->loadTranslationsFrom($moduleLangPath, 'iuser');
         }
     }
 
@@ -161,11 +161,11 @@ class IsettingServiceProvider extends ServiceProvider
 
     private function registerBindings(): void
     {
-        $this->app->bind(SettingRepository::class, function () {
-            $repository = new EloquentSettingRepository(new Setting());
+        $this->app->bind(TranslationRepository::class, function () {
+            $repository = new EloquentTranslationRepository(new Translation());
 
             return config('app.cache')
-                ? new CacheSettingDecorator($repository)
+                ? new CacheTranslationDecorator($repository)
                 : $repository;
         });
         // append-bindings

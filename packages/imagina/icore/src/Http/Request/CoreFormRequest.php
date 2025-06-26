@@ -4,7 +4,6 @@ namespace Imagina\Icore\Http\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Contracts\Validation\Validator;
 
 abstract class CoreFormRequest extends FormRequest
@@ -102,8 +101,8 @@ abstract class CoreFormRequest extends FormRequest
      */
     public function requiredLocales(): array
     {
-        //TODO: Change by Localization
-        return LaravelLocalization::getSupportedLocales();
+        //Now is a helper from Itranslation Module
+        return getSupportedLocales();
     }
 
     /**

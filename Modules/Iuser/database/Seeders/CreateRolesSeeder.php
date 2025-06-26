@@ -20,7 +20,7 @@ class CreateRolesSeeder extends Seeder
         Schedule $schedule,
         RoleRepository $roleRepository,
         PermissionManager $permissions
-    ){
+    ) {
         $this->schedule = $schedule;
         $this->roleRepository = $roleRepository;
         $this->permissions = $permissions;
@@ -39,50 +39,49 @@ class CreateRolesSeeder extends Seeder
         $this->createSuperAdminRol();
         $this->createUserRol();
         $this->createAdminRol();
-
     }
 
     /**
      * TODO: Permisos, probar si no se asignan permisos y se utiliza lo del gate
      */
-    private function createSuperAdminRol():void
+    private function createSuperAdminRol(): void
     {
         $roleData = [
             'system_name' => 'super-admin',
-            'en' => ['title' => trans("iuser::roles.types.super admin",[],"en")],
-            'es' => ['title' => trans("iuser::roles.types.super admin",[],"es")]
+            'en' => ['title' => itrans("iuser::roles.types.super admin", [], "en")],
+            'es' => ['title' => itrans("iuser::roles.types.super admin", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name'=>'super-admin'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name' => 'super-admin'], $roleData);
     }
 
     /**
      * TODO: Este creo que no lleva permisos por defecto
      */
-    private function createUserRol():void
+    private function createUserRol(): void
     {
         $roleData = [
             'system_name' => 'user',
-            'en' => ['title' => trans("iuser::roles.types.user",[],"en")],
-            'es' => ['title' => trans("iuser::roles.types.user",[],"es")]
+            'en' => ['title' => itrans("iuser::roles.types.user", [], "en")],
+            'es' => ['title' => itrans("iuser::roles.types.user", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name'=>'user'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name' => 'user'], $roleData);
     }
 
     /**
      * Create the Admin role with all permissions.
      */
-    private function createAdminRol():void
+    private function createAdminRol(): void
     {
 
         $roleData = [
             'system_name' => 'admin',
-            'en' => ['title' => trans("iuser::roles.types.admin",[],"en")],
-            'es' => ['title' => trans("iuser::roles.types.admin",[],"es")]
+            'en' => ['title' => itrans("iuser::roles.types.admin", [], "en")],
+            'es' => ['title' => itrans("iuser::roles.types.admin", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name'=>'admin'],$roleData);
+        $role = $this->roleRepository->updateOrCreate(['system_name' => 'admin'], $roleData);
 
         //Set all permissions
         //$this->setAllPermissions($role);
@@ -115,8 +114,5 @@ class CreateRolesSeeder extends Seeder
         //Set all permissions to the role
         $role->permissions = $allPermissions;
         $role->save();
-
     }
-
-
 }
