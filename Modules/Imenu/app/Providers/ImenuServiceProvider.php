@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\$MODULE_NAME$\Providers;
+namespace Modules\Imenu\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -8,15 +8,25 @@ use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 // Bindings
+use Modules\Imenu\Repositories\Eloquent\EloquentMenuRepository;
+use Modules\Imenu\Repositories\Cache\CacheMenuDecorator;
+use Modules\Imenu\Repositories\MenuRepository;
+use Modules\Imenu\Models\Menu;
+use Modules\Imenu\Repositories\Eloquent\EloquentMenuItemRepository;
+use Modules\Imenu\Repositories\Cache\CacheMenuItemDecorator;
+use Modules\Imenu\Repositories\MenuItemRepository;
+use Modules\Imenu\Models\MenuItem;
 // append-use-bindings
 
-class $MODULE_NAME$ServiceProvider extends ServiceProvider
+
+
+class ImenuServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = '$MODULE_NAME$';
+    protected string $name = 'Imenu';
 
-    protected string $nameLower = '$LOWERCASE_MODULE_NAME$';
+    protected string $nameLower = 'imenu';
 
     /**
      * Boot the application events.
@@ -28,7 +38,7 @@ class $MODULE_NAME$ServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
-        $this->loadMigrationsFrom(module_path($this->name, '$MIGRATIONS_PATH$'));
+        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
     /**
@@ -125,7 +135,7 @@ class $MODULE_NAME$ServiceProvider extends ServiceProvider
     public function registerViews(): void
     {
         $viewPath = resource_path('views/modules/'.$this->nameLower);
-        $sourcePath = module_path($this->name, '$PATH_VIEWS$');
+        $sourcePath = module_path($this->name, '$resources/views$');
 
         $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
 
@@ -156,6 +166,22 @@ class $MODULE_NAME$ServiceProvider extends ServiceProvider
 
     private function registerBindings(): void
     {
-        // append-bindings
+        $this->app->bind(MenuRepository::class, function () {
+    $repository = new EloquentMenuRepository(new Menu());
+
+    return config('app.cache')
+        ? new CacheMenuDecorator($repository)
+        : $repository;
+});
+$this->app->bind(MenuItemRepository::class, function () {
+    $repository = new EloquentMenuItemRepository(new MenuItem());
+
+    return config('app.cache')
+        ? new CacheMenuItemDecorator($repository)
+        : $repository;
+});
+// append-bindings
+
+
     }
 }

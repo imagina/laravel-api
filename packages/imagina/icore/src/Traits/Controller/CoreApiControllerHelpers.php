@@ -36,10 +36,10 @@ trait CoreApiControllerHelpers
         if ($e instanceof \Illuminate\Validation\ValidationException) {
             $code = Response::HTTP_BAD_REQUEST;
         } else {
-            $code = $e->getCode();
-            if ($code < 100 || $code >= 600) {
-                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-            }
+            $rawCode = $e->getCode();
+            $code = is_int($rawCode) && $rawCode >= 100 && $rawCode <= 599
+                ? $rawCode
+                : Response::HTTP_INTERNAL_SERVER_ERROR; // 500
         }
 
         $payload = [

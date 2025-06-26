@@ -1,6 +1,9 @@
 {
     "Iuser": true,
     "Isetting": true,
-    "Imedia": true,
+    "Ipage": true,
+    "Imenu": true,
+    "Islider": true,
+    "Imedia": true
     "Itranslation": true
 }
