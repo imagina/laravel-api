@@ -93,8 +93,12 @@ trait ScaffoldTrait
     {
         foreach ($files as $file) {
             $dir = "$this->modulePath/" . $file['destination'];
-            $this->components->task("Generating file $dir", function () use($file, $dir) {
+            $this->components->task("Generating file $dir", function () use ($file, $dir) {
                 $content = $this->getContentForStub($file['stub']);
+                $parentDir = dirname($dir);
+                if (!is_dir($parentDir)) {
+                    mkdir($parentDir, 0755, true);
+                }
                 file_put_contents($dir, $content);
             });
         }

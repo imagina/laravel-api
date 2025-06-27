@@ -54,6 +54,14 @@ class MakeEntityCommand extends Command
                 'stub' => '9-transformer',
                 'destination' => $this->appFolderPath . "Transformers/{$this->entityName}Transformer.php"
             ],
+            [
+                'stub' => '10-lang-entity',
+                'destination' => "resources/lang/en/{$this->entityName}.php"
+            ],
+            [
+                'stub' => '10-lang-entity',
+                'destination' => "resources/lang/es/{$this->entityName}.php"
+            ],
             ...$this->getMigrationFiles()
         ]);
         $this->appendStub('2-permissions-append', 'config/permissions.php');
