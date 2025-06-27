@@ -36,7 +36,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('imenu__menuitem_translations', function (Blueprint $table) {
-            $table->dropForeign(['menuitem_id']);
+            $table->dropForeign(['menu_item_id']);
         });
         Schema::dropIfExists('imenu__menuitem_translations');
     }
