@@ -1,0 +1,12 @@
+
+{
+    "name": "Islider",
+    "alias": "islider",
+    "description": "manage islider",
+    "keywords": ["islider"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Islider\\Providers\\IsliderServiceProvider"
+    ],
+    "files": []
+}
