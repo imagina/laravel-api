@@ -13,6 +13,7 @@ use Modules\Iuser\Services\AuthService;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Modules\Iuser\Transformers\UserTransformer;
 
 class AuthApiController extends CoreApiController
 {
@@ -48,7 +49,7 @@ class AuthApiController extends CoreApiController
             $tokenData = $this->authService->getToken("password", $data);
 
             $response = ['data' => [
-                'user' => $user,
+                'user' => new UserTransformer($user),
                 'token' => $tokenData
             ]];
         } catch (\Exception $e) {
