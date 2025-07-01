@@ -9,7 +9,11 @@ class UpdatePageRequest extends CoreFormRequest
 {
     public function rules(): array
     {
-        return [];
+        return [
+            'title' => 'required',
+            'slug' => ['required', 'alpha_dash:ascii'],
+            'body' => 'required',
+        ];
     }
 
     public function translationRules(): array
@@ -29,7 +33,11 @@ class UpdatePageRequest extends CoreFormRequest
 
     public function translationMessages(): array
     {
-        return [];
+        return [
+            'title.required' => itrans('ipage::pages.validation.titleIsRequired'),
+            'slug.required' => itrans('ipage::pages.validation.slugIsRequired'),
+            'body.required' => itrans('ipage::pages.validation.bodyIsRequired'),
+        ];
     }
 
     public function getValidator(): Validator
