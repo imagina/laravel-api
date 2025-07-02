@@ -9,16 +9,16 @@ class UpdatePageRequest extends CoreFormRequest
 {
     public function rules(): array
     {
+        return [];
+    }
+
+    public function translationRules(): array
+    {
         return [
             'title' => 'required',
             'slug' => ['required', 'alpha_dash:ascii'],
             'body' => 'required',
         ];
-    }
-
-    public function translationRules(): array
-    {
-        return [];
     }
 
     public function authorize(): bool
