@@ -208,4 +208,28 @@ class AuthApiController extends CoreApiController
         //Return response
         return response()->json($response, $status ?? Response::HTTP_OK);
     }
+
+    /**
+     * Information about user logged
+     */
+    public function me(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                throw new \Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
+            }
+
+            //Not clear cache | TODO: From v10
+            //app()->instance('clearResponseCache', false);
+
+            $response = ['data' => new UserTransformer($user)];
+        } catch (\Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
+        }
+
+        //Return response
+        return response()->json($response, $status ?? Response::HTTP_OK);
+    }
 }
