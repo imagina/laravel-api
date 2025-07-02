@@ -4,45 +4,47 @@ namespace Modules\Iform\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Form extends CoreModel
 {
-  use Translatable;
-  //use Translatable, IsQreable;
+    use Translatable;
 
-  protected $table = 'iform__forms';
-  public string $transformer = 'Modules\Iform\Transformers\FormTransformer';
-  public string $repository = 'Modules\Iform\Repositories\FormRepository';
-  public array $requestValidation = [
-      'create' => 'Modules\Iform\Http\Requests\CreateFormRequest',
-      'update' => 'Modules\Iform\Http\Requests\UpdateFormRequest',
+    //use Translatable, IsQreable;
+
+    protected $table = 'iform__forms';
+    public string $transformer = 'Modules\Iform\Transformers\FormTransformer';
+    public string $repository = 'Modules\Iform\Repositories\FormRepository';
+    public array $requestValidation = [
+        'create' => 'Modules\Iform\Http\Requests\CreateFormRequest',
+        'update' => 'Modules\Iform\Http\Requests\UpdateFormRequest',
     ];
-  //Instance external/internal events to dispatch with extraData
-  public array $dispatchesEventsWithBindings = [
-    //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
-    'created' => [],
-    'creating' => [],
-    'updated' => [],
-    'updating' => [],
-    'deleting' => [],
-    'deleted' => []
-  ];
-  public array $translatedAttributes = [
-      'title',
-      'submit_text',
-      'success_text',
-      'description',
-  ];
-  protected $fillable = [
-      'system_name',
-      'active',
-      'destination_email',
-      'user_id',
-      'options',
-      'form_type',
-      'organization_id',
-      'parent_id'
-  ];
+    //Instance external/internal events to dispatch with extraData
+    public array $dispatchesEventsWithBindings = [
+        //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
+        'created' => [],
+        'creating' => [],
+        'updated' => [],
+        'updating' => [],
+        'deleting' => [],
+        'deleted' => []
+    ];
+    public array $translatedAttributes = [
+        'title',
+        'submit_text',
+        'success_text',
+        'description',
+    ];
+    protected $fillable = [
+        'system_name',
+        'active',
+        'destination_email',
+        'user_id',
+        'options',
+        'form_type',
+        'organization_id',
+        'parent_id'
+    ];
 
     protected $casts = [
         'options' => 'json',
@@ -74,9 +76,11 @@ class Form extends CoreModel
         return $this->belongsTo("Modules\\Iuser\\Models\\User", 'user_id');
     }
 
-    public function getUrlAttribute()
+    public function url(): Attribute
     {
-        return \LaravelLocalization::localizeUrl('/iforms/view/' . $this->id);
+        return Attribute::make(
+            get: fn(?int $value) => \LaravelLocalization::localizeUrl('/iforms/view/' . $this->id),
+        );
     }
 
 }

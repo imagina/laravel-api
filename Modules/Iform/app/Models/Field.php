@@ -4,50 +4,52 @@ namespace Modules\Iform\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Field extends CoreModel
 {
-  use Translatable;
+    use Translatable;
+
 //  use Translatable, PresentableTrait, isFillable;
 
-  protected $table = 'iform__fields';
-  public string $transformer = 'Modules\Iform\Transformers\FieldTransformer';
-  public string $repository = 'Modules\Iform\Repositories\FieldRepository';
-  public array $requestValidation = [
-      'create' => 'Modules\Iform\Http\Requests\CreateFieldRequest',
-      'update' => 'Modules\Iform\Http\Requests\UpdateFieldRequest',
+    protected $table = 'iform__fields';
+    public string $transformer = 'Modules\Iform\Transformers\FieldTransformer';
+    public string $repository = 'Modules\Iform\Repositories\FieldRepository';
+    public array $requestValidation = [
+        'create' => 'Modules\Iform\Http\Requests\CreateFieldRequest',
+        'update' => 'Modules\Iform\Http\Requests\UpdateFieldRequest',
     ];
-  //Instance external/internal events to dispatch with extraData
-  public array $dispatchesEventsWithBindings = [
-    //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
-    'created' => [],
-    'creating' => [],
-    'updated' => [],
-    'updating' => [],
-    'deleting' => [],
-    'deleted' => []
-  ];
-  public array $translatedAttributes = [
-      'label',
-      'placeholder',
-      'description',
-  ];
-  protected $fillable = [
-      'type',
-      'name',
-      'required',
-      'form_id',
-      'selectable',
-      'order',
-      'prefix',
-      'suffix',
-      'width',
-      'block_id',
-      'options',
-      'rules',
-      'parent_id',
-      'visibility'
-  ];
+    //Instance external/internal events to dispatch with extraData
+    public array $dispatchesEventsWithBindings = [
+        //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
+        'created' => [],
+        'creating' => [],
+        'updated' => [],
+        'updating' => [],
+        'deleting' => [],
+        'deleted' => []
+    ];
+    public array $translatedAttributes = [
+        'label',
+        'placeholder',
+        'description',
+    ];
+    protected $fillable = [
+        'type',
+        'name',
+        'required',
+        'form_id',
+        'selectable',
+        'order',
+        'prefix',
+        'suffix',
+        'width',
+        'block_id',
+        'options',
+        'rules',
+        'parent_id',
+        'visibility'
+    ];
 
 //    protected $presenter = FieldPresenter::class;
 
@@ -74,44 +76,52 @@ class Field extends CoreModel
         return $this->belongsTo(Block::class);
     }
 
-    public function setRulesAttribute($value)
+    public function rules(): Attribute
     {
-        $rules = $value;
-        if (isset($rules["mimes"]) && !empty($rules["mimes"])) {
-            foreach ($rules["mimes"] as $index => $availableExtension) {
-                $rules["mimes"][$index] = Str::replace('.', '', $availableExtension);
+        return Attribute::set(function (?array $value) {
+            $rules = $value;
+            if (isset($rules["mimes"]) && !empty($rules["mimes"])) {
+                foreach ($rules["mimes"] as $index => $availableExtension) {
+                    $rules["mimes"][$index] = Str::replace('.', '', $availableExtension);
+                }
             }
-        }
-        $rules["required"] = $this->required;
+            $rules["required"] = $this->required;
 
-        $this->attributes['rules'] = json_encode($rules);
+            return json_encode($rules);
+        });
     }
 
-    public function getRuleAcceptAttribute()
+    public function ruleAccept(): Attribute
     {
-        $rules = $this->rules;
-        $accept = "";
-        if (isset($rules->mimes) && !empty($rules->mimes)) {
-            $accept = join(",", array_map(
-                function ($valor) {
-                    return "." . $valor;
-                }, $rules->mimes));
-        }
+        return Attribute::get(function () {
+            $rules = $this->rules;
+            $accept = "";
+            if (isset($rules->mimes) && !empty($rules->mimes)) {
+                $accept = join(",", array_map(
+                    function ($valor) {
+                        return "." . $valor;
+                    }, $rules->mimes));
+            }
 
-        return $accept;
+            return $accept;
+        });
     }
 
-    public function getFieldOptionsAttribute()
+    public function FieldOptions(): Attribute
     {
-        $fieldOptions = $this->fields->where('name', 'field_options')->first();
-        if ($fieldOptions) return $fieldOptions->value ?? [];
-        //getting the options from the selectable attribute for old sites created with the Iform before Dec, 2021
-        return $this->options['fieldOptions'] ?? json_decode($this->selectable) ?? [];
+        return Attribute::get(function () {
+            $fieldOptions = $this->fields->where('name', 'field_options')->first();
+            if ($fieldOptions) return $fieldOptions->value ?? [];
+            //getting the options from the selectable attribute for old sites created with the Iform before Dec, 2021
+            return $this->options['fieldOptions'] ?? json_decode($this->selectable) ?? [];
+        });
     }
 
-    public function getLabelAttribute($value)
+    public function label()
     {
-        return $value . ($this->required ? config('asgard.iforms.config.requiredFieldLabel') : '');
+        return Attribute::get(function (?string $value) {
+            return $value . ($this->required ? config('asgard.iforms.config.requiredFieldLabel') : '');
+        });
     }
 
 }
