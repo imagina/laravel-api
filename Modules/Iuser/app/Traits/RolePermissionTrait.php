@@ -23,16 +23,25 @@ trait RolePermissionTrait
     public function hasPermission($permission): bool
     {
 
-        //Validation Super Admin
-        if ($this->hasRole('super-admin'))
-            return true;
-
         //Get data from permission
         $permissionInfo = explode('.', $permission);
         //Get config with Module Name
         $permissionConfig = config($permissionInfo[0] . '.permissions');
         //Get the base permission name | Example: ['iuser.users']['manage'];
         $dataPermission = $permissionConfig[$permissionInfo[0] . '.' . $permissionInfo[1]][$permissionInfo[2]];
+
+        return $this->validatePermission($dataPermission, $permission);
+    }
+
+    /**
+     * Used by Middleware and User Model
+     */
+    public function validatePermission($dataPermission, $permission = null): bool
+    {
+
+        //Validation Super Admin
+        if ($this->hasRole('super-admin'))
+            return true;
 
         //Check if the permission is not restricted to super-admins only
         if ($this->hasRole('admin')) {
