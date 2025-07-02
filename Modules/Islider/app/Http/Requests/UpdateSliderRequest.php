@@ -10,7 +10,7 @@ class UpdateSliderRequest extends CoreFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required'
+            'title' => 'required'
         ];
     }
 
@@ -27,7 +27,7 @@ class UpdateSliderRequest extends CoreFormRequest
     public function messages(): array
     {
         return [
-            'name.required' => itrans('islider::sliders.validation.nameIsRequired'),
+            'title.required' => itrans('islider::sliders.validation.nameIsRequired'),
         ];
     }
 
