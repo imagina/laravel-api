@@ -3,6 +3,11 @@
 namespace Modules\Iform\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Iform\Events\CreateForm;
+use Modules\Iform\Events\DeleteForm;
+use Modules\Iform\Events\Handlers\DeleteFormeable;
+use Modules\Iform\Events\Handlers\StoreFormeable;
+use Modules\Iform\Events\UpdateForm;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,7 +16,17 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        CreateForm::class => [
+            StoreFormeable::class,
+        ],
+        UpdateForm::class => [
+            StoreFormeable::class,
+        ],
+        DeleteForm::class => [
+            DeleteFormeable::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.
