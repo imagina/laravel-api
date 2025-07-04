@@ -59,8 +59,12 @@ trait RolePermissionTrait
         }
 
         // Case: User has the permission directly
-        if (isset($this->permissions[$permission])) {
-            return $this->permissions[$permission];
+        $userPermissions = isset($this->attributes['permissions'])
+            ? json_decode($this->attributes['permissions'], true)
+            : [];
+
+        if (isset($userPermissions[$permission])) {
+            return $userPermissions[$permission];
         } else {
             //Check if the Role from User has the permission
             return $this->roles->contains(function ($role) use ($permission) {
