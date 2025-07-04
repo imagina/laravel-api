@@ -1,32 +1,31 @@
 <?php
 
-namespace Modules\Iuser\Http\Requests;
+namespace Modules\Inotification\Http\Requests;
 
 use Imagina\Icore\Http\Request\CoreFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class CreateRoleRequest extends CoreFormRequest
+class CreateNotificationRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
-            'system_name' => 'required|unique:iuser__roles,system_name',
+            'title' => 'required|min:2',
+            'message' => 'required|min:2',
         ];
     }
 
     public function translationRules(): array
     {
-        return [
-            'title' => 'required'
-        ];
+        return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }
