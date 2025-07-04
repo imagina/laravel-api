@@ -10,8 +10,7 @@ class CreateRoleRequest extends CoreFormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'slug' => 'required|unique:iuser__roles,slug'
+            'system_name' => 'required|unique:iuser__roles,system_name',
         ];
     }
 
