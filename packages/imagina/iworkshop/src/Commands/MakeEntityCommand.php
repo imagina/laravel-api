@@ -56,11 +56,11 @@ class MakeEntityCommand extends Command
             ],
             [
                 'stub' => '10-lang-entity',
-                'destination' => "resources/lang/en/{$this->entityName}.php"
+                'destination' => "resources/lang/en/" . strtolower($this->entityName) . ".php"
             ],
             [
                 'stub' => '10-lang-entity',
-                'destination' => "resources/lang/es/{$this->entityName}.php"
+                'destination' => "resources/lang/es/" . strtolower($this->entityName) . ".php"
             ],
             ...$this->getMigrationFiles()
         ]);

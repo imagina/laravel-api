@@ -70,6 +70,10 @@ Route::prefix('/iuser/v1')->group(function () {
 
         Route::post('/reset-complete', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'resetComplete'])
             ->name($locale . '.api.iuser.auth.reset-complete');
+
+        Route::get('/me', [Modules\Iuser\Http\Controllers\Api\AuthApiController::class, 'me'])
+            ->name($locale . '.api.iuser.auth.me')
+            ->middleware('auth-can');
     });
 
 

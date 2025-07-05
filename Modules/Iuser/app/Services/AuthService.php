@@ -40,7 +40,15 @@ class AuthService
         //Format Response
         $tokenData = json_decode((string) $responseToken->getBody(), true);
 
-        return $tokenData;
+        //Transform Data
+        $tokenDataTransfomer = [
+            'tokenType' => $tokenData['token_type'] ?? null,
+            'expiresIn' => $tokenData['expires_in'] ?? null,
+            'accessToken' => $tokenData['access_token'] ?? null,
+            'refreshToken' => $tokenData['refresh_token'] ?? null,
+        ];
+
+        return $tokenDataTransfomer;
     }
 
     /**

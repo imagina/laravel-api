@@ -77,6 +77,7 @@ class User extends Authenticatable implements OAuthenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'permissions' => 'json'
         ];
     }
 
@@ -89,6 +90,45 @@ class User extends Authenticatable implements OAuthenticatable
             set: fn(string $value) => strtolower($value)
         );
     }
+
+    /**
+     * Get Permission from all enable Modules, only true permissions
+     */
+    public function permissions(): Attribute
+    {
+        return Attribute::get(function ($value) {
+
+            //TODO - Check this | not necessary for now
+            /*  $cacheKey = 'user_permissions_' . $this->id;
+            return cache()->remember($cacheKey, 60, function () use ($value) { */
+
+            $permissions = [];
+            //Get All Modules
+            $allModules = \Module::allEnabled();
+            foreach ($allModules as $moduleName => $data) {
+                //Get All Permission from Module
+                $modulePermissions = config($moduleName . '.permissions');
+                foreach ($modulePermissions as $permissionEntity => $permission) {
+                    //Information to each permission
+                    foreach ($permission as $permissionType => $infoPermission) {
+                        //Check if permission is true
+                        $resultValidate = $this->validatePermission($infoPermission);
+                        if ($resultValidate) {
+                            $permissions[$permissionEntity . '.' . $permissionType] = true;
+                        }
+                    }
+                }
+            }
+
+            //Merge with individual permissions
+            if (is_array($value) && !empty($value)) {
+                return array_merge($value, $permissions);
+            }
+
+            return $permissions;
+        });
+    }
+
 
     /**
      * RELATIONS

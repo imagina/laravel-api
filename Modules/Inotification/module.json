@@ -1,0 +1,12 @@
+
+{
+    "name": "Inotification",
+    "alias": "inotification",
+    "description": "manage inotification",
+    "keywords": ["inotification"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Inotification\\Providers\\InotificationServiceProvider"
+    ],
+    "files": []
+}
