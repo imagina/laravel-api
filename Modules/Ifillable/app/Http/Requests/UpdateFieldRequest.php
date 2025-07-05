@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Iuser\Http\Requests;
+namespace Modules\Ifillable\Http\Requests;
 
 use Imagina\Icore\Http\Request\CoreFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class CreateRoleRequest extends CoreFormRequest
+class UpdateFieldRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [];
     }
@@ -17,12 +17,12 @@ class CreateRoleRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }
