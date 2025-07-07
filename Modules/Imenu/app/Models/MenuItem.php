@@ -4,6 +4,7 @@ namespace Modules\Imenu\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 //use TypiCMS\NestableTrait;
 
 class MenuItem extends CoreModel
@@ -51,27 +52,29 @@ class MenuItem extends CoreModel
     /**
      * Check if page_id is empty and returning null instead empty string
      */
-    public function setPageIdAttribute($value)
+    public function pageId(): Attribute
     {
-        $this->attributes['page_id'] = !empty($value) ? $value : null;
+        return Attribute::make(
+            get: fn (?int $value) =>  !empty($value) ? $value : null
+        );
     }
 
     /**
      * Check if parent_id is empty and returning null instead empty string
      */
-    public function setParentIdAttribute($value)
+    public function parentId(): Attribute
     {
-        $this->attributes['parent_id'] = !empty($value) ? $value : null;
+        return Attribute::make(
+            set: fn (?int $value) =>  !empty($value) ? $value : null,
+            get: fn (?int $value) =>  is_null($value) ? 0 : $value,
+        );
     }
 
-    public function getParentIdAttribute($value)
+    public function systemName(): Attribute
     {
-        return intval(is_null($value) ? 0 : $value);
-    }
-
-    public function setSystemNameAttribute($value)
-    {
-        $this->attributes['system_name'] = !empty($value) ? $value : \Str::slug($this->title, '-');
+        return Attribute::make(
+            get: fn (?string $value) => !empty($value) ? $value : \Str::slug($this->title, '-'),
+        );
     }
 
 }
