@@ -36,7 +36,7 @@ class Field extends CoreModel
     ];
     protected $fillable = [
         'type',
-        'name',
+        'system_name',
         'required',
         'form_id',
         'selectable',
@@ -121,6 +121,14 @@ class Field extends CoreModel
     {
         return Attribute::get(function (?string $value) {
             return $value . ($this->required ? config('asgard.iforms.config.requiredFieldLabel') : '');
+        });
+    }
+
+    public function systemName(): Attribute
+    {
+        return Attribute::get(function (?string $value) {
+            $formSystemName = $this->form->system_name ?? '';
+            return \Str::slug("{$formSystemName}-{$value}");
         });
     }
 

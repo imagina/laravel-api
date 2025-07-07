@@ -16,7 +16,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('type')->index();
-            $table->string('name')->nullable();
+            $table->string('system_name')->nullable();
             $table->boolean('required')->nullable()->default(false);
             $table->json('selectable')->nullable();
             $table->integer('order')->unsigned()->default(0);
