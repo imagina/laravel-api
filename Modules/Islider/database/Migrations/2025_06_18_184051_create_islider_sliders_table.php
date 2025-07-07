@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('islider__sliders', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name', 100);
+            $table->string('title', 100);
             $table->string('system_name', 100);
             $table->json('options')->nullable();
             $table->boolean('active')->default(false);

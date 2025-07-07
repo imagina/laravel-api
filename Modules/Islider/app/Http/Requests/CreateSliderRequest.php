@@ -9,7 +9,9 @@ class CreateSliderRequest extends CoreFormRequest
 {
     public function rules(): array
         {
-            return [];
+            return [
+                'title' => 'required'
+            ];
         }
 
         public function translationRules(): array
@@ -24,7 +26,9 @@ class CreateSliderRequest extends CoreFormRequest
 
         public function messages(): array
         {
-            return [];
+            return [
+                'title.required' => itrans('islider::sliders.validation.nameIsRequired'),
+            ];
         }
 
         public function translationMessages(): array
