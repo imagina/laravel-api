@@ -9,7 +9,7 @@ php artisan module:seed Inotification
 
 ## Implements notifications in Modules
 
-## In Module Entity Events
+### In Module Entity Events
 
 1. In the Model->dispatchesEventsWithBindings add the [path] and [extraData] attributes in the event.
 Example: Send a notification after the model is updated:
@@ -62,7 +62,7 @@ public function getNotificableParams()
 ```
 
 
-## Call directly
+### Call directly
 
 - You can directly use the service to send a notification. Example:
 
@@ -79,3 +79,18 @@ $data = [
  app(NotificationDispatcherService::class)->execute($data);
 
 ```
+
+## View Default Layout
+
+You can view the email design (default) by accessing this path:
+
+```php
+http://localhost:8081/inotification/v1/preview-email
+```
+
+If in addition to displaying it, you also need it to be sent, you can add the email attribute:
+```php
+http://localhost:8081/inotification/v1/preview-email?email=example@email.com
+```
+
+Important: Only works for the LOCAL environment
