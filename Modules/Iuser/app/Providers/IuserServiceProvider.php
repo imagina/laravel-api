@@ -27,6 +27,8 @@ use Modules\Iuser\Http\Middleware\AuthCan;
 use Laravel\Passport\Passport;
 use Carbon\CarbonInterval;
 
+use Modules\Iuser\Console\CreateSuperAdmin;
+
 class IuserServiceProvider extends ServiceProvider
 {
     use PathNamespace;
@@ -93,7 +95,9 @@ class IuserServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            CreateSuperAdmin::class
+        ]);
     }
 
     /**
