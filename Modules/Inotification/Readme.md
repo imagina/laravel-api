@@ -85,12 +85,12 @@ $data = [
 You can view the email design (default) by accessing this path:
 
 ```php
-http://localhost:8081/inotification/v1/preview-email
+http://exampleurl.com/inotification/v1/preview-email
 ```
 
 If in addition to displaying it, you also need it to be sent, you can add the email attribute:
 ```php
-http://localhost:8081/inotification/v1/preview-email?email=example@email.com
+http://exampleurl.com/inotification/v1/preview-email?email=example@email.com
 ```
 
 Important: Only works for the LOCAL environment
