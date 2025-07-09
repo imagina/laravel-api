@@ -39,6 +39,44 @@ return [
             'defaultAccess' => []
         ],
     ],
+    'ifillable.modelFillables' => [
+        'manage' => [
+            'title' => 'ifillable::modelFillables.manage.title',
+            'description' => 'ifillable::modelFillables.manage.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'index' => [
+            'title' => 'ifillable::modelFillables.list.title',
+            'description' => 'ifillable::modelFillables.index.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'create' => [
+            'title' => 'ifillable::modelFillables.create.title',
+            'description' => 'ifillable::modelFillables.create.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'edit' => [
+            'title' => 'ifillable::modelFillables.edit.title',
+            'description' => 'ifillable::modelFillables.edit.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'destroy' => [
+            'title' => 'ifillable::modelFillables.destroy.title',
+            'description' => 'ifillable::modelFillables.destroy.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'restore' => [
+            'title' => 'ifillable::modelFillables.restore.title',
+            'description' => 'ifillable::modelFillables.restore.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+    ],
     // append
 
 

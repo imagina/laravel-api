@@ -14,10 +14,7 @@ class StoreFillable
         $dataFromRequest = $params['data'];
         $model = $params['model'];
 
-        // Handle Form
-        if (!empty($dataFromRequest['fields'])) {
-            $this->syncExtraFillable($dataFromRequest['fields'], $model);
-        }
+        $this->syncExtraFillable($dataFromRequest, $model);
     }
 
     /**
@@ -54,71 +51,84 @@ class StoreFillable
      */
     public function validateExtraFillable($extraFields = [], $model)
     {
-        //Instance response
-        $response = [];
-        //temp response to save locales
-        $localeResponse = [];
-        //Get model fillable
-        $modelFillable = array_merge(
-            $model->getFillable(),//Fillables
-            $model->translatedAttributes ?? [],//Translated attributes
-            array_keys($model->getRelations()),//Relations
-            getIgnoredFields()//Ignored fields
-        );
-        $defaultLocaleData = array_keys($extraFields[\App::getLocale()] ?? []);
-        //Get model translatable fields
-        $modelTranslatableAttributes = $model->translatedAttributes ?? [];
+        $modelFillableRepository = app('Modules\Ifillable\Repositories\ModelFillableRepository');
 
-        foreach ($extraFields as $keyField => $field) {
-            //Validate translatable fields
-            if (in_array($keyField, $this->getAvailableLocales())) {
-                //Instance language in response
-                $localeResponse[$keyField] = [];
-                //compare with translatable attributes
-                foreach ($field as $keyTransField => $transField) {
-                    if (!in_array($keyTransField, $modelTranslatableAttributes)) $localeResponse[$keyField][$keyTransField] = $transField;
-                }
-            } //Compare with model fillable and model relations
-            else if (!in_array($keyField, $modelFillable) && !method_exists($this, $keyField)) {
-                if(!in_array($keyField, $defaultLocaleData)) $response[$keyField] = $field;
+        $params = json_decode(json_encode([
+            "filter" => [
+                "entity_type" => get_class($model)
+            ]
+        ]));
+
+        $entityFields = $modelFillableRepository->getItemsBy($params)->first();
+
+        if (!$entityFields) {
+            return [];
+        }
+
+        $fillableFields = $entityFields->fillables ?? [];
+        $translatableFields = $entityFields->translatables_fillables ?? [];
+
+        $baseFields = array_filter(
+            $extraFields,
+            fn($value, $key) => in_array($key, $fillableFields), ARRAY_FILTER_USE_BOTH
+        );
+
+        $locales = $this->getAvailableLocales();
+        $translatedFields = [];
+
+        foreach ($locales as $locale) {
+            if (!isset($extraFields[$locale]) || !is_array($extraFields[$locale])) {
+                continue;
+            }
+
+            $translatedLocaleFields = array_filter(
+                $extraFields[$locale],
+                fn($value, $key) => in_array($key, $translatableFields),ARRAY_FILTER_USE_BOTH
+            );
+
+            if (!empty($translatedLocaleFields)) {
+                $translatedFields[$locale] = $translatedLocaleFields;
             }
         }
 
-        // Merge the locale response with the original response to priority locales
-        $response = array_merge($response, $localeResponse);
-        //Response
-        return $response;
+        return [
+            'base' => $baseFields,
+            'translated' => $translatedFields,
+        ];
     }
 
-    /**
-     * Format extra fillable to save in data base
-     */
-    public function formatFillableToDataBase($extraFields = [], $model = null)
+    public function formatFillableToDataBase($dataFields, $model)
     {
-        //Instance response
-        $response = [];
-        //instance default morph field
-        $defaultFields = ['entity_id' => $model->id, 'entity_type' => get_class($model)];
+        $results = [];
 
-        foreach ($extraFields as $keyField => $field) {
-            //Convert translatable fields
-            if (in_array($keyField, $this->getAvailableLocales())) {
-                foreach ($field as $keyTransField => $transField) {
-                    $existKeyField = array_search($keyTransField, array_column($response, 'name'));
-                    if ($existKeyField) {
-                        $response[$existKeyField][$keyField] = ['value' => $transField];
-                    } else {
-                        $response[] = array_merge(['name' => $keyTransField, $keyField => ['value' => $transField]], $defaultFields);
-                    }
+        foreach ($dataFields['base'] as $name => $value) {
+            $results[] = [
+                'name' => $name,
+                'value' => $value,
+                'entity_id' => $model->id,
+                'entity_type' => get_class($model),
+            ];
+        }
+
+        $translatedGrouped = [];
+
+        foreach ($dataFields['translated'] as $locale => $fields) {
+            foreach ($fields as $name => $value) {
+                if (!isset($translatedGrouped[$name])) {
+                    $translatedGrouped[$name] = [
+                        'name' => $name,
+                        'entity_id' => $model->id,
+                        'entity_type' => get_class($model),
+                    ];
                 }
-            } else {
-                //Convert no translatable fields
-                $response[] = array_merge(['name' => $keyField, 'value' => $field], $defaultFields);
+
+                $translatedGrouped[$name][$locale] = [
+                    'value' => $value,
+                ];
             }
         }
 
-        //Response
-        return $response;
+        return array_merge($results, array_values($translatedGrouped));
     }
 
 }

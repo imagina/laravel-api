@@ -4,14 +4,20 @@ namespace Modules\Ifillable\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Ifillable\Models\ModelFillable;
+use Modules\Ifillable\Repositories\Cache\CacheModelFillableDecorator;
+use Modules\Ifillable\Repositories\Eloquent\EloquentModelFillableRepository;
+use Modules\Ifillable\Repositories\ModelFillableRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+
 // Bindings
 use Modules\Ifillable\Repositories\Eloquent\EloquentFieldRepository;
 use Modules\Ifillable\Repositories\Cache\CacheFieldDecorator;
 use Modules\Ifillable\Repositories\FieldRepository;
 use Modules\Ifillable\Models\Field;
+
 // append-use-bindings
 
 
@@ -92,9 +98,9 @@ class IfillableServiceProvider extends ServiceProvider
 
             foreach ($iterator as $file) {
                 if ($file->isFile() && $file->getExtension() === 'php') {
-                    $config = str_replace($configPath.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $config = str_replace($configPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
                     $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
-                    $segments = explode('.', $this->nameLower.'.'.$config_key);
+                    $segments = explode('.', $this->nameLower . '.' . $config_key);
 
                     // Remove duplicated adjacent segments
                     $normalized = [];
@@ -129,14 +135,14 @@ class IfillableServiceProvider extends ServiceProvider
      */
     public function registerViews(): void
     {
-        $viewPath = resource_path('views/modules/'.$this->nameLower);
+        $viewPath = resource_path('views/modules/' . $this->nameLower);
         $sourcePath = module_path($this->name, '$resources/views$');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
     }
 
     /**
@@ -151,8 +157,8 @@ class IfillableServiceProvider extends ServiceProvider
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            if (is_dir($path.'/modules/'.$this->nameLower)) {
-                $paths[] = $path.'/modules/'.$this->nameLower;
+            if (is_dir($path . '/modules/' . $this->nameLower)) {
+                $paths[] = $path . '/modules/' . $this->nameLower;
             }
         }
 
@@ -162,12 +168,19 @@ class IfillableServiceProvider extends ServiceProvider
     private function registerBindings(): void
     {
         $this->app->bind(FieldRepository::class, function () {
-    $repository = new EloquentFieldRepository(new Field());
+            $repository = new EloquentFieldRepository(new Field());
 
-    return config('app.cache')
-        ? new CacheFieldDecorator($repository)
-        : $repository;
-});
+            return config('app.cache')
+                ? new CacheFieldDecorator($repository)
+                : $repository;
+        });
+        $this->app->bind(ModelFillableRepository::class, function () {
+            $repository = new EloquentModelFillableRepository(new ModelFillable());
+
+            return config('app.cache')
+                ? new CacheModelFillableDecorator($repository)
+                : $repository;
+        });
 // append-bindings
 
     }
