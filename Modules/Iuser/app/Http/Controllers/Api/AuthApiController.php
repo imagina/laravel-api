@@ -13,6 +13,7 @@ use Modules\Iuser\Services\AuthService;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Modules\Iuser\Transformers\UserTransformer;
 
 class AuthApiController extends CoreApiController
 {
@@ -48,7 +49,7 @@ class AuthApiController extends CoreApiController
             $tokenData = $this->authService->getToken("password", $data);
 
             $response = ['data' => [
-                'user' => $user,
+                'user' => new UserTransformer($user),
                 'token' => $tokenData
             ]];
         } catch (\Exception $e) {
@@ -200,6 +201,30 @@ class AuthApiController extends CoreApiController
             }
 
             $response = ['data' => $message];
+        } catch (\Exception $e) {
+            [$status, $response] = $this->getErrorResponse($e);
+        }
+
+        //Return response
+        return response()->json($response, $status ?? Response::HTTP_OK);
+    }
+
+    /**
+     * Information about user logged
+     */
+    public function me(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                throw new \Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
+            }
+
+            //Not clear cache | TODO: From v10
+            //app()->instance('clearResponseCache', false);
+
+            $response = ['data' => new UserTransformer($user)];
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }

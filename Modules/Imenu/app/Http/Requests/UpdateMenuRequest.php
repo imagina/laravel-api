@@ -9,7 +9,9 @@ class UpdateMenuRequest extends CoreFormRequest
 {
     public function rules(): array
     {
-        return [];
+        return [
+            'name' => 'required',
+        ];
     }
 
     public function translationRules(): array
@@ -24,7 +26,9 @@ class UpdateMenuRequest extends CoreFormRequest
 
     public function messages(): array
     {
-        return [];
+        return [
+            'name.required' => itrans('imenu::menus.validation.nameIsRequired'),
+        ];
     }
 
     public function translationMessages(): array

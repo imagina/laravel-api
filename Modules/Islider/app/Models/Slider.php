@@ -27,7 +27,7 @@ class Slider extends CoreModel
     ];
     public array $translatedAttributes = [];
     protected $fillable = [
-        'name',
+        'title',
         'system_name',
         'options',
         'active'

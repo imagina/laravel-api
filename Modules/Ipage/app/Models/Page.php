@@ -10,6 +10,7 @@ use Modules\Ifillable\Traits\isFillable;
 use Modules\Iqreable\Traits\IsQreable;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Tag\Traits\TaggableTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Page extends CoreModel
 {
@@ -91,20 +92,23 @@ class Page extends CoreModel
         return new \Imagina\Icore\Relations\EmptyRelation();
     }
 
-    public function getUrlAttribute($locale = null)
+    public function url($locale = null): Attribute
     {
+        return Attribute::get(function () {
+            $currentLocale = $locale ?? locale();
+            if (!is_null($locale)) {
+                $this->slug = $this->getTranslation($locale)->slug;
+            }
 
-        $currentLocale = $locale ?? locale();
-        if (!is_null($locale)) {
-            $this->slug = $this->getTranslation($locale)->slug;
-        }
-
-        return \LaravelLocalization::localizeUrl('/' . $this->slug, $currentLocale);
+            return \LaravelLocalization::localizeUrl('/' . $this->slug, $currentLocale);
+        });
     }
 
-    public function setSystemNameAttribute($value)
+    public function systemName(): Attribute
     {
-        $this->attributes['system_name'] = !empty($value) ? $value : \Str::slug($this->title, '-');
+        return Attribute::make(
+            set: fn(?string $value) => !empty($value) ? $value : \Str::slug($this->title, '-'),
+        );
     }
 
     public function getCacheClearableData()
