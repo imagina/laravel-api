@@ -98,7 +98,7 @@ class Post extends CoreModel
 
     public function url($locale = null)
     {
-        return Attribute::get(function () {
+        return Attribute::get(function () use ($locale) {
             if (empty($this->slug)) {
                 $post = $this->getTranslation(\LaravelLocalization::getDefaultLocale());
                 $this->slug = $post->slug ?? "";
@@ -106,30 +106,19 @@ class Post extends CoreModel
 
             $currentLocale = $locale ?? locale();
             if (!is_null($locale)) {
-                $this->slug = $this->getTranslation($currentLocale)->slug;
+                $this->slug = $this->getTranslation($currentLocale)->slug ?? "";
                 $this->category = $this->category->getTranslation($currentLocale);
             }
 
             if (empty($this->slug)) return "";
 
-            $currentDomain = !empty($this->organization_id) ? tenant()->domain ?? tenancy()->find($this->organization_id)->domain :
-                parse_url(config('app.url'), PHP_URL_HOST);
-
-            if (config("app.url") != $currentDomain) {
-                $savedDomain = config("app.url");
-                config(["app.url" => "https://" . $currentDomain]);
-            }
-
-            if (isset($this->options->urlCoder) && !empty($this->options->urlCoder) && $this->options->urlCoder == "onlyPost") {
-
+            // Lógica para construir la URL
+            if (isset($this->options->urlCoder) && $this->options->urlCoder === "onlyPost") {
                 $url = \LaravelLocalization::localizeUrl('/' . $this->slug, $currentLocale);
-
             } else {
-                if (empty($this->category->slug)) $url = "";
-                else $url = \LaravelLocalization::localizeUrl('/' . $this->category->slug . '/' . $this->slug, $currentLocale);
+                if (empty($this->category->slug)) return "";
+                $url = \LaravelLocalization::localizeUrl('/' . $this->category->slug . '/' . $this->slug, $currentLocale);
             }
-
-            if (isset($savedDomain) && !empty($savedDomain)) config(["app.url" => $savedDomain]);
 
             return $url;
         });

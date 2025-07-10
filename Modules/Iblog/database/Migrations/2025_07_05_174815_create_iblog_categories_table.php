@@ -23,9 +23,6 @@ return new class extends Migration
             $table->json('options')->nullable();
             $table->string('external_id')->nullable();
             $table->boolean('internal')->default(false);
-            $table->integer('lft')->unsigned()->nullable();
-            $table->integer('rgt')->unsigned()->nullable();
-            $table->integer('depth')->unsigned()->nullable();
 
             // Audit fields
             $table->timestamps();
