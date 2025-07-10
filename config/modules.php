@@ -164,7 +164,7 @@ return [
 
             // database/
             'factory' => ['path' => 'database/factories', 'generate' => true],
-            'migration' => ['path' => 'database/migrations', 'generate' => true],
+            'migration' => ['path' => 'database/Migrations', 'generate' => true],
             'seeder' => ['path' => 'database/seeders', 'generate' => true],
 
             // lang/
