@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('imenu__menus', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name');
+            $table->string('system_name');
             $table->tinyInteger('primary')->default(0);
             $table->boolean('is_root')->default(0);
 

@@ -10,7 +10,7 @@ class UpdateMenuRequest extends CoreFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'system_name' => 'required',
         ];
     }
 
@@ -27,7 +27,7 @@ class UpdateMenuRequest extends CoreFormRequest
     public function messages(): array
     {
         return [
-            'name.required' => itrans('imenu::menus.validation.nameIsRequired'),
+            'system_name.required' => itrans('imenu::menus.validation.nameIsRequired'),
         ];
     }
 
