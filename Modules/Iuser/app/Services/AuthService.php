@@ -4,6 +4,7 @@ namespace Modules\Iuser\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthService
 {
@@ -36,6 +37,10 @@ class AuthService
 
         //Get
         $responseToken = Http::asForm()->post($endpoint, $attributes);
+
+        if (!$responseToken->successful())
+            throw new \Exception("Error to get Token |" . ($responseToken['message'] ?? 'Error desconocido'), Response::HTTP_UNAUTHORIZED);
+
 
         //Format Response
         $tokenData = json_decode((string) $responseToken->getBody(), true);

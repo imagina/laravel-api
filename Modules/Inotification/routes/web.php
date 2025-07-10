@@ -4,6 +4,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Modules\Inotification\Services\NotificationDispatcherService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 
 $router->group(['prefix' => '/inotification/v1'], function (Router $router) {
@@ -18,10 +19,13 @@ $router->group(['prefix' => '/inotification/v1'], function (Router $router) {
                 'message' => itrans("inotification::notification.email.default.message")
             ];
 
-            //Si se llega a necesitar, se descomenta y comitea
-            /* if ($to) {
+            if ($to) {
+                //Validation Email
+                if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                    return response()->json(['error' => 'Invalid Email'], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
                 app(NotificationDispatcherService::class)->execute(['email' => $to]);
-            } */
+            }
 
             return view('inotification::emails.contents.default', compact('data'));
         });

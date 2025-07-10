@@ -23,14 +23,6 @@ class CoreModel extends Model
         return $this->fillable;
     }
 
-    /**
-     * Use the custom query builder.
-     *
-     */
-    public function newEloquentBuilder($query): CustomBuilder
-    {
-        return new CustomBuilder($query);
-    }
 
     /**
      * Filter valid relations for eager loading.

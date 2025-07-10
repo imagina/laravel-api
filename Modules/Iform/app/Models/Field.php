@@ -10,8 +10,6 @@ class Field extends CoreModel
 {
     use Translatable;
 
-//  use Translatable, PresentableTrait, isFillable;
-
     protected $table = 'iform__fields';
     public string $transformer = 'Modules\Iform\Transformers\FieldTransformer';
     public string $repository = 'Modules\Iform\Repositories\FieldRepository';
@@ -36,7 +34,7 @@ class Field extends CoreModel
     ];
     protected $fillable = [
         'type',
-        'name',
+        'system_name',
         'required',
         'form_id',
         'selectable',
@@ -50,8 +48,6 @@ class Field extends CoreModel
         'parent_id',
         'visibility'
     ];
-
-//    protected $presenter = FieldPresenter::class;
 
     protected $casts = [
         'selectable' => 'json',
@@ -124,4 +120,11 @@ class Field extends CoreModel
         });
     }
 
+    public function systemName(): Attribute
+    {
+        return Attribute::get(function (?string $value) {
+            $formSystemName = $this->form->system_name ?? '';
+            return \Str::slug("{$formSystemName}-{$value}");
+        });
+    }
 }
