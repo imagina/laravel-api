@@ -36,11 +36,17 @@ class User extends Authenticatable implements OAuthenticatable
     //Instance external/internal events to dispatch with extraData
     public $dispatchesEventsWithBindings = [
         //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
-        'created' => [],
+        'created' => [
+            ['path' => 'Modules\Ifillable\Events\CreateField']
+        ],
         'creating' => [],
-        'updated' => [],
+        'updated' => [
+            ['path' => 'Modules\Ifillable\Events\CreateField']
+        ],
         'updating' => [],
-        'deleting' => [],
+        'deleting' => [
+            ['path' => 'Modules\Ifillable\Events\CreateField']
+        ],
         'deleted' => []
     ];
     //public $translatedAttributes = [];
@@ -149,5 +155,13 @@ class User extends Authenticatable implements OAuthenticatable
         \Log::info("Iuser::User||Token: " . $token);
 
         //$this->notify(new ResetPasswordNotification($url));
+    }
+
+    public function fields()
+    {
+        if (isModuleEnabled('Ifillable')) {
+            return app(\Modules\Ifillable\Relations\FillablesRelation::class)->resolve($this);
+        }
+        return new \Imagina\Icore\Relations\EmptyRelation();
     }
 }
