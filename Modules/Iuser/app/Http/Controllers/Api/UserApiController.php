@@ -11,6 +11,7 @@ use Modules\Iuser\Models\User;
 use Modules\Iuser\Repositories\UserRepository;
 use Modules\Iuser\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\DB;
 
 class UserApiController extends CoreApiController
 {
@@ -28,7 +29,7 @@ class UserApiController extends CoreApiController
      */
     public function register(Request $request)
     {
-
+        DB::beginTransaction();
         try {
 
             $data = $request->input('attributes'); //Get data from request
@@ -42,7 +43,6 @@ class UserApiController extends CoreApiController
 
                 $data->is_guest = 0;
                 $response = $this->modelRepository->updateBy($user->id, $data);
-
             } else {
 
                 //Validate data
@@ -54,14 +54,14 @@ class UserApiController extends CoreApiController
                     'data' => "User registered successfully"
                 ];
             }
+
+            DB::commit(); //Commit to Data Base
         } catch (\Exception $e) {
+            DB::rollback(); //Rollback to Data Base
             [$status, $response] = $this->getErrorResponse($e);
         }
 
         //Return response
         return response()->json($response, $status ?? Response::HTTP_OK);
     }
-
-
-
 }
