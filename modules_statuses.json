@@ -7,5 +7,6 @@
     "Imedia": true,
     "Itranslation": true,
     "Inotification": true,
-    "Iform": true
+    "Iform": true,
+    "Ifillable": true
 }
