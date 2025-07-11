@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Iforms\Models;
+namespace Modules\Iform\Models;
 
 use Imagina\Icore\Models\CoreStaticModel;
 
