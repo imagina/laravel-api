@@ -29,17 +29,16 @@ class CreateUsersSeeder extends Seeder
         $this->createSuperAdminUser();
     }
 
-
+    /**
+     * Commented | It was changed to a "command"
+     */
     private function createSuperAdminUser(): void
     {
-        //TODO - Check this data to change it
-        $email = 'soporte@imaginacolombia.com';
-        $password = 'baseImagina123';
 
         $params = json_decode(json_encode(["filter" => ["field" => "email"]]));
         $user = $this->userRepository->getItem($email, $params);
 
-        if(empty($user)) {
+        /* if (empty($user)) {
 
             //Data Base
             $data = [
@@ -52,15 +51,13 @@ class CreateUsersSeeder extends Seeder
             $user = $this->userRepository->create($data);
 
             //TO CHECK: //In seeder , repo validations "beforeCreate" are not applied :/
-            if($user){
+            if ($user) {
                 $params = json_decode(json_encode(["filter" => ["field" => "system_name"]]));
                 $role = $this->roleRepository->getItem("super-admin", $params);
-                if(!empty($role)){
+                if (!empty($role)) {
                     $user->roles()->attach($role->id);
                 }
             }
-        }
-
+        } */
     }
-
 }

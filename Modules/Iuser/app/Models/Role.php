@@ -9,6 +9,8 @@ class Role extends CoreModel
 {
     use Translatable;
 
+    public $useAudit = false;
+
     protected $table = 'iuser__roles';
     public $transformer = 'Modules\Iuser\Transformers\RoleTransformer';
     public $repository = 'Modules\Iuser\Repositories\RoleRepository';
@@ -49,8 +51,16 @@ class Role extends CoreModel
 
     public function users()
     {
-        return $this->belongsToMany(User::class,'iuser__role_user');
+        return $this->belongsToMany(User::class, 'iuser__role_user');
     }
+
+    /**
+     * NOT USER AUDIT
+     */
+    /*  public function isSoftDeleting()
+    {
+        return false;
+    } */
 
     public function form()
     {
@@ -59,5 +69,4 @@ class Role extends CoreModel
         }
         return new \Imagina\Icore\Relations\EmptyRelation();
     }
-
 }
