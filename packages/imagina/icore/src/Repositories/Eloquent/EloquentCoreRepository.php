@@ -14,6 +14,8 @@ use Imagina\Icore\Traits\Repositories\HasRelationSync;
 use Imagina\Icore\Traits\Repositories\HasQueryBuilderSupport;
 use Imagina\Icore\Traits\Repositories\HasEventDispatching;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /* TODO : check media event
 use Modules\helpers\Events\CreateMedia;
 use Modules\helpers\Events\UpdateMedia;
@@ -236,6 +238,9 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
 
         //get model
         $model = $query->where($field ?? 'id', $criteria)->first();
+
+        if (is_null($model))
+            throw new \Exception('Item not found', Response::HTTP_NOT_FOUND);
 
         //Event deleting model
         $this->dispatchesEvents(['eventName' => 'deleting', 'criteria' => $criteria, 'model' => $model]);
