@@ -42,3 +42,10 @@ Change app url variable in the .env
 APP_URL=http://host.docker.internal:8081/
 ```
 
+### Create Super Admin User
+
+Use the following Artisan command to create a super admin user. Replace the placeholders with the desired user details:
+
+```bash
+php artisan iuser:create-super-admin demo@example.com FirstName LastName
+```
