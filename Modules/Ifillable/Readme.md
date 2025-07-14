@@ -35,20 +35,53 @@ public function fields()
     }
 ```
 
-[//]: # (### In Transformer  &#40;Transformers/EntityTransformer&#41;)
+### In Transformer  (Transformers/EntityTransformer)
 
-[//]: # ()
-[//]: # (- Add relation with files)
 
-[//]: # ()
-[//]: # (``` php)
+- Add relation with fields
+- Instead of returning the full fields relationship as an array of objects, the transformer extracts each field's value and exposes it directly at the top level of the API response.
+```php
+public function modelAttributes($request):array
+  {
+      $attributes = [];
 
-[//]: # (//Implementation with Media)
+      if ($this->resource->relationLoaded('fields')) {
+          $translations = [];
+          $currentLocale = app()->getLocale();
 
-[//]: # ( return [)
+          foreach ($this->resource->fields as $field) {
+              $isMultilang = false;
+              $fieldTitle = $field->title;
 
-[//]: # (    'files' => $this->whenLoaded&#40;'files', fn&#40;&#41; => $this->files->byZones&#40;$this->mediaFillable, $this&#41;&#41;,)
+              foreach ($field->getAttributes() as $locale => $data) {
+                  if (is_array($data) && isset($data['value'])) {
+                      $translations[$locale][$fieldTitle] = $data['value'];
+                      $isMultilang = true;
+                  }
+              }
 
-[//]: # (];)
+              if ($isMultilang) {
+                  $attributes[$fieldTitle] = $translations[$currentLocale][$fieldTitle] ?? null;
+              } else {
+                  $attributes[$fieldTitle] = $field->value;
+              }
+          }
 
-[//]: # (```)
+          $attributes = array_merge($attributes, $translations);
+      }
+
+      return $attributes;
+  }
+```
+- Even though the fields relationship is not shown in the final response, it must be loaded (->with('fields')) for this logic to work. Otherwise, the transformer cannot access the field data.
+To hide the fields array from the output while still using its data, the transformer defines:
+``` php
+protected array $excludeRelations = ['fields'];
+```
+### Extra
+
+- It is also necessary to create records for each entity and add the extra fields that they must handle so that the relationship can generate its relationship with its respective data.
+
+``` php
+class ModelFillable extends CoreModel
+```
