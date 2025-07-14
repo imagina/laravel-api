@@ -63,7 +63,7 @@ class Lead extends CoreModel
             'created' => [
                 "email" => $email,
                 "title" =>  itrans("iform::leads.email.created.title"),
-                "content" => "iform::emails.textForm",
+                "content" => "iform::emails.lead",
                 "extraParams" => [
                     "lead" => $this,
                     "form" => $this->form
