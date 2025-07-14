@@ -26,6 +26,10 @@ class StoreFillable
         //Validate data fields
         $dataFields = $this->validateExtraFillable($params, $model);
 
+        if (empty($dataFields['base']) && empty($dataFields['translated'])) {
+            return;
+        }
+
         //Insert New fields
         foreach ($this->formatFillableToDataBase($dataFields, $model) as $field) {
             Field::updateOrCreate(
