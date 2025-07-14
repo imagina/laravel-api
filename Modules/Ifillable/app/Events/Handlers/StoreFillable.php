@@ -44,7 +44,7 @@ class StoreFillable
      */
     public function getAvailableLocales()
     {
-        return array_keys(\LaravelLocalization::getSupportedLocales());
+        return array_keys(getSupportedLocales());
     }
 
     /**
