@@ -108,7 +108,7 @@ class AuthApiController extends CoreApiController
             //Get
             $tokenData = $this->authService->getToken("refresh_token", $data);
 
-            $response = ['data' => [$tokenData]];
+            $response = ['data' => $tokenData];
         } catch (\Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }

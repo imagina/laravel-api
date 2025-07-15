@@ -46,14 +46,15 @@ class AuthService
         $tokenData = json_decode((string) $responseToken->getBody(), true);
 
         //Transform Data
-        $tokenDataTransfomer = [
+        $issuedAt = now();
+        $expiresIn = $tokenData['expires_in'] ?? 0;
+        return [
             'tokenType' => $tokenData['token_type'] ?? null,
-            'expiresIn' => $tokenData['expires_in'] ?? null,
             'accessToken' => $tokenData['access_token'] ?? null,
             'refreshToken' => $tokenData['refresh_token'] ?? null,
+            'expiresIn' => $expiresIn,
+            'expiresAt' => $issuedAt->copy()->addSeconds($expiresIn)->getTimestampMs()
         ];
-
-        return $tokenDataTransfomer;
     }
 
     /**
