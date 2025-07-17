@@ -26,6 +26,45 @@ class Province extends CoreModel
     'deleting' => [],
     'deleted' => []
   ];
-  public array $translatedAttributes = [];
-  protected $fillable = [];
+  public array $translatedAttributes = [
+      'name'
+  ];
+  protected $fillable = [
+      'iso_2',
+      'country_id',
+  ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function cities()
+    {
+        return $this->hasMany(City::class);
+    }
+
+
+    public function children()
+    {
+        return $this->hasMany(City::class);
+    }
+
+    public function name()
+    {
+
+        $currentTranslations = $this->getTranslation(locale());
+
+        if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
+
+            $model = $this->getTranslation(app()->getLocale());
+
+            if(empty($model)) return "";
+            return $model->toArray()["name"] ?? "";
+        }
+
+        return $currentTranslations->toArray()["name"];
+
+    }
+
 }
