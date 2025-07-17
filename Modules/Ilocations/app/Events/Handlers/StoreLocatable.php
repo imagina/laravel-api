@@ -20,13 +20,13 @@ class StoreLocatable
 
     public function syncExtraFillable($params, $model)
     {
-        $cityId = $params['data']['locatable']['city_id'] ?? null;
-        $countryId = $params['data']['locatable']['country_id'] ?? null;
-        $provinceId = $params['data']['locatable']['province_id'] ?? null;
-        $lat = $params['data']['locatable']['lat'] ?? null;
-        $lng = $params['data']['locatable']['lng'] ?? null;
+        $cityId = $params['locatable']['city_id'] ?? null;
+        $countryId = $params['locatable']['country_id'] ?? null;
+        $provinceId = $params['locatable']['province_id'] ?? null;
+        $lat = $params['locatable']['lat'] ?? null;
+        $lng = $params['locatable']['lng'] ?? null;
 
-        if ($cityId || $countryId || $provinceId) {
+        if ($cityId || $countryId || $provinceId || $lat || $lng) {
             $locatableRepository = app('Modules\Ilocations\Repositories\LocatableRepository');
             $locatableRepository->updateOrCreate([
                 'entity_type' => get_class($model),
