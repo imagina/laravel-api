@@ -7,7 +7,7 @@ return [
      * http://exampleurl.com/inotification/v1/preview-email?config=imodule.entityTestEmail
      */
     'leadTestEmail' => [
-        "title" =>  itrans("iform::lead.email.created.title"),
+        "title" =>  "iform::lead.email.created.title",
         "message" => 'El mensaje',
         "content" => "iform::emails.lead",
         "extraParams" => [
