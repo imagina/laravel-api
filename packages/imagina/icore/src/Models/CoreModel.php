@@ -9,7 +9,7 @@ use Modules\Isite\Traits\RevisionableTrait;
 use Imagina\Icore\Traits\SingleFlaggable;
 use Imagina\Icore\Traits\HasUniqueFields;
 use Imagina\Icore\Traits\HasCacheClearable;*/
-use Modules\Icore\Traits\AuditTrait;
+use Imagina\Icore\Traits\AuditTrait;
 use Imagina\Icore\Traits\hasEventsWithBindings;
 use Imagina\Icore\Traits\HasOptionalTraits;
 use Imagina\Icore\Repositories\Eloquent\CustomBuilder;
