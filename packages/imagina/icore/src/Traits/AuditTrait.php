@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Icore\Traits;
+namespace Imagina\Icore\Traits;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
