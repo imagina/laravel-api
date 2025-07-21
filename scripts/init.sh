@@ -39,12 +39,16 @@ echo "🔗 Linking storage folder..."
 docker exec laravel_api_fpm php artisan storage:link
 
 # Step 7: Passport
-echo "🔗 Installing Passport..."
-docker exec laravel_api_fpm php artisan install:api --passport
+scripts/passport-client.sh
 
+# Step 9: Jump into the container
 echo "🔄 Restarting container with Octane..."
 docker-compose restart app-octane
 
-# Step 6: Jump into the container
+# Step 8: Create Super Admin user
+echo "🔗 Create Super Admin..."
+docker exec laravel_api_fpm php artisan iuser:create-super-admin admin@imagina.com Imagina Admin
+
+# Step 10: Jump into the container
 echo "🐳 Entering app container..."
 docker exec -it laravel_api_fpm bash
