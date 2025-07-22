@@ -23,10 +23,11 @@ class StoreLocatable
         $cityId = $params['locatable']['city_id'] ?? null;
         $countryId = $params['locatable']['country_id'] ?? null;
         $provinceId = $params['locatable']['province_id'] ?? null;
+        $address = $params['locatable']['address'] ?? null;
         $lat = $params['locatable']['lat'] ?? null;
         $lng = $params['locatable']['lng'] ?? null;
 
-        if ($cityId || $countryId || $provinceId || $lat || $lng) {
+        if ($cityId || $countryId || $provinceId || $lat || $lng || $address) {
             $locatableRepository = app('Modules\Ilocations\Repositories\LocatableRepository');
             $locatableRepository->updateOrCreate([
                 'entity_type' => get_class($model),
@@ -35,6 +36,7 @@ class StoreLocatable
                 'city_id' => $cityId,
                 'country_id' => $countryId,
                 'province_id' => $provinceId,
+                'address' => $address,
                 'lat' => $lat,
                 'lng' => $lng,
             ]);

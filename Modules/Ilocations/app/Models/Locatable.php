@@ -33,6 +33,7 @@ class Locatable extends CoreModel
       'province_id',
       'country_id',
       'lat',
-      'lng'
+      'lng',
+      'address'
   ];
 }

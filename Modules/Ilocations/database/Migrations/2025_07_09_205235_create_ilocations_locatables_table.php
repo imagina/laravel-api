@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('province_id')->references('id')->on('ilocations__provinces')->onDelete('restrict');
             $table->integer('city_id')->unsigned()->nullable();
             $table->foreign('city_id')->references('id')->on('ilocations__cities')->onDelete('restrict');
+            $table->string('address')->nullable();
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
 
