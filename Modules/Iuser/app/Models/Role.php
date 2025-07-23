@@ -9,6 +9,8 @@ class Role extends CoreModel
 {
     use Translatable;
 
+    public $useAudit = false;
+
     protected $table = 'iuser__roles';
     public $transformer = 'Modules\Iuser\Transformers\RoleTransformer';
     public $repository = 'Modules\Iuser\Repositories\RoleRepository';
@@ -19,11 +21,17 @@ class Role extends CoreModel
     //Instance external/internal events to dispatch with extraData
     public $dispatchesEventsWithBindings = [
         //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
-        'created' => [],
+        'created' => [
+            ['path' => 'Modules\Iform\Events\CreateForm']
+        ],
         'creating' => [],
-        'updated' => [],
+        'updated' => [
+            ['path' => 'Modules\Iform\Events\UpdateForm']
+        ],
         'updating' => [],
-        'deleting' => [],
+        'deleting' => [
+            ['path' => 'Modules\Iform\Events\DeleteForm']
+        ],
         'deleted' => []
     ];
     public $translatedAttributes = [
@@ -43,7 +51,22 @@ class Role extends CoreModel
 
     public function users()
     {
-        return $this->belongsToMany(User::class,'iuser__role_user');
+        return $this->belongsToMany(User::class, 'iuser__role_user');
     }
 
+    /**
+     * NOT USER AUDIT
+     */
+    /*  public function isSoftDeleting()
+    {
+        return false;
+    } */
+
+    public function form()
+    {
+        if (isModuleEnabled('Iform')) {
+            return app(\Modules\Iform\Relations\FormsRelation::class)->resolve($this);
+        }
+        return new \Imagina\Icore\Relations\EmptyRelation();
+    }
 }

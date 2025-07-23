@@ -14,8 +14,5 @@ class IuserDatabaseSeeder extends Seeder
     {
 
         $this->call(CreateRolesSeeder::class);
-        $this->call(CreateUsersSeeder::class);
-
     }
-
 }

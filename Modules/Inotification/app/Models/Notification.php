@@ -7,6 +7,8 @@ use Imagina\Icore\Models\CoreModel;
 class Notification extends CoreModel
 {
 
+    public $useAudit = false;
+
     protected $table = 'inotification__notifications';
     public string $transformer = 'Modules\Inotification\Transformers\NotificationTransformer';
     public string $repository = 'Modules\Inotification\Repositories\NotificationRepository';

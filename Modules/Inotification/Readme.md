@@ -93,4 +93,9 @@ If in addition to displaying it, you also need it to be sent, you can add the em
 http://exampleurl.com/inotification/v1/preview-email?email=example@email.com
 ```
 
+You can also use a module's config to load a specific view with its data.
+```php
+http://exampleurl.com/inotification/v1/preview-email?config=imodule.entityTestEmail
+```
+
 Important: Only works for the LOCAL environment

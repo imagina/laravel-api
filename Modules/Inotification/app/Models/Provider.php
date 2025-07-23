@@ -7,6 +7,8 @@ use Imagina\Icore\Models\CoreModel;
 class Provider extends CoreModel
 {
 
+    public $useAudit = false;
+
     protected $table = 'inotification__providers';
     public string $transformer = 'Modules\Inotification\Transformers\ProviderTransformer';
     public string $repository = 'Modules\Inotification\Repositories\ProviderRepository';

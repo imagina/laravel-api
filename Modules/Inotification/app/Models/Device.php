@@ -7,6 +7,7 @@ use Imagina\Icore\Models\CoreModel;
 class Device extends CoreModel
 {
 
+    public $useAudit = false;
 
     protected $table = 'inotification__devices';
     public string $transformer = 'Modules\Inotification\Transformers\DeviceTransformer';

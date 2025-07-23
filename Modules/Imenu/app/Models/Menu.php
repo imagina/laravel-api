@@ -31,7 +31,7 @@ class Menu extends CoreModel
         'status'
     ];
     protected $fillable = [
-        'name',
+        'system_name',
         'primary',
     ];
 

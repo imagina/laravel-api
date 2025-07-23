@@ -5,11 +5,9 @@ namespace Modules\Imenu\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-//use TypiCMS\NestableTrait;
 
 class MenuItem extends CoreModel
 {
-//    use Translatable, NestableTrait;
     use Translatable;
 
     protected $table = 'imenu__menuitems';
@@ -65,8 +63,8 @@ class MenuItem extends CoreModel
     public function parentId(): Attribute
     {
         return Attribute::make(
-            set: fn (?int $value) =>  !empty($value) ? $value : null,
             get: fn (?int $value) =>  is_null($value) ? 0 : $value,
+            set: fn (?int $value) =>  !empty($value) ? $value : null,
         );
     }
 

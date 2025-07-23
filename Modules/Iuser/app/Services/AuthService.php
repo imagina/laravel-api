@@ -46,34 +46,11 @@ class AuthService
         $tokenData = json_decode((string) $responseToken->getBody(), true);
 
         //Transform Data
-        $tokenDataTransfomer = [
+        return [
             'tokenType' => $tokenData['token_type'] ?? null,
-            'expiresIn' => $tokenData['expires_in'] ?? null,
             'accessToken' => $tokenData['access_token'] ?? null,
             'refreshToken' => $tokenData['refresh_token'] ?? null,
+            'expiresIn' => $tokenData['expires_in']
         ];
-
-        return $tokenDataTransfomer;
-    }
-
-    /**
-     *
-     */
-    public function logUserIn($user)
-    {
-        Auth::login($user); //OJO: esto nose si sea necesario
-        session()->regenerate();
-    }
-
-    /**
-     *
-     */
-    public function logUserOut()
-    {
-        //Method Laravel\Passport\Guards\TokenGuard::logout does not exist.
-        //Auth::logout();
-
-        session()->invalidate();
-        session()->regenerateToken();
     }
 }
