@@ -32,7 +32,13 @@ class RouterGenerator
         //Generate routes
         $this->router->group(['prefix' => $params['prefix']], function (Router $router) use ($crudRoutes, $params) {
             foreach ($crudRoutes as $route) {
-                $router->match($route->method, $route->path, $route->actions);
+                //Match the route with the method, path and actions
+                $laravelRoute = $router->match($route->method, $route->path, $route->actions);
+                if (isset($route->actions['defaults'])) {
+                    foreach ($route->actions['defaults'] as $key => $value) {
+                        $laravelRoute->defaults($key, $value);
+                    }
+                }
             }
             //Load the customRoutes
             if (isset($params['customRoutes'])) {
@@ -40,7 +46,7 @@ class RouterGenerator
                     if (isset($route['method']) && isset($route['path']) && isset($route['uses'])) {
                         $router->match($route['method'], $route['path'], [
                             'as' => "api.{$params['module']}.{$params['prefix']}.{$route['uses']}",
-                            'uses' => $params['controller'].'@'.$route['uses'],
+                            'uses' => $params['controller'] . '@' . $route['uses'],
                             'middleware' => $route['middleware'] ?? ['auth:api']
                         ]);
                     }
@@ -150,7 +156,7 @@ class RouterGenerator
                 'path' => '/',
                 'actions' => [
                     'as' => "api.{$params['module']}.{$params['prefix']}.index",
-                    'uses' => [CoreStaticApiController::class, 'index'],
+                    'uses' => CoreStaticApiController::class . '@index',
                     'middleware' => $params['middleware']['index'] ?? ['auth:api'],
                     'defaults' => [
                         'entityClass' => $params['staticEntity'],
@@ -163,7 +169,7 @@ class RouterGenerator
                 'path' => '/{criteria}',
                 'actions' => [
                     'as' => "api.{$params['module']}.{$params['prefix']}.show",
-                    'uses' => [CoreStaticApiController::class, 'show'],
+                    'uses' => CoreStaticApiController::class . '@show',
                     'middleware' => $params['middleware']['show'] ?? ['auth:api'],
                     'defaults' => [
                         'entityClass' => $params['staticEntity'],
