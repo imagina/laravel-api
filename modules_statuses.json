@@ -9,5 +9,6 @@
     "Inotification": true,
     "Iform": true,
     "Ifillable": true,
-    "Iblog": true
+    "Iblog": true,
+    "Ilocations": true
 }
