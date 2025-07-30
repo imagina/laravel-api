@@ -54,6 +54,13 @@ class EloquentReservationRepository extends EloquentCoreRepository implements Re
         }
         */
 
+        //Validation Index All
+        $user = \Auth::user();
+        $permission = 'irentcar.reservations.index-all';
+        if (!$user->hasPermission($permission)) {
+            $query->where('user_id', $user->id);
+        }
+
         //Response
         return $query;
     }

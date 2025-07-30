@@ -240,6 +240,12 @@ return [
             'title' => 'irentcar::reservations.list.title',
             'description' => 'irentcar::reservations.index.description',
             'onlyFor' => [],
+            'defaultAccess' => ['user']
+        ],
+        'index-all' => [
+            'title' =>   'irentcar::reservations.index-all.title',
+            'description' => 'irentcar::reservations.index-all.description',
+            'onlyFor' => [],
             'defaultAccess' => []
         ],
         'create' => [
