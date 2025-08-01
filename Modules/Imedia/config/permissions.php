@@ -12,7 +12,7 @@ return [
             'title' =>   'imedia::files.index.title',
             'description' => 'imedia::files.index.description',
             'onlyFor' => [],
-            'defaultAccess' => []
+            'defaultAccess' => ['user']
         ],
         'index-all' => [
             'title' =>   'imedia::files.index-all.title',

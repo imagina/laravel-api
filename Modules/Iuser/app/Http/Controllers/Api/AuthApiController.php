@@ -221,6 +221,8 @@ class AuthApiController extends CoreApiController
                 throw new \Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
             }
 
+            $user->makeVisible('permissions');
+
             //Not clear cache | TODO: From v10
             //app()->instance('clearResponseCache', false);
 
