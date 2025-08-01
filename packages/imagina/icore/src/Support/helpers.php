@@ -31,3 +31,31 @@ if (!function_exists('isModuleEnabled')) {
         return Module::isEnabled($moduleName);
     }
 }
+
+if (!function_exists('iconfig')) {
+    function iconfig($configName = null, $byModule = false, $onlyEnableModules = true)
+    {
+        //Init response
+        $response = config();
+
+        if ($configName && strlen($configName)) {
+            $modules = app('modules'); //Init modules
+            $enabledModules = $onlyEnableModules ? $modules->allEnabled() : $modules->all(); //Get all enable modules
+
+
+            //Get config by name to each module
+            if ($byModule) {
+                $response = [];
+                foreach (array_keys($enabledModules) as $moduleName) {
+                    $response[$moduleName] = config(strtolower($moduleName) . "." . $configName);
+                }
+            } else {
+                $configNameExplode = explode('.', $configName);
+                $response = config(strtolower(array_shift($configNameExplode)) . "." . implode('.', $configNameExplode));
+                //dd($configNameExplode, $response, strtolower(array_shift($configNameExplode)) . "." . implode('.', $configNameExplode));
+            }
+        }
+
+        return $response;
+    }
+}
