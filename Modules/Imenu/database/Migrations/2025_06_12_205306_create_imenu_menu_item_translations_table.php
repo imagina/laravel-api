@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('imenu__menuitem_translations', function (Blueprint $table) {
+        Schema::create('imenu__menu_item_translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->tinyInteger('status')->default(0);
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('menu_item_id')->unsigned();
             $table->string('locale')->index();
             $table->unique(['menu_item_id', 'locale']);
-            $table->foreign('menu_item_id')->references('id')->on('imenu__menuitems')->onDelete('cascade');
+            $table->foreign('menu_item_id')->references('id')->on('imenu__menu_items')->onDelete('cascade');
         });
     }
 
@@ -35,9 +35,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('imenu__menuitem_translations', function (Blueprint $table) {
+        Schema::table('imenu__menu_item_translations', function (Blueprint $table) {
             $table->dropForeign(['menu_item_id']);
         });
-        Schema::dropIfExists('imenu__menuitem_translations');
+        Schema::dropIfExists('imenu__menu_item_translations');
     }
 };

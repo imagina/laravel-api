@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('imenu__menuitems', function (Blueprint $table) {
+        Schema::create('imenu__menu_items', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('menu_id')->unsigned();
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('imenu__menuitems');
+        Schema::dropIfExists('imenu__menu_items');
     }
 };
