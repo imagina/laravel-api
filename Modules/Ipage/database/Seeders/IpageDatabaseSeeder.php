@@ -11,6 +11,6 @@ class IpageDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+         $this->call([InitialPagesSeeder::class]);
     }
 }
