@@ -85,11 +85,6 @@ class SettingsService
             //Add Translations
             $configWithTranslations = $this->translateConfigLabels($config);
 
-            \Log::info("name: " . $config['name']);
-            if ($config['name'] == "isite::logo2") {
-                //dd($configWithTranslations, $config);
-            }
-
             //Add data from config
             $setting->dataConfig = $configWithTranslations;
 
