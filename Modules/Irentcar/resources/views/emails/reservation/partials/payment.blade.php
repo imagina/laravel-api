@@ -7,7 +7,7 @@
 <p style="margin: 0; font-weight: bold; color: #28a745;">
     ${{ $reservation->total_price}} COP</p>
 <p style="margin: 0; color: #000;">A pagar a la llegada</p>
-<p style="margin: 0; color: #000;"><strong>$ TODO USD</strong>
+<p style="margin: 0; color: #000;"><strong>$ {{ $reservation->total_price_usd }} USD</strong>
     ({{ $reservation->total_price }} COP)</p>
 
 

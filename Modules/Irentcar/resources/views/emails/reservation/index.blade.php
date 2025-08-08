@@ -9,7 +9,7 @@
 <div class="content-email-reservation">
 
     <h1 class="title" style="text-align: center;width: 80%;font-size: 30px;margin: 12px auto;">
-        {{itrans('irentcart::reservation.single')}} #{{$reservation->id}}
+        {{itrans('irentcar::reservation.single')}} #{{$reservation->id}}
     </h1>
 
     <div
