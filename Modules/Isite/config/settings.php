@@ -74,7 +74,7 @@ return [
     'logo1' => [
         'default' => (object)['mainimage' => null],
         'name' => 'isite::logo1',
-        'isMedia' => 'media_single',
+        'isMedia' => 'medias_single',
         'dynamicField' => [
             'fakeFieldName' => 'mainimage',
             'type' => 'media',
@@ -93,7 +93,7 @@ return [
     'logo2' => [
         'default' => (object)['mainimage' => null],
         'name' => 'isite::logo2',
-        'isMedia' => 'media_single',
+        'isMedia' => 'medias_single',
         'dynamicField' => [
             'fakeFieldName' => 'mainimage',
             'type' => 'media',
@@ -110,7 +110,7 @@ return [
     'logo3' => [
         'default' => (object)['mainimage' => null],
         'name' => 'isite::logo3',
-        'isMedia' => 'media_single',
+        'isMedia' => 'medias_single',
         'dynamicField' => [
             'fakeFieldName' => 'mainimage',
             'type' => 'media',
@@ -127,7 +127,7 @@ return [
     'logoIadmin' => [
         'default' => (object)['mainimage' => null],
         'name' => 'isite::logoIadmin',
-        'isMedia' => 'media_single',
+        'isMedia' => 'medias_single',
         'dynamicField' => [
             'fakeFieldName' => 'mainimage',
             'type' => 'media',
@@ -144,7 +144,7 @@ return [
     'logoIadminSM' => [
         'default' => (object)['mainimage' => null],
         'name' => 'isite::logoIadminSM',
-        'isMedia' => 'media_single',
+        'isMedia' => 'medias_single',
         'dynamicField' => [
             'fakeFieldName' => 'mainimage',
             'type' => 'media',
