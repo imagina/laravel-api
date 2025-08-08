@@ -16,10 +16,6 @@ class Page extends CoreModel
 {
     use Translatable;
 
-    // use Translatable, isFillable, IsQreable, isBuildable;
-
-    // use ?? TaggableTrait, NamespacedEntity, MediaRelation, BelongsToTenant
-
     protected $table = 'ipage__pages';
     public string $transformer = 'Modules\Ipage\Transformers\PageTransformer';
     public string $repository = 'Modules\Ipage\Repositories\PageRepository';
@@ -56,13 +52,8 @@ class Page extends CoreModel
         'og_type',
     ];
     protected $fillable = [
-        'is_home',
-        'template',
-        'record_type',
         'type',
         'system_name',
-        'internal',
-        'options',
     ];
 
     protected $casts = [
@@ -109,18 +100,6 @@ class Page extends CoreModel
         return Attribute::make(
             set: fn(?string $value) => !empty($value) ? $value : \Str::slug($this->title, '-'),
         );
-    }
-
-    public function getCacheClearableData()
-    {
-        $baseUrls = [];
-
-        if (!$this->wasRecentlyCreated) {
-            $baseUrls[] = $this->url;
-        }
-        $urls = ['urls' => $baseUrls];
-
-        return $urls;
     }
 
 }
