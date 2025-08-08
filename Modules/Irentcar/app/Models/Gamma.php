@@ -29,6 +29,7 @@ class Gamma extends CoreModel
     protected $fillable = [
         'title',
         'description',
+        'summary',
         'transmission_type',
         'passengers_number',
         'luggages',

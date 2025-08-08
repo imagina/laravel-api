@@ -46,19 +46,22 @@ class Reservation extends CoreModel
         'gamma_office_price',
         'gamma_office_extra_total_price',
         'total_price',
-        'status'
+        'status',
+        'options'
     ];
 
     protected function casts(): array
     {
         return [
             'gamma_data' => 'json',
-            'extras_data' => 'json'
+            'extras_data' => 'json',
+            'options' => 'json'
         ];
     }
 
     protected $appends = [
-        'status_title'
+        'status_title',
+        'total_price_usd'
     ];
 
     public function pickupOffice()
@@ -102,6 +105,26 @@ class Reservation extends CoreModel
             fn($value) => \Carbon\Carbon::parse($value)
         );
     }
+
+
+
+    public function totalPriceUsd(): Attribute
+    {
+        return Attribute::get(function () {
+            $usdRates = $this->options['USDRates'] ?? null;
+
+            if (is_array($usdRates) && isset($usdRates['COP'])) {
+                $copRate = (float) $usdRates['COP'];
+                $totalPrice = (float) $this->total_price;
+
+                return round($totalPrice / $copRate, 2);
+            }
+
+
+            return 0;
+        });
+    }
+
 
     /**
      * Notification Params
