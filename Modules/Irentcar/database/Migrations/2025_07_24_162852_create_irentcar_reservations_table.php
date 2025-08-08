@@ -45,6 +45,8 @@ return new class extends Migration
 
             $table->tinyInteger('status')->default(1)->unsigned();
 
+            $table->json('options')->nullable();
+
             // Audit fields
             $table->timestamps();
             $table->auditStamps();

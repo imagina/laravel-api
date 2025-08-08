@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id');
             // Your fields...
             $table->string('title');
+            $table->text('summary')->nullable();
             $table->text('description');
             $table->tinyInteger('transmission_type')->default(0)->unsigned();
             $table->integer('passengers_number')->unsigned();
