@@ -5,6 +5,7 @@ namespace Modules\Irentcar\Services;
 use Modules\Irentcar\Repositories\GammaOfficeRepository;
 use Modules\Irentcar\Repositories\GammaRepository;
 use Modules\Irentcar\Repositories\GammaOfficeExtraRepository;
+use Illuminate\Support\Facades\Http;
 
 class ReservationService
 {
@@ -36,6 +37,7 @@ class ReservationService
         $this->getGammaData($data);
         $this->getExtrasData($data);
         $this->getTotalPrice($data);
+        $this->getConvertionsData($data);
 
         return $data;
     }
@@ -94,5 +96,15 @@ class ReservationService
             $totalPrice += $data['gamma_office_extra_total_price'];
 
         $data['total_price'] = $totalPrice;
+    }
+
+    private function getConvertionsData(&$data)
+    {
+
+        $result = getConversionRates();
+
+        if (isset($result['USDRates'])) {
+            $data['options']['USDRates'] = $result['USDRates'];
+        }
     }
 }
