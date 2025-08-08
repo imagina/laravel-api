@@ -8,5 +8,5 @@ class MenuItemTranslation extends Model
 {
     public $timestamps = false;
     protected $fillable = ['title', 'uri', 'url', 'status', 'locale', 'description'];
-    protected $table = 'imenu__menuitem_translations';
+    protected $table = 'imenu__menu_item_translations';
 }

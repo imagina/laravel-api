@@ -10,41 +10,38 @@ use Modules\Ilocations\Models\Province;
 
 class CityTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run()
-    {
-        Model::unguard();
+  /**
+   * Run the database seeds.
+   */
+  public function run()
+  {
+    Model::unguard();
+    if (City::count() == 0) {
+      $countries = Country::get();
+      $provinces = Province::get();
+      $cities = [];
+      $countriesToSeedCities = json_decode(setting('ilocations::countriesToSeedCities', '["citiesCO"]'));
 
-        $countries = Country::get();
-        $provinces = Province::get();
-        $pathCO = base_path('/Modules/Ilocations/app/Assets/js/citiesCO.json');
-        $pathUS = base_path('/Modules/Ilocations/app/Assets/js/citiesUS.json');
-        $pathMX = base_path('/Modules/Ilocations/app/Assets/js/citiesMX.json');
-        $cities = [];
-        $countriesToSeedCities = json_decode(setting('ilocations::countriesToSeedCities', '["citiesCO"]'));
+      foreach ($countriesToSeedCities as $citiesJsonName) {
+        $path = base_path("/Modules/Ilocations/app/Assets/js/$citiesJsonName.json");
+        $citiesJson = json_decode(file_get_contents($path), true);
+        $cities = array_merge($cities, $citiesJson);
+      }
 
-        foreach ($countriesToSeedCities as $citiesJsonName) {
-            $path = base_path("/Modules/Ilocations/app/Assets/js/$citiesJsonName.json");
-            $citiesJson = json_decode(file_get_contents($path), true);
-            $cities = array_merge($cities, $citiesJson);
+      $currentCities = City::all();
+
+      foreach ($cities as $key => $city) {
+        $currentCity = $currentCities->where('code', $city['code'])->first();
+        if (!isset($currentCity->id)) {
+          $countryCity = $countries->where('iso_2', $city['country_iso_2'])->first();
+          $provinceCity = $provinces->where('iso_2', $city['province_iso_2'])->first();
+          $city['country_id'] = $countryCity->id;
+          $city['province_id'] = $provinceCity->id;
+          unset($city['country_iso_2']);
+          unset($city['province_iso_2']);
+          City::create($city);
         }
-
-        $currentCities = City::all();
-
-        $citiesToCreate = [];
-        foreach ($cities as $key => $city) {
-            $currentCity = $currentCities->where('code', $city['code'])->first();
-            if (! isset($currentCity->id)) {
-                $countryCity = $countries->where('iso_2', $city['country_iso_2'])->first();
-                $provinceCity = $provinces->where('iso_2', $city['province_iso_2'])->first();
-                $city['country_id'] = $countryCity->id;
-                $city['province_id'] = $provinceCity->id;
-                unset($city['country_iso_2']);
-                unset($city['province_iso_2']);
-                City::create($city);
-            }
-        }
+      }
     }
+  }
 }
