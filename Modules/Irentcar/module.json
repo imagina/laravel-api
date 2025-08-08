@@ -1,0 +1,12 @@
+
+{
+    "name": "Irentcar",
+    "alias": "irentcar",
+    "description": "manage irentcar",
+    "keywords": ["irentcar"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Irentcar\\Providers\\IrentcarServiceProvider"
+    ],
+    "files": []
+}
