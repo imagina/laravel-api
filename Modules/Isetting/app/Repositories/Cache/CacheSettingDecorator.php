@@ -25,4 +25,11 @@ class CacheSettingDecorator extends CoreCacheDecorator implements SettingReposit
         $this->clearCache();
         return $this->repository->setSetting($systemName, $value);
     }
+
+    public function getAllSettings($params): mixed
+    {
+        return $this->remember(function () use ($params) {
+            return $this->repository->getAllSettings($params);
+        });
+    }
 }

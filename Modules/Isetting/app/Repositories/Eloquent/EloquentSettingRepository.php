@@ -87,13 +87,47 @@ class EloquentSettingRepository extends EloquentCoreRepository implements Settin
         if (!$settingConfig) return null;
 
         $isTranslatable = $settingConfig['isTranslatable'] ?? false;
+        $isMedia = $settingConfig['isMedia'] ?? false;
+
         return $this->updateOrCreate(['system_name' => $systemName], [
             'is_translatable' => $isTranslatable,
             'plain_value' => !$isTranslatable ? $value : null,
             ...(!$isTranslatable ? [] : array_map(function ($value) {
                 return ['value' => $value];
-            }, $value))
+            }, $value)),
+            ...($isMedia ? $value : [])
         ]);
+    }
 
+
+
+    /**
+     * Get all Setting Formated from Config and DB
+     */
+    public function getAllSettings($params): mixed
+    {
+        //Get Module with settings
+        $modulesWithSettings = iconfig('settings', true);
+
+        //Pass to first level
+        $configSettings = [];
+        foreach ($modulesWithSettings as $module => $settings) {
+            foreach ($settings as $key => $config) {
+                //Validation valid array
+                if (is_array($config)) {
+                    $configSettings[] = array_merge($config, [
+                        'name' => "{$module}::{$key}",
+                    ]);
+                }
+            }
+        }
+
+        //Get All Settings from DB
+        $dbSettings = $this->getItemsBy($params);
+
+        //Get All Settings Formatted
+        $settings = app('Modules\Isetting\Services\SettingsService')->getFormatedSettings($configSettings, $dbSettings);
+
+        return $settings;
     }
 }

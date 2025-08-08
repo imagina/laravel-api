@@ -10,7 +10,7 @@ class MenuItem extends CoreModel
 {
     use Translatable;
 
-    protected $table = 'imenu__menuitems';
+    protected $table = 'imenu__menu_items';
     public string $transformer = 'Modules\Imenu\Transformers\MenuItemTransformer';
     public string $repository = 'Modules\Imenu\Repositories\MenuItemRepository';
     public array $requestValidation = [

@@ -11,5 +11,6 @@
     "Ifillable": true,
     "Iblog": true,
     "Ilocations": true,
-    "Irentcar": true
+    "Irentcar": true,
+    "Isite": true
 }

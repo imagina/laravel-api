@@ -21,27 +21,33 @@ class FileCollection extends Collection
 
         $response = []; //Default response
 
-        //To each Zone (MediaFillable) - Transform Files
-        foreach ($mediaFillable as $fieldName => $fileType) {
-            $zone = strtolower($fieldName); //Get zone name
-            //Init the zone , multiple or single
-            $response[$zone] = ($fileType == 'multiple') ? [] : false;
-            //Get files by zone
-            $filesByZone = $files->filter(function ($item) use ($zone) {
-                return ($item->pivot->zone == strtolower($zone));
-            });
 
-            //Not files so Add fake file
-            if (!$filesByZone->count()) $filesByZone = [0];
+        if (count($files) > 0) {
+            //To each Zone (MediaFillable) - Transform Files
+            foreach ($mediaFillable as $fieldName => $fileType) {
+                $zone = strtolower($fieldName); //Get zone name
 
-            //Transform files
-            foreach ($filesByZone as $file) {
-                $transformedFile = $this->transformFile($file, $classInfo, $resource);
-                //Add to response
-                if ($fileType == 'multiple') {
-                    if ($file) array_push($response[$zone], $transformedFile);
-                } else
-                    $response[$zone] = $transformedFile;
+                //Init the zone , multiple or single
+                $response[$zone] = ($fileType == 'multiple') ? [] : false;
+                //Get files by zone
+                $filesByZone = $files->filter(function ($item) use ($zone) {
+                    return ($item->pivot->zone == strtolower($zone));
+                });
+
+                //Not files so Add fake file
+                if (!$filesByZone->count()) $filesByZone = [0];
+
+
+                //Transform files
+                foreach ($filesByZone as $file) {
+
+                    $transformedFile = $this->transformFile($file, $classInfo);
+                    //Add to response
+                    if ($fileType == 'multiple') {
+                        if ($file) array_push($response[$zone], $transformedFile);
+                    } else
+                        $response[$zone] = $transformedFile;
+                }
             }
         }
         //Response
@@ -57,7 +63,7 @@ class FileCollection extends Collection
         //Create a mokup of a file if not exist
         if (!$file) {
             if (!$defaultPath) {
-                $defaultPath = strtolower("/modules/{$classInfo["moduleName"]}/img/{$classInfo["entityName"]}/default.jpg");
+                $defaultPath = strtolower("modules/{$classInfo["moduleName"]}/img/{$classInfo["entityName"]}/default.jpg");
 
                 $defaultPath = \Modules\Imedia\Support\FileHelper::validateMediaDefaultPath($defaultPath);
             }

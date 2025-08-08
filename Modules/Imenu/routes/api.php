@@ -13,7 +13,7 @@ Route::prefix('/imenu/v1')->group(function () {
       'prefix' => 'menus',
       'controller' => MenuApiController::class,
       'permission' => 'imenu.menus',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -28,7 +28,7 @@ Route::prefix('/imenu/v1')->group(function () {
       'prefix' => 'menuitems',
       'controller' => MenuItemApiController::class,
       'permission' => 'imenu.menuitems',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....

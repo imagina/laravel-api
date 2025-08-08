@@ -13,7 +13,7 @@ Route::prefix('/iblog/v1')->group(function () {
       'prefix' => 'categories',
       'controller' => CategoryApiController::class,
       'permission' => 'iblog.categories',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -28,7 +28,7 @@ Route::prefix('/iblog/v1')->group(function () {
       'prefix' => 'posts',
       'controller' => PostApiController::class,
       'permission' => 'iblog.posts',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....

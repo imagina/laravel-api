@@ -11,6 +11,8 @@ class IlocationsDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call(CountryTableSeeder::class);
+        $this->call(ProvinceTableSeeder::class);
+        $this->call(CityTableSeeder::class);
     }
 }
