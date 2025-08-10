@@ -16,6 +16,9 @@ class $CLASS_NAME$ extends CoreModel
       'create' => 'Modules\$MODULE_NAME$\Http\Requests\Create$CLASS_NAME$Request',
       'update' => 'Modules\$MODULE_NAME$\Http\Requests\Update$CLASS_NAME$Request',
     ];
+  public array $modelRelations = [
+    //eg. 'relationName' => 'belongsToMany/hasMany',
+  ];
   //Instance external/internal events to dispatch with extraData
   public array $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
