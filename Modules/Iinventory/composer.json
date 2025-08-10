@@ -1,0 +1,30 @@
+{
+    "name": "imagina/iinventory",
+    "description": "",
+    "authors": [
+        {
+            "name": "Imagina Colombia",
+            "email": "soporte@imaginacolombia.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Iinventory\\": "app/",
+            "Modules\\Iinventory\\Database\\Factories\\": "database/factories/",
+            "Modules\\Iinventory\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Iinventory\\Tests\\": "tests/"
+        }
+    }
+}

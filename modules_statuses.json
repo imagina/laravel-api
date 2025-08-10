@@ -14,5 +14,6 @@
     "Irentcar": true,
     "Isite": true,
     "Ishoe": true,
-    "Ifulfillment": true
+    "Ifulfillment": true,
+    "Iinventory": true
 }

@@ -1,0 +1,12 @@
+
+{
+    "name": "Iinventory",
+    "alias": "iinventory",
+    "description": "manage iinventory",
+    "keywords": ["iinventory"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Iinventory\\Providers\\IinventoryServiceProvider"
+    ],
+    "files": []
+}
