@@ -1,0 +1,30 @@
+{
+    "name": "imagina/ishoe",
+    "description": "",
+    "authors": [
+        {
+            "name": "Imagina Colombia",
+            "email": "soporte@imaginacolombia.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Ishoe\\": "app/",
+            "Modules\\Ishoe\\Database\\Factories\\": "database/factories/",
+            "Modules\\Ishoe\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Ishoe\\Tests\\": "tests/"
+        }
+    }
+}

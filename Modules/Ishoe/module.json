@@ -1,0 +1,12 @@
+
+{
+    "name": "Ishoe",
+    "alias": "ishoe",
+    "description": "manage ishoe",
+    "keywords": ["ishoe"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ishoe\\Providers\\IshoeServiceProvider"
+    ],
+    "files": []
+}
