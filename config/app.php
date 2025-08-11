@@ -74,7 +74,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    //'timezone' => 'UTC',
+    'timezone' => 'America/Caracas', //TODO
 
     /*
     |--------------------------------------------------------------------------

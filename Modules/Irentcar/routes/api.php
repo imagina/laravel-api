@@ -10,13 +10,6 @@ use Modules\Irentcar\Http\Controllers\Api\GammaOfficeExtraApiController;
 use Modules\Irentcar\Http\Controllers\Api\ReservationApiController;
 // add-use-controller
 
-
-
-
-
-
-
-
 Route::prefix('/irentcar/v1')->group(function () {
     Route::apiCrud([
         'module' => 'irentcar',
@@ -114,14 +107,14 @@ Route::prefix('/irentcar/v1')->group(function () {
         'controller' => ReservationApiController::class,
         'permission' => 'irentcar.reservations',
         //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
-        // 'customRoutes' => [ // Include custom routes if needed
-        //  [
-        //    'method' => 'post', // get,post,put....
-        //    'path' => '/some-path', // Route Path
-        //    'uses' => 'ControllerMethodName', //Name of the controller method to use
-        //    'middleware' => [] // if not set up middleware, auth:api will be the default
-        //  ]
-        // ]
+        'customRoutes' => [ // Include custom routes if needed
+            [
+                'method' => 'get', // get,post,put....
+                'path' => '/validation/date', // Route Path
+                'uses' => 'validationDate', //Name of the controller method to use
+                'middleware' => [] // if not set up middleware, auth:api will be the default
+            ]
+        ]
     ]);
     // append
 

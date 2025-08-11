@@ -28,7 +28,7 @@ return [
         ]
     ],
     'maxReservationDays' => [
-        'default' => 1,
+        'default' => 2,
         'name' => 'irentcar::maxReservationDays',
         "onlySuperAdmin" => true,
         'dynamicField' => [
