@@ -64,7 +64,6 @@ class ReservationService
             $ids =  json_decode($data['gamma_office_extra_ids']);
 
             //Params to Query
-            //TODO - Chequear el Filtro de Ids - Esta trayendo todo
             $params = [
                 'filter' => ['ids' => $ids],
                 'include' => ['extra']
@@ -74,8 +73,6 @@ class ReservationService
             $extras = [];
 
             $extrasBD = $this->gammaOfficeExtraRepository->getItemsBy(json_decode(json_encode($params)));
-
-            //dd(count($extrasBD));
 
             foreach ($extrasBD as $key => $extra) {
                 $extras[$key] = $extra->toArray();
