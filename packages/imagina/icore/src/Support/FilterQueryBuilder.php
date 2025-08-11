@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class FilterQueryBuilder
 {
-    public static function apply(Builder $query, object|string $filterData, string|array $fieldName, ?Model $model = null): Builder
+    public static function apply(Builder $query, object|string|array $filterData, string|array $fieldName, ?Model $model = null): Builder
     {
         $filterData = self::normalizeFilterValue($fieldName, $filterData);
         $filterWhere = $filterData->where ?? null;
