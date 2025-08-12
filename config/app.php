@@ -74,8 +74,9 @@ return [
     |
     */
 
-    //'timezone' => 'UTC',
-    'timezone' => 'America/Caracas', //TODO
+    'timezone' => 'UTC',
+
+    'local_timezone' => env('LOCAL_TIMEZONE', 'AMERICA/BOGOTA'),
 
     /*
     |--------------------------------------------------------------------------
