@@ -13,9 +13,9 @@ class Province extends CoreModel
   public string $transformer = 'Modules\Ilocations\Transformers\ProvinceTransformer';
   public string $repository = 'Modules\Ilocations\Repositories\ProvinceRepository';
   public array $requestValidation = [
-      'create' => 'Modules\Ilocations\Http\Requests\CreateProvinceRequest',
-      'update' => 'Modules\Ilocations\Http\Requests\UpdateProvinceRequest',
-    ];
+    'create' => 'Modules\Ilocations\Http\Requests\CreateProvinceRequest',
+    'update' => 'Modules\Ilocations\Http\Requests\UpdateProvinceRequest',
+  ];
   //Instance external/internal events to dispatch with extraData
   public array $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -27,44 +27,44 @@ class Province extends CoreModel
     'deleted' => []
   ];
   public array $translatedAttributes = [
-      'name'
+    'name'
   ];
   protected $fillable = [
-      'iso_2',
-      'country_id',
+    'iso_2',
+    'country_id',
   ];
 
-    public function country()
-    {
-        return $this->belongsTo(Country::class);
+  public function country()
+  {
+    return $this->belongsTo(Country::class);
+  }
+
+  public function cities()
+  {
+    return $this->hasMany(City::class);
+  }
+
+
+  public function children()
+  {
+    return $this->hasMany(City::class);
+  }
+
+  public function name()
+  {
+
+    $currentTranslations = $this->getTranslation(locale());
+
+    if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
+
+      $model = $this->getTranslation(app()->getLocale());
+
+      if (empty($model)) return "";
+      return $model->toArray()["name"] ?? "";
     }
 
-    public function cities()
-    {
-        return $this->hasMany(City::class);
-    }
+    return $currentTranslations->toArray()["name"];
 
-
-    public function children()
-    {
-        return $this->hasMany(City::class);
-    }
-
-    public function name()
-    {
-
-        $currentTranslations = $this->getTranslation(locale());
-
-        if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
-
-            $model = $this->getTranslation(app()->getLocale());
-
-            if(empty($model)) return "";
-            return $model->toArray()["name"] ?? "";
-        }
-
-        return $currentTranslations->toArray()["name"];
-
-    }
+  }
 
 }

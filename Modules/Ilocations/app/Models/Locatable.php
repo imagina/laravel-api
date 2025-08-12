@@ -12,9 +12,9 @@ class Locatable extends CoreModel
   public string $transformer = 'Modules\Ilocations\Transformers\LocatableTransformer';
   public string $repository = 'Modules\Ilocations\Repositories\LocatableRepository';
   public array $requestValidation = [
-      'create' => 'Modules\Ilocations\Http\Requests\CreateLocatableRequest',
-      'update' => 'Modules\Ilocations\Http\Requests\UpdateLocatableRequest',
-    ];
+    'create' => 'Modules\Ilocations\Http\Requests\CreateLocatableRequest',
+    'update' => 'Modules\Ilocations\Http\Requests\UpdateLocatableRequest',
+  ];
   //Instance external/internal events to dispatch with extraData
   public array $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -27,13 +27,13 @@ class Locatable extends CoreModel
   ];
   public array $translatedAttributes = [];
   protected $fillable = [
-      'entity_id',
-      'entity_type',
-      'city_id',
-      'province_id',
-      'country_id',
-      'lat',
-      'lng',
-      'address'
+    'entity_id',
+    'entity_type',
+    'city_id',
+    'province_id',
+    'country_id',
+    'lat',
+    'lng',
+    'address'
   ];
 }
