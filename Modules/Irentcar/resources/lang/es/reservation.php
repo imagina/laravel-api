@@ -17,6 +17,7 @@ return [
         'gammaOfficeIdIsRequired' => 'El ID de la relacion Gama Oficina es obligatorio.',
         'gammaOfficeIdExists' => 'La relacion Gama Oficina no existe.',
         'gammaOfficeExtraIdsMustBeJson' => 'Los extras deben ser un JSON valido.',
+        'pickupDateAlreadyPassed' => 'La fecha de recogida ya ha pasado.',
     ],
     'validation' => [],
     'status' => [

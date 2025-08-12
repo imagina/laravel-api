@@ -2,8 +2,11 @@
 
 return [
     'ivaRate' => 'Porcentaje de IVA',
-    'minReservationDays' => 'Tiempo minimo en dias de la Reserva',
-    'maxReservationDays' => 'Tiempo maximo en dias de la Reserva',
-    'minAdvanceHours' => 'Tiempo de Antelacion de la Reserva (Para poder realizarla en Horas)',
+    'minDropoffDays' => 'Tiempo minimo de entrega en dias',
+    'maxDropoffDays' => 'Tiempo maximo de entrega en dias',
+    'minAdvanceMinutes' => 'Tiempo de Antelacion de la Reserva (Para poder realizarla en minutos)',
+    'slotsInvervalMinutes' => 'Intervalor en minutos de los slots',
+    'slotRangeStart' => 'Slot inicia',
+    'slotRangeEnd' => 'Slot termina',
     'minDriveAge' => 'Edad Minima del Conductor'
 ];
