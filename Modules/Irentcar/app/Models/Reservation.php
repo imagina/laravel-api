@@ -5,6 +5,7 @@ namespace Modules\Irentcar\Models;
 use Imagina\Icore\Models\CoreModel;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 
 class Reservation extends CoreModel
 {
@@ -93,21 +94,25 @@ class Reservation extends CoreModel
         });
     }
 
-    public function pickupDate(): Attribute
+    protected function pickupDate(): Attribute
     {
-        return Attribute::get(
-            fn($value) => \Carbon\Carbon::parse($value)
+        $localTz = config('app.local_timezone');
+
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->timezone($localTz),
+            set: fn(string $value) => Carbon::parse($value, $localTz)->setTimezone('UTC')->format('Y-m-d H:i:s'),
         );
     }
 
-    public function dropoffDate(): Attribute
+    protected function dropoffDate(): Attribute
     {
-        return Attribute::get(
-            fn($value) => \Carbon\Carbon::parse($value)
+        $localTz = config('app.local_timezone');
+
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->timezone($localTz),
+            set: fn(string $value) => Carbon::parse($value, $localTz)->setTimezone('UTC')->format('Y-m-d H:i:s'),
         );
     }
-
-
 
     public function totalPriceUsd(): Attribute
     {
