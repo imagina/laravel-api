@@ -14,42 +14,79 @@ return [
             ]
         ]
     ],
-    'minReservationDays' => [
-        'default' => 1,
-        'name' => 'irentcar::minReservationDays',
+    'minDropoffDays' => [
+        'default' => 0,
+        'name' => 'irentcar::minDropoffDays',
         "onlySuperAdmin" => true,
         'dynamicField' => [
             'type' => 'input',
             'colClass' => 'col-12 col-md-6',
             'props' => [
-                'label' => 'irentcar::settings.minReservationDays',
+                'label' => 'irentcar::settings.minDropoffDays',
                 'type' => 'number'
             ]
         ]
     ],
-    'maxReservationDays' => [
-        'default' => 2,
-        'name' => 'irentcar::maxReservationDays',
+    'maxDropoffDays' => [
+        'default' => 0,
+        'name' => 'irentcar::maxDropoffDays',
         "onlySuperAdmin" => true,
         'dynamicField' => [
             'type' => 'input',
             'colClass' => 'col-12 col-md-6',
             'props' => [
-                'label' => 'irentcar::settings.maxReservationDays',
+                'label' => 'irentcar::settings.maxDropoffDays',
                 'type' => 'number'
             ]
         ]
     ],
-    'minAdvanceHours' => [
-        'default' => 2,
-        'name' => 'irentcar::minAdvanceHours',
+    'minAdvanceMinutes' => [
+        'default' => 30,
+        'name' => 'irentcar::minAdvanceMinutes',
         "onlySuperAdmin" => true,
         'dynamicField' => [
             'type' => 'input',
             'colClass' => 'col-12 col-md-6',
             'props' => [
-                'label' => 'irentcar::settings.minAdvanceHours',
+                'label' => 'irentcar::settings.minAdvanceMinutes',
                 'type' => 'number'
+            ]
+        ]
+    ],
+    'slotsInvervalMinutes' => [
+        'default' => 30,
+        'name' => 'irentcar::slotsInvervalMinutes',
+        "onlySuperAdmin" => true,
+        'dynamicField' => [
+            'type' => 'input',
+            'colClass' => 'col-12 col-md-6',
+            'props' => [
+                'label' => 'irentcar::settings.slotsInvervalMinutes',
+                'type' => 'number'
+            ]
+        ]
+    ],
+    'slotRangeStart' => [
+        'default' => "08:00",
+        'name' => 'irentcar::slotRangeStart',
+        "onlySuperAdmin" => true,
+        'dynamicField' => [
+            'type' => 'input',
+            'colClass' => 'col-12 col-md-6',
+            'props' => [
+                'label' => 'irentcar::settings.slotRangeStart'
+            ]
+        ]
+    ],
+    'slotRangeEnd' => [
+        'default' => "20:00",
+        'name' => 'irentcar::slotRangeEnd',
+        "onlySuperAdmin" => true,
+        'dynamicField' => [
+            'type' => 'input',
+            'colClass' => 'col-12 col-md-6',
+            'props' => [
+                'label' => 'irentcar::settings.slotRangeEnd'
             ]
         ]
     ],
