@@ -20,7 +20,6 @@ class Type extends CoreStaticModel
     const FILE = 12;
     const TREE_SELECT = 13;
     const HIDDEN = 14;
-
     const FIRST_NAME = 15;
     const LAST_NAME = 16;
 
@@ -119,6 +118,4 @@ class Type extends CoreStaticModel
         $item = collect($this->records)->where('value', $value)->first();
         return $item['id'] ?? null;
     }
-
-
 }

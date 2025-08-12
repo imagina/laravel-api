@@ -42,7 +42,6 @@ class Form extends CoreModel
         'user_id',
         'options',
         'form_type',
-        'organization_id',
         'parent_id'
     ];
 
