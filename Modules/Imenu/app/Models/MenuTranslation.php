@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MenuTranslation extends Model
 {
-    public $timestamps = false;
-    protected $fillable = ['title', 'status'];
-    protected $table = 'imenu__menu_translations';
+  public $timestamps = false;
+  protected $fillable = ['title', 'status'];
+  protected $table = 'imenu__menu_translations';
 }
