@@ -17,9 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->json('options')->nullable();
             $table->boolean('featured')->default(false);
-            $table->integer('sort_order')->default(0);
             $table->date('date_available')->nullable();
-            $table->string('external_id')->nullable();
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('iblog__categories')->onDelete('restrict');
 

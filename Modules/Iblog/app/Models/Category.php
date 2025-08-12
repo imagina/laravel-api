@@ -45,11 +45,7 @@ class Category extends CoreModel
     ];
     protected $fillable = [
         'parent_id',
-        'show_menu',
         'featured',
-        'internal',
-        'sort_order',
-        'external_id',
         'options'
     ];
 
@@ -114,18 +110,6 @@ class Category extends CoreModel
 
             return \LaravelLocalization::localizeUrl('/' . $this->slug, $currentLocale);
         });
-    }
-
-    public function getCacheClearableData()
-    {
-        $baseUrls = [config("app.url")];
-
-        if (!$this->wasRecentlyCreated && $this->status == 1) {
-            $baseUrls[] = $this->url;
-        }
-        $urls = ['urls' => $baseUrls];
-
-        return $urls;
     }
 
 }

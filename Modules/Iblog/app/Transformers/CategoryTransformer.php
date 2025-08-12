@@ -19,6 +19,8 @@ class CategoryTransformer extends CoreResource
   */
   public function modelAttributes($request): array
   {
-    return [];
+    return [
+      'files' => $this->whenLoaded('files', fn() => $this->files->byZones($this->mediaFillable, $this))
+    ];
   }
 }

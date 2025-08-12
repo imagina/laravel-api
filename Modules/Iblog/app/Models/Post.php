@@ -48,9 +48,6 @@ class Post extends CoreModel
     'options',
     'category_id',
     'featured',
-    'sort_order',
-    'external_id',
-    'created_at',
     'date_available'
   ];
 
@@ -122,18 +119,4 @@ class Post extends CoreModel
       return $url;
     });
   }
-
-  public function getCacheClearableData()
-  {
-    $baseUrls = [config("app.url"), $this->category->url];
-
-    $categoryUrls = $this->categories->pluck('url')->toArray();
-    if (!$this->wasRecentlyCreated && $this->status == 2) {
-      $baseUrls[] = $this->url;
-    }
-    $urls = ['urls' => array_unique(array_merge($baseUrls, $categoryUrls))];
-
-    return $urls;
-  }
-
 }

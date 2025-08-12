@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Iblog\Http\Controllers\Api\CategoryApiController;
 use Modules\Iblog\Http\Controllers\Api\PostApiController;
-// add-use-controller
-
-
 
 Route::prefix('/iblog/v1')->group(function () {
     Route::apiCrud([
@@ -39,6 +36,4 @@ Route::prefix('/iblog/v1')->group(function () {
       // ]
     ]);
 // append
-
-
 });

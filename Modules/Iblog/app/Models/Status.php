@@ -23,10 +23,10 @@ class Status
     public function __construct()
     {
         $this->statuses = [
-            self::DRAFT => trans('iblog::common.status.draft'),
-            self::PENDING => trans('iblog::common.status.pending'),
-            self::PUBLISHED => trans('iblog::common.status.published'),
-            self::UNPUBLISHED => trans('iblog::common.status.unpublished'),
+            self::DRAFT => itrans('iblog::common.status.draft'),
+            self::PENDING => itrans('iblog::common.status.pending'),
+            self::PUBLISHED => itrans('iblog::common.status.published'),
+            self::UNPUBLISHED => itrans('iblog::common.status.unpublished'),
         ];
     }
 
