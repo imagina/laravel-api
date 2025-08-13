@@ -38,7 +38,7 @@ return [
             'description' => 'iuser::users.restore.description',
             'onlyFor' => ['super-admin'],
             'defaultAccess' => []
-        ]
+        ],
     ],
     'iuser.roles' => [
         'manage' => [
@@ -78,6 +78,20 @@ return [
             'defaultAccess' => []
         ]
     ],
+    'iuser.access' => [
+        'iadmin' => [
+            'title' =>  'iuser::access.iadmin.title',
+            'description' => 'iuser::access.iadmin.description',
+            'onlyFor' => [],
+            'defaultAccess' => []
+        ],
+        'ipanel' => [
+            'title' =>  'iuser::access.ipanel.title',
+            'description' => 'iuser::access.ipanel.description',
+            'onlyFor' => [],
+            'defaultAccess' => ['user']
+        ],
+    ]
     // append
 
 
