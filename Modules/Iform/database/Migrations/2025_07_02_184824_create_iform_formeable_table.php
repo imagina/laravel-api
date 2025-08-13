@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('iform_formeable', function (Blueprint $table) {
+        Schema::create('iform__formeable', function (Blueprint $table) {
             $table->id();
             $table->integer('form_id')->unsigned();
             $table->integer('formeable_id')->unsigned();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('iform_formeable');
+        Schema::dropIfExists('iform__formeable');
     }
 };
