@@ -10,7 +10,7 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create('iblog_post_category', function (Blueprint $table) {
+    Schema::create('iblog__post_category', function (Blueprint $table) {
       $table->id();
       $table->integer('post_id')->unsigned();
       $table->foreign('post_id')->references('id')->on('iblog__posts')->onDelete('cascade');
@@ -27,6 +27,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists('iblog_post_category');
+    Schema::dropIfExists('iblog__post_category');
   }
 };
