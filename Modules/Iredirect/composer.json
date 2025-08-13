@@ -1,0 +1,30 @@
+{
+    "name": "imagina/iredirect",
+    "description": "",
+    "authors": [
+        {
+            "name": "Imagina Colombia",
+            "email": "soporte@imaginacolombia.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Iredirect\\": "app/",
+            "Modules\\Iredirect\\Database\\Factories\\": "database/factories/",
+            "Modules\\Iredirect\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Iredirect\\Tests\\": "tests/"
+        }
+    }
+}

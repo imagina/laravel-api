@@ -1,0 +1,12 @@
+
+{
+    "name": "Iredirect",
+    "alias": "iredirect",
+    "description": "manage iredirect",
+    "keywords": ["iredirect"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Iredirect\\Providers\\IredirectServiceProvider"
+    ],
+    "files": []
+}
