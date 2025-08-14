@@ -32,7 +32,7 @@ return new class extends Migration
             $table->foreign('gamma_id')->references('id')->on('irentcar__gammas')->onDelete('restrict');
 
             $table->integer('gamma_office_id')->unsigned();
-            $table->foreign('gamma_office_id')->references('id')->on('irentcar__offices')->onDelete('restrict');
+            $table->foreign('gamma_office_id')->references('id')->on('irentcar__gamma_office')->onDelete('restrict');
 
             $table->json('gamma_office_extra_ids')->nullable();
 
