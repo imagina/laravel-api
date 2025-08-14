@@ -30,7 +30,9 @@ class DailyAvailability extends CoreModel
         'gamma_office_id',
         'quantity',
         'date',
-        'reason'
+        'reason',
+        'price',
+        'reserved_quantity'
     ];
 
     /*

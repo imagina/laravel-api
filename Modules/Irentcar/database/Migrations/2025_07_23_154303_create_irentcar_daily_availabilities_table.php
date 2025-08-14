@@ -20,8 +20,10 @@ return new class extends Migration
             $table->foreign('gamma_office_id')->references('id')->on('irentcar__gamma_office')->onDelete('restrict');
 
             $table->integer('quantity')->default(0)->unsigned();
+            $table->decimal('price', 15, 2)->nullable();
             $table->timestamp('date');
             $table->text('reason')->nullable();
+            $table->integer('reserved_quantity')->default(0)->unsigned();
 
             // Audit fields
             $table->timestamps();
