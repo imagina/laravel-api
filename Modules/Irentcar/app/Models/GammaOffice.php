@@ -58,4 +58,9 @@ class GammaOffice extends CoreModel
     {
         return $this->belongsTo(Office::class, 'office_id');
     }
+
+    public function gamma()
+    {
+        return $this->belongsTo(Gamma::class, 'gamma_id');
+    }
 }
