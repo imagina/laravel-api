@@ -113,6 +113,12 @@ Route::prefix('/irentcar/v1')->group(function () {
                 'path' => '/validation/date', // Route Path
                 'uses' => 'validationDate', //Name of the controller method to use
                 'middleware' => [] // if not set up middleware, auth:api will be the default
+            ],
+            [
+                'method' => 'get', // get,post,put....
+                'path' => '/available/gammas', // Route Path
+                'uses' => 'getAvailableGammas', //Name of the controller method to use
+                'middleware' => [] // if not set up middleware, auth:api will be the default
             ]
         ]
     ]);

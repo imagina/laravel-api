@@ -17,6 +17,7 @@ class Reservation extends CoreModel
         'create' => 'Modules\Irentcar\Http\Requests\CreateReservationRequest',
         'update' => 'Modules\Irentcar\Http\Requests\UpdateReservationRequest',
         'validationDate' => 'Modules\Irentcar\Http\Requests\ValidationDateRequest',
+        'validationGammasToReservation' => 'Modules\Irentcar\Http\Requests\ValidationGammasToReservationRequest',
     ];
     //Instance external/internal events to dispatch with extraData
     public array $dispatchesEventsWithBindings = [
