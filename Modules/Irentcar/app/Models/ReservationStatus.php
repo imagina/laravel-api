@@ -8,7 +8,7 @@ class ReservationStatus
 
     const APPROVED = 1;
     const CANCELLED = 2;
-
+    const FINISHED = 3;
     private $data = [];
 
     public function __construct()
@@ -17,6 +17,7 @@ class ReservationStatus
             self::PENDING => itrans('irentcar::reservation.status.pending'),
             self::APPROVED => itrans('irentcar::reservation.status.approved'),
             self::CANCELLED => itrans('irentcar::reservation.status.cancelled'),
+            self::FINISHED => itrans('irentcar::reservation.status.finished'),
         ];
     }
 

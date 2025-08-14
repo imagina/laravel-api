@@ -27,6 +27,7 @@ return [
         'pending' => 'Pendiente',
         'approved' => 'Aprobado',
         'cancelled' => 'Cancelado',
+        'finished' => 'Finalizada'
     ],
     'email' => [
         'created' => [

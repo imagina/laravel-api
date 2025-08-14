@@ -8,5 +8,6 @@ return [
         'pending' => 'Pending',
         'approved' => 'Approved',
         'cancelled' => 'Cancelled',
+        'finished' => 'Finalizada'
     ],
 ];
