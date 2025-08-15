@@ -5,22 +5,28 @@ namespace Modules\Irentcar\Services;
 use Modules\Irentcar\Repositories\GammaOfficeRepository;
 use Modules\Irentcar\Repositories\GammaRepository;
 use Modules\Irentcar\Repositories\GammaOfficeExtraRepository;
-use Illuminate\Support\Facades\Http;
+use Modules\Irentcar\Repositories\DailyAvailabilityRepository;
+
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class ReservationService
 {
     private $gammaOfficeRepository;
     private $gammaRepository;
     private $gammaOfficeExtraRepository;
+    private $dailyAvailabilityRepository;
 
     public function __construct(
         GammaOfficeRepository $gammaOfficeRepository,
         GammaRepository $gammaRepository,
-        GammaOfficeExtraRepository $gammaOfficeExtraRepository
+        GammaOfficeExtraRepository $gammaOfficeExtraRepository,
+        DailyAvailabilityRepository $dailyAvailabilityRepository
     ) {
         $this->gammaOfficeRepository = $gammaOfficeRepository;
         $this->gammaRepository = $gammaRepository;
         $this->gammaOfficeExtraRepository = $gammaOfficeExtraRepository;
+        $this->dailyAvailabilityRepository  = $dailyAvailabilityRepository;
     }
 
     /**
@@ -29,6 +35,8 @@ class ReservationService
      */
     public function getDataToCreate($data)
     {
+        \Log::info("Irentcart::getDataToCreate|INIT");
+
         //Get User ID
         $userId = \Auth::user()->id;
         $data['user_id'] = $userId;
@@ -38,6 +46,11 @@ class ReservationService
         $this->getExtrasData($data);
         $this->getTotalPrice($data);
         $this->getConvertionsData($data);
+        $this->processToDailyAvailabilities($data);
+
+        \Log::info("Irentcart::getDataToCreate|END");
+
+
 
         return $data;
     }
@@ -102,6 +115,45 @@ class ReservationService
 
         if (isset($result['USDRates'])) {
             $data['options']['USDRates'] = $result['USDRates'];
+        }
+    }
+
+
+    private function processToDailyAvailabilities(array &$data): void
+    {
+        $pickupDate = Carbon::parse($data['pickup_date'])->startOfDay();
+        $dropoffDate = Carbon::parse($data['dropoff_date'])->startOfDay();
+        $gammaOfficeId = $data['gamma_office_id'];
+
+        //Obtener la entidad padre con sus disponibilidades segun el gammaOfficeId | Importante para crear por si no esta
+        $params = ['include' => ['dailyAvailabilities']];
+        $gammaOffice = $this->gammaOfficeRepository->getItem($gammaOfficeId, json_decode(json_encode($params)));
+
+        //Iterar por cada día del rango segun la reserva
+        $period = CarbonPeriod::create($pickupDate, $dropoffDate);
+        foreach ($period as $date) {
+            $dateKey = $date->format('Y-m-d');
+
+            //Buscar si ya existe disponibilidad para ese día
+            $daily = $gammaOffice->dailyAvailabilities->first(function ($item) use ($dateKey) {
+                return Carbon::parse($item->date)->format('Y-m-d') === $dateKey;
+            });
+
+            if ($daily) {
+                // Ya existe: incrementar reserved_quantity
+                $daily->reserved_quantity += 1;
+                $daily->save();
+            } else {
+                // No existe: crear nuevo registro
+                $this->dailyAvailabilityRepository->create([
+                    'gamma_office_id'    => $gammaOffice->id,
+                    'quantity'           => $gammaOffice->quantity,
+                    'date'               => $dateKey,
+                    'reserved_quantity'  => 1,
+                    'reason'             => null,
+                    'price'              => null
+                ]);
+            }
         }
     }
 }
