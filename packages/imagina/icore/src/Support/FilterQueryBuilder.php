@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class FilterQueryBuilder
 {
-    public static function apply(Builder $query, object|string|array $filterData, string|array $fieldName, ?Model $model = null): Builder
+    public static function apply(Builder $query, mixed $filterData, string|array $fieldName, ?Model $model = null): Builder
     {
         $filterData = self::normalizeFilterValue($fieldName, $filterData);
         $filterWhere = $filterData->where ?? null;
@@ -35,7 +35,7 @@ class FilterQueryBuilder
         };
     }
 
-    protected static function normalizeFilterValue(string $field, mixed $value): object|array|string
+    protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
         if ($field === 'id') {
             return (object)['where' => 'in', 'value' => (array)$value];
