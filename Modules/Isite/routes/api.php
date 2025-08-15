@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// add-use-controller
+use Modules\Isite\Http\Controllers\Api\ConfigsApiController;
 
 Route::prefix('/isite/v1')->group(function () {
-// append
+  Route::prefix('/configs')->group(function () {
+    Route::get('/', [ConfigsApiController::class, 'index']);
+    Route::get('/modules-info', [ConfigsApiController::class, 'modulesInfo']);
+  });
 });
