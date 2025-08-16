@@ -45,6 +45,16 @@ return [
       ],
     ]
   ],
+  'defaultLocale' => [
+    'name' => 'isite::defaultLocale',
+    'default' => env('APP_LOCALE', 'es'),
+    'dynamicField' => [
+      'type' => 'input',
+      'props' => [
+        'label' => 'isite::settings.defaultLocales'
+      ],
+    ]
+  ],
   'locales' => [
     'name' => 'isite::locales',
     'default' => [],
