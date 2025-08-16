@@ -4,6 +4,7 @@ namespace Modules\Isetting\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Imagina\Icore\Relations\EmptyRelation;
 
 class Setting extends CoreModel
 {
@@ -35,19 +36,19 @@ class Setting extends CoreModel
     /**
      * Media Fillable
      */
-    public $mediaFillable = [
+    public array $mediaFillable = [
         'mainimage' => 'single'
     ];
 
     /**
      * Relation Media
-     * Make the Many To Many Morph
+     * Make the Many-To-Many Morph
      */
     public function files()
     {
         if (isModuleEnabled('Imedia')) {
             return app(\Modules\Imedia\Relations\FilesRelation::class)->resolve($this);
         }
-        return new \Imagina\Icore\Relations\EmptyRelation();
+        return new EmptyRelation();
     }
 }
