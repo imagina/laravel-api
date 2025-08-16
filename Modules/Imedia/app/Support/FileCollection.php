@@ -5,91 +5,75 @@ namespace Modules\Imedia\Support;
 
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Imedia\Models\File;
+use Modules\Imedia\Transformers\FileTransformer;
 
 class FileCollection extends Collection
 {
 
-    /**
-     * Relation used with transformers in Modules
-     */
-    public function byZones(array $zones = [], $resource = null)
-    {
-        $files = $this; //Get files
-        $classInfo = $this->getClassInfo($resource);
-        //Get media fillable
-        $mediaFillable = $zones ?? [];
+  /**
+   * Relation used with transformers in Modules
+   */
+  public function byZones(array $zones = [], $resource = null): object
+  {
+    $classInfo = $this->getClassInfo($resource);
+    $response = collect($zones)->mapWithKeys(function ($fileType, $fieldName) use ($classInfo) {
+      $zone = strtolower($fieldName);
 
-        $response = []; //Default response
+      $filesByZone = $this->filter(fn($item) => $item->pivot->zone === $zone);
 
+      // No files? simulate with placeholder
+      if ($filesByZone->isEmpty()) {
+        $filesByZone = collect([0]);
+      }
 
-        if (count($files) > 0) {
-            //To each Zone (MediaFillable) - Transform Files
-            foreach ($mediaFillable as $fieldName => $fileType) {
-                $zone = strtolower($fieldName); //Get zone name
+      // Transform files
+      $transformed = $filesByZone
+        ->map(fn($file) => $this->transformFile($file, $classInfo))
+        ->filter(); // removes null/false if transformFile returns that
 
-                //Init the zone , multiple or single
-                $response[$zone] = ($fileType == 'multiple') ? [] : false;
-                //Get files by zone
-                $filesByZone = $files->filter(function ($item) use ($zone) {
-                    return ($item->pivot->zone == strtolower($zone));
-                });
+      // Single vs multiple
+      $value = ($fileType === 'multiple')
+        ? $transformed->values()->all()
+        : $transformed->first();
 
-                //Not files so Add fake file
-                if (!$filesByZone->count()) $filesByZone = [0];
+      return [$zone => $value];
+    });
 
+    //Response
+    return (object)$response->all();
+  }
 
-                //Transform files
-                foreach ($filesByZone as $file) {
+  /**
+   * Get information about the class that use this trait
+   */
+  private function getClassInfo($resource): array
+  {
+    //Get Model
+    $model = $resource->resource;
 
-                    $transformedFile = $this->transformFile($file, $classInfo);
-                    //Add to response
-                    if ($fileType == 'multiple') {
-                        if ($file) array_push($response[$zone], $transformedFile);
-                    } else
-                        $response[$zone] = $transformedFile;
-                }
-            }
-        }
-        //Response
-        return (object)$response;
+    $entityNamespace = get_class($model);
+    $entityNamespaceExploded = explode('\\', strtolower($entityNamespace));
+
+    return [
+      "moduleName" => $entityNamespaceExploded[1],
+      "entityName" => $entityNamespaceExploded[3],
+    ];
+  }
+
+  /**
+   *
+   */
+  public function transformFile($file, $classInfo, $defaultPath = null)
+  {
+    //Create a mockup of a file if not exist
+    if (!$file) {
+      if (!$defaultPath) {
+        $defaultPath = strtolower("modules/{$classInfo["moduleName"]}/img/{$classInfo["entityName"]}/default.jpg");
+      }
+
+      $file = new File(['path' => $defaultPath, 'is_folder' => 0]);
     }
 
-    /**
-     *
-     */
-    public function transformFile($file, $classInfo, $defaultPath = null)
-    {
-
-        //Create a mokup of a file if not exist
-        if (!$file) {
-            if (!$defaultPath) {
-                $defaultPath = strtolower("modules/{$classInfo["moduleName"]}/img/{$classInfo["entityName"]}/default.jpg");
-
-                $defaultPath = \Modules\Imedia\Support\FileHelper::validateMediaDefaultPath($defaultPath);
-            }
-            $file = new \Modules\Imedia\Models\File(['path' => $defaultPath, 'is_folder' => 0]);
-        }
-
-        //Transform the file
-        $transformerParams = $classInfo['entityName'] == 'user' ? ['ignoreUser' => true] : [];
-
-        return json_decode(json_encode(new \Modules\Imedia\Transformers\FileTransformer($file, $transformerParams)));
-    }
-
-    /**
-     * Get information about the class that use this trait
-     */
-    private function getClassInfo($resource): array
-    {
-        //Get Model
-        $model = $resource->resource;
-
-        $entityNamespace = get_class($model);
-        $entityNamespaceExploded = explode('\\', strtolower($entityNamespace));
-
-        return [
-            "moduleName" => $entityNamespaceExploded[1],
-            "entityName" => $entityNamespaceExploded[3],
-        ];
-    }
+    return json_decode(json_encode(new FileTransformer($file)));
+  }
 }
