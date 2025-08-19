@@ -103,4 +103,26 @@ return [
             ]
         ]
     ],
+    'configurationToGetAvailableGammas' => [
+        'default' => "by-date-range",
+        'name' => 'irentcar::configurationToGetAvailableGammas',
+        "onlySuperAdmin" => true,
+        'dynamicField' => [
+            'type' => 'select',
+            'colClass' => 'col-12 col-md-6',
+            'props' => [
+                'label' => 'irentcar::settings.configurationToGetAvailableGammas',
+                'useInput' => false,
+                'useChips' => false,
+                'multiple' => false,
+                'hideDropdownIcon' => true,
+                'newValueMode' => 'add-unique',
+                'options' => [
+                    ['label' => 'Por rango de fecha de la reservacion', 'value' => "by-date-range"],
+                    ['label' => 'Por fecha de recogida', 'value' => "by-pickup-date"],
+                ]
+            ]
+        ]
+    ],
+
 ];
