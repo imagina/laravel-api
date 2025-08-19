@@ -47,6 +47,29 @@ class EloquentUserRepository extends EloquentCoreRepository implements UserRepos
          *
          */
 
+        //filter by Role ID
+        if (isset($filter->roleId) && ((int)$filter->roleId) != 0) {
+            $query->whereIn('id', function ($query) use ($filter) {
+                $query->select('user_id')->from('iuser__role_user')->where('role_id', $filter->roleId);
+            });
+        }
+
+        //filter by Role Slug
+        if (isset($filter->roleSystemName)) {
+            $query->whereIn('id', function ($query) use ($filter) {
+                $query->select('user_id')->from('iuser__role_user')->where('role_id', function ($subQuery) use ($filter) {
+                    $subQuery->select('id')->from('iuser__roles')->where('system_name', $filter->roleSystemName);
+                });
+            });
+        }
+
+        //filter by Roles
+        if (isset($filter->roles) && count($filter->roles)) {
+            $query->whereIn('id', function ($query) use ($filter) {
+                $query->select('user_id')->from('iuser__role_user')->whereIn('role_id', $filter->roles);
+            });
+        }
+
         //Response
         return $query;
     }
@@ -74,7 +97,4 @@ class EloquentUserRepository extends EloquentCoreRepository implements UserRepos
         //Response
         return $model;
     }
-
-
-
 }
