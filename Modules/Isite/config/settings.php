@@ -57,7 +57,7 @@ return [
   ],
   'locales' => [
     'name' => 'isite::locales',
-    'default' => [],
+    'default' => ['es'],
     'dynamicField' => [
       'type' => 'treeSelect',
       "onlySuperAdmin" => true,

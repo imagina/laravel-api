@@ -11,7 +11,7 @@ Route::prefix('/itranslation/v1')->group(function () {
       'prefix' => 'translations',
       'controller' => TranslationApiController::class,
       'permission' => 'itranslation.translations',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
