@@ -12,7 +12,7 @@ Route::prefix('/isetting/v1')->group(function () {
         'prefix' => 'settings',
         'controller' => SettingApiController::class,
         'permission' => 'isetting.settings',
-        'middleware' => ['index' => []],
+        'middleware' => ['index' => [],'show' => []],
         'customRoutes' => [ // Include custom routes if needed
             [
                 'method' => 'post', // get,post,put....
