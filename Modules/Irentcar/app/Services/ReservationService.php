@@ -10,6 +10,8 @@ use Modules\Irentcar\Repositories\DailyAvailabilityRepository;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class ReservationService
 {
     private $gammaOfficeRepository;
@@ -30,17 +32,14 @@ class ReservationService
     }
 
     /**
+     * Used by ReservationRepository (BeforeCreate)
      * Get Attributes to create a Reservation
      * @param mixed $data
      */
     public function getDataToCreate($data)
     {
-        \Log::info("Irentcart::getDataToCreate|INIT");
 
-        //Get User ID
-        $userId = \Auth::user()->id;
-        $data['user_id'] = $userId;
-
+        $this->validationsUser($data);
         $this->getPriceFromGammaOffice($data);
         $this->getGammaData($data);
         $this->getExtrasData($data);
@@ -48,17 +47,55 @@ class ReservationService
         $this->getConvertionsData($data);
         $this->processToDailyAvailabilities($data);
 
-        \Log::info("Irentcart::getDataToCreate|END");
-
-
-
         return $data;
+    }
+
+    private function validationsUser(&$data)
+    {
+        //Get User
+        $user = \Auth::user();
+        //Configration from Setting
+        $ageSetting = setting("irentcar::minDriveAge");
+
+        //Get age from User Profile
+        $ageField = collect($user->fields)->firstWhere('title', 'age');
+        $age = $ageField->value ?? null;
+
+        //Validation Aage
+        if (!$age || $age <= $ageSetting) {
+            throw new \Exception(
+                itrans('irentcar::reservation.validation.minimunUserAge', ['age' => $ageSetting]),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        //Set user id
+        $data['user_id'] = $user->id;
     }
 
     private function getPriceFromGammaOffice(&$data)
     {
-        $gammaOffice = $this->gammaOfficeRepository->getItem($data['gamma_office_id']);
-        $data['gamma_office_price'] = $gammaOffice->price;
+
+        $gammaOfficeId = $data['gamma_office_id'];
+        $pickupDate = Carbon::parse($data['pickup_date'])->format('Y-m-d');
+
+        //Priority check in dailyAvailability to this specific date and this gamma_office_id
+        $params = [
+            'filter' => [
+                'field' => 'date',
+                'gamma_office_id' => $gammaOfficeId
+            ]
+        ];
+        $dailyAvailability = $this->dailyAvailabilityRepository->getItem($pickupDate, json_decode(json_encode($params)));
+
+        //To specific date get the price
+        if ($dailyAvailability && !is_null($dailyAvailability->price)) {
+            $data['gamma_office_price'] = $dailyAvailability->price;
+        } else {
+            //Get Base
+            $gammaOffice = $this->gammaOfficeRepository->getItem($gammaOfficeId);
+            $data['gamma_office_price'] = $gammaOffice->price;
+        }
     }
 
     private function getGammaData(&$data)
@@ -118,7 +155,6 @@ class ReservationService
         }
     }
 
-
     private function processToDailyAvailabilities(array &$data): void
     {
         $pickupDate = Carbon::parse($data['pickup_date'])->startOfDay();
@@ -144,7 +180,7 @@ class ReservationService
                 $daily->reserved_quantity += 1;
                 $daily->save();
             } else {
-                // No existe: crear nuevo registro
+                // No existe: crear nuevo registro con algunos datos del padre
                 $this->dailyAvailabilityRepository->create([
                     'gamma_office_id'    => $gammaOffice->id,
                     'quantity'           => $gammaOffice->quantity,
