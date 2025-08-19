@@ -8,5 +8,6 @@ return [
     'slotsInvervalMinutes' => 'Intervalor en minutos de los slots',
     'slotRangeStart' => 'Slot inicia',
     'slotRangeEnd' => 'Slot termina',
-    'minDriveAge' => 'Edad Minima del Conductor'
+    'minDriveAge' => 'Edad Minima del Conductor',
+    'configurationToGetAvailableGammas' => 'Configuracion para obtener las Gamas Disponibles'
 ];

@@ -22,6 +22,7 @@ return [
     'validation' => [
         'dropoffDateNotValid' => 'La fecha de entrega no es valida',
         'pickupHourNotValid' => 'La hora de recogida no es valida',
+        'minimunUserAge' => 'La edad minima para poder reservar debe ser de: :age'
     ],
     'status' => [
         'pending' => 'Pendiente',
