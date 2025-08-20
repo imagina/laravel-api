@@ -3,13 +3,23 @@
 namespace Modules\Irentcar\Services;
 
 use Carbon\Carbon;
-use Modules\Irentcar\Models\Reservation;
 use Modules\Irentcar\Models\GammaOffice;
+use Modules\Irentcar\Models\DailyAvailability;
+use Modules\Irentcar\Repositories\GammaOfficeRepository;
+
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class GammaService
 {
+
+    private $gammaOfficeRepository;
+
+    public function __construct(
+        GammaOfficeRepository $gammaOfficeRepository
+    ) {
+        $this->gammaOfficeRepository = $gammaOfficeRepository;
+    }
 
     /**
      * MAIN PROCESS
@@ -51,7 +61,7 @@ class GammaService
             throw new \Exception(itrans('irentcar::reservation.validation.dropoffDateNotValid'), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        //Validar que la hora de pickup esté disponible
+        //Validar que la Hora de Pickup esté disponible
         $pickupDateTime = Carbon::parse($data['pickup_date']);
         $pickupHour = $pickupDateTime->format('H:i');
 
@@ -64,77 +74,97 @@ class GammaService
     }
 
     /**
-     * Process to get available gammas
+     * Process to get Available Gammas
      */
-    private function getAvailableGammas($data, $params): mixed
+    private function getAvailableGammas(array $data, $paramsFromRequest)
     {
         $pickupOfficeId = $data['pickup_office_id'];
         $pickupDate = Carbon::parse($data['pickup_date'])->startOfDay();
-        $dropoffDate = Carbon::parse($data['dropoff_date'])->endOfDay();
+        $dropoffDate = Carbon::parse($data['dropoff_date'])->startOfDay();
 
-        //Obtener cada fecha en ese rango
-        $days = Carbon::parse($pickupDate)->daysUntil($dropoffDate)->map(fn($date) => $date->format('Y-m-d'));
+        //Get Range from setting configuration
+        [$startDate, $endDate] = $this->getDateRange($pickupDate, $dropoffDate);
 
-        //Always include Gamma | TODO CHECK
-        $include = empty($params->include) ? 'gamma' : $params->include;
+        //Get gammas to pickup office
+        $params = [
+            "include" => (array) (empty($paramsFromRequest->include) ? 'gamma' : $paramsFromRequest->include),
+            "filter" => ["office_id" => $pickupOfficeId]
+        ];
+        $paramsFromRequest = array_merge((array)$paramsFromRequest, $params);
+        $gammasOffice = $this->gammaOfficeRepository->getItemsBy(json_decode(json_encode($paramsFromRequest)));
 
-        //Preload gamma quantities with full gamma info | TODO: CACHEAR
-        $gammaOffices = GammaOffice::with($include)
-            ->where('office_id', $pickupOfficeId)
-            ->get()
-            ->keyBy('gamma_id'); //Esto permite acceder rápidamente a cada GammaOffice por su gamma_id, sin hacer búsquedas lineales.
+        //Get Daily Availabilities
+        $dailyAvailabilities = $this->getGroupedDailyAvailabilities($gammasOffice, $startDate, $endDate);
 
-        // Inicialmente asumimos que todas las gammas están disponibles
-        $viableGammaIds = collect($gammaOffices->keys())->flip(); // flip() para usar como mapa: [gamma_id => true]
+        $availableGammas = [];
 
-        //Opcional: Verificar al final la cantidad disponible para esa gamma | Dejarlo mientras se prueba
-        $gammaMinAvailable = collect(); // [gamma_id => min_available]
-
-        //Reservaciones en ese rango, agrupadas por dias y gammas
-        $reservations = Reservation::whereBetween('pickup_date', [$pickupDate, $dropoffDate])
-            ->where('pickup_office_id', $pickupOfficeId)
-            ->where('status', 1) // Approved
-            ->selectRaw('gamma_id, DATE(pickup_date) as day, COUNT(*) as reserved_count')
-            ->groupBy('gamma_id', 'day')
-            ->get()
-            ->groupBy('day'); // Agrupamos por día para simular el loop original
-
-        //Se recorren los dias
-        foreach ($days as $day) {
-            //Obtener las reservaciones para ese dia
-            $dailyReservations = $reservations[$day] ?? collect();
-            // Reindexamos por gamma_id para facilitar el acceso
-            $reservationsByGamma = $dailyReservations->keyBy('gamma_id');
-
-            foreach ($viableGammaIds->keys() as $gammaId) {
-                $reserved = $reservationsByGamma[$gammaId]->reserved_count ?? 0;
-                $available = $gammaOffices[$gammaId]->quantity - $reserved;
-
-                //Opcional: Verificar al final la cantidad disponible para esa gamma | Dejarlo mientras se prueba
-                $currentMin = $gammaMinAvailable[$gammaId] ?? $gammaOffices[$gammaId]->quantity;
-                $gammaMinAvailable[$gammaId] = min($currentMin, $available);
-
-                if ($available <= 0) {
-                    $viableGammaIds->forget($gammaId); // Ya no está disponible en todo el rango
-                }
-            }
-
-            if ($viableGammaIds->isEmpty()) {
-                break;
+        // Recorre cada gamma de esa oficina
+        foreach ($gammasOffice as $gammaOffice) {
+            if ($this->isGammaAvailableAllDays($gammaOffice, $dailyAvailabilities, $startDate, $endDate)) {
+                $availableGammas[] = $gammaOffice->gamma;
             }
         }
 
-        // Construir el resultado final con las gammas que sobrevivieron todos los días
-        $availableGammas = $viableGammaIds->keys()->map(function ($gammaId) use ($gammaOffices, $gammaMinAvailable) {
-            $gamma = $gammaOffices[$gammaId]->gamma;
-            //Opcional: Verificar al final la cantidad disponible para esa gamma | Dejarlo mientras se prueba
-            $gamma->setAttribute('available_quantity', $gammaMinAvailable[$gammaId] ?? 0);
-            //Return resul final
-            return $gamma;
-        })->values();
-
-
+        //Resultado Final
         return $availableGammas;
+    }
+
+    /**
+     * Determina el rango de fechas según la configuración.
+     */
+    private function getDateRange(Carbon $pickupDate, Carbon $dropoffDate): array
+    {
+        $configurationProcess = setting("irentcar::configurationToGetAvailableGammas");
+
+        if ($configurationProcess === 'by-pickup-date') {
+            return [$pickupDate, $pickupDate];
+        }
+
+        //By default: by-date-range
+        return [$pickupDate, $dropoffDate];
+    }
+
+    /**
+     * Consulta todos los registros de disponibilidad (DailyAvailability) para los gamma_office_ids involucrados (gammas de esa oficina), dentro del rango de fechas.
+     * Agrupa los resultados por gamma_office_id.
+     * Para cada grupo, reorganiza los elementos usando keyBy, donde la clave es la fecha sin hora (Y-m-d).
+     */
+    private function getGroupedDailyAvailabilities($gammasOffice, $pickupDate, $dropoffDate)
+    {
+        return DailyAvailability::whereIn('gamma_office_id', $gammasOffice->pluck('id'))
+            ->whereBetween('date', [$pickupDate->toDateString(), $dropoffDate->toDateString()])
+            ->get()
+            ->groupBy('gamma_office_id')
+            ->map(function ($items) {
+                return $items->keyBy(function ($item) {
+                    return Carbon::parse($item->date)->toDateString();
+                });
+            });
+    }
+
+    /**
+     * Verificar si la gamma esta disponible para el rango de fechas o hasta que cumpla con la cantidad de reservas.
+     */
+    private function isGammaAvailableAllDays($gammaOffice, $dailyAvailabilities, $pickupDate, $dropoffDate)
+    {
+        $currentDate = $pickupDate->copy();
+
+        while ($currentDate->lte($dropoffDate)) {
+            $dateKey = $currentDate->toDateString();
+            $daily = $dailyAvailabilities[$gammaOffice->id][$dateKey] ?? null;
+
+            $availableQuantity = $daily
+                ? $daily->quantity - $daily->reserved_quantity
+                : $gammaOffice->quantity;
+
+            if ($availableQuantity <= 0) {
+                return false;
+            }
+
+            $currentDate->addDay();
+        }
+
+        return true;
     }
 
     /**
@@ -142,6 +172,8 @@ class GammaService
      */
     private function addPagination($availableGammas, $params): LengthAwarePaginator
     {
+
+        $availableGammas = collect($availableGammas);
 
         $page = $params->page;
         $perPage = $params->take;
