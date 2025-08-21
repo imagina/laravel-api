@@ -1,12 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Islider\Http\Controllers\Api\IsliderApiController;
 use Modules\Islider\Http\Controllers\Api\SliderApiController;
 use Modules\Islider\Http\Controllers\Api\SlideApiController;
-// add-use-controller
-
-
 
 
 Route::prefix('/islider/v1')->group(function () {
@@ -15,7 +11,7 @@ Route::prefix('/islider/v1')->group(function () {
       'prefix' => 'sliders',
       'controller' => SliderApiController::class,
       'permission' => 'islider.sliders',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -30,7 +26,7 @@ Route::prefix('/islider/v1')->group(function () {
       'prefix' => 'slides',
       'controller' => SlideApiController::class,
       'permission' => 'islider.slides',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
