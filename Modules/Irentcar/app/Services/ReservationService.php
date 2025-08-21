@@ -19,6 +19,8 @@ class ReservationService
     private $gammaOfficeExtraRepository;
     private $dailyAvailabilityRepository;
 
+    private $gammaOffice;
+
     public function __construct(
         GammaOfficeRepository $gammaOfficeRepository,
         GammaRepository $gammaRepository,
@@ -40,8 +42,8 @@ class ReservationService
     {
 
         $this->validationsUser($data);
-        $this->getPriceFromGammaOffice($data);
         $this->getGammaData($data);
+        $this->getPriceFromGammaOffice($data);
         $this->getExtrasData($data);
         $this->getTotalPrice($data);
         $this->getConvertionsData($data);
@@ -50,6 +52,9 @@ class ReservationService
         return $data;
     }
 
+    /**
+     * Get user and validate age
+     */
     private function validationsUser(&$data)
     {
         //Get User
@@ -73,13 +78,16 @@ class ReservationService
         $data['user_id'] = $user->id;
     }
 
+    /**
+     * Get price from gammaOffice and priority in DailyAvailability
+     */
     private function getPriceFromGammaOffice(&$data)
     {
 
         $gammaOfficeId = $data['gamma_office_id'];
         $pickupDate = Carbon::parse($data['pickup_date'])->format('Y-m-d');
 
-        //Priority check in dailyAvailability to this specific date and this gamma_office_id
+        //Priority check in dailyAvailability to this specific Date and this gamma_office_id
         $params = [
             'filter' => [
                 'field' => 'date',
@@ -92,20 +100,30 @@ class ReservationService
         if ($dailyAvailability && !is_null($dailyAvailability->price)) {
             $data['gamma_office_price'] = $dailyAvailability->price;
         } else {
-            //Get Base
-            $gammaOffice = $this->gammaOfficeRepository->getItem($gammaOfficeId);
-            $data['gamma_office_price'] = $gammaOffice->price;
+            //Get Base price
+            $data['gamma_office_price'] = $this->gammaOffice->price;
         }
     }
 
+    /**
+     * Get gammaOffice, get gamma and set data
+     */
     private function getGammaData(&$data)
     {
-        $gamma = $this->gammaRepository->getItem($data['gamma_id']);
-        $data['gamma_data'] = $gamma->toArray();
+        //Get Gamma Office with Gamma and DailyAvailabilities
+        $params = ['include' => ['gamma', 'dailyAvailabilities']];
+        $this->gammaOffice = $this->gammaOfficeRepository->getItem($data['gamma_office_id'], json_decode(json_encode($params)));
+
+        $gamma = $this->gammaOffice->gamma->toArray();
+
+        //Set gamma data
+        $data['gamma_id'] = $gamma['id'];
+        //Save data as backup
+        $data['gamma_data'] = $gamma;
     }
 
     /**
-     * OPTIONAL
+     * OPTIONAL Get Extras data and total price to the extras
      */
     private function getExtrasData(&$data)
     {
@@ -136,6 +154,9 @@ class ReservationService
         }
     }
 
+    /**
+     * Get total price from gamma Office price + extras total price
+     */
     private function getTotalPrice(&$data)
     {
         $totalPrice = $data['gamma_office_price'];
@@ -145,6 +166,9 @@ class ReservationService
         $data['total_price'] = $totalPrice;
     }
 
+    /**
+     * Get Convertion Rates
+     */
     private function getConvertionsData(&$data)
     {
 
@@ -155,15 +179,16 @@ class ReservationService
         }
     }
 
+    /**
+     * Process to DailyAvailabilities: Create or Update reserved_quantity
+     */
     private function processToDailyAvailabilities(array &$data): void
     {
         $pickupDate = Carbon::parse($data['pickup_date'])->startOfDay();
         $dropoffDate = Carbon::parse($data['dropoff_date'])->startOfDay();
-        $gammaOfficeId = $data['gamma_office_id'];
 
-        //Obtener la entidad padre con sus disponibilidades segun el gammaOfficeId | Importante para crear por si no esta
-        $params = ['include' => ['dailyAvailabilities']];
-        $gammaOffice = $this->gammaOfficeRepository->getItem($gammaOfficeId, json_decode(json_encode($params)));
+        //Global Gamma Office
+        $gammaOffice = $this->gammaOffice;
 
         //Iterar por cada día del rango segun la reserva
         $period = CarbonPeriod::create($pickupDate, $dropoffDate);

@@ -14,7 +14,7 @@ class CreateReservationRequest extends CoreFormRequest
             'dropoff_date' => ['required', 'date_format:Y-m-d H:i'],
             'pickup_office_id' => 'required|integer|exists:irentcar__offices,id',
             'dropoff_office_id' => 'required|integer|exists:irentcar__offices,id',
-            'gamma_id' => 'required|integer|exists:irentcar__gammas,id',
+            //'gamma_id' => 'required|integer|exists:irentcar__gammas,id',
             'gamma_office_id' => 'required|integer|exists:irentcar__gamma_office,id',
             'gamma_office_extra_ids' => 'nullable|json',
         ];
