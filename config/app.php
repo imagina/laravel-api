@@ -76,6 +76,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'local_timezone' => env('LOCAL_TIMEZONE', 'AMERICA/BOGOTA'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

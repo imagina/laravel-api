@@ -59,3 +59,30 @@ public function files()
     'files' => $this->whenLoaded('files', fn() => $this->files->byZones($this->mediaFillable, $this)),
 ];
 ```
+
+### Endpoint | Attributes Example
+
+- To Media single , add zone and file id.
+
+```
+attributes[medias_single][$zone] = $fileId
+```
+
+Example: Zone = mainimage
+
+```
+attributes[medias_single][mainimage] = 1
+```
+
+- To Media gallery, add zone and files array ids.
+
+```
+attributes[medias_multi][$zone][files][] = $fileId
+```
+
+Example:  Zone = gallery
+
+```
+attributes[medias_multi][gallery][files][] = 1
+attributes[medias_multi][gallery][files][] = 2
+```

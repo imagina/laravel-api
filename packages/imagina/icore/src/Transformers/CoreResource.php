@@ -26,6 +26,7 @@ class CoreResource extends JsonResource
         $response = $this->mergeFillable($response);
         $response = $this->mergeTranslated($response);
         $response = $this->mergeRelations($response);
+        $response = $this->mergeAppends($response);
         //TODO: CHeck if needed put here the magic attributes again
 
         //Sort response
@@ -142,6 +143,18 @@ class CoreResource extends JsonResource
             // TODO: put again media a revisionable relations manage?
         }
 
+        return $response;
+    }
+
+    protected function mergeAppends(array $response): array
+    {
+        foreach ($this->resource->getAppends() as $appended) {
+            // Puedes usar snake_case o camelCase según tu preferencia
+            $camel = snakeToCamel($appended);
+            if (!array_key_exists($camel, $response)) {
+                $response[$camel] = $this->$appended;
+            }
+        }
         return $response;
     }
 
