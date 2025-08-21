@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             // Your fields...
             $table->timestamp('pickup_date');
-            $table->timestamp('dropoff_date');
+            $table->timestamp('dropoff_date')->nullable(); //OJO Esto se agrego por "Modo estricto de MySQL" cuando se instalo en el server. Igual se valida en el Request
 
             $table->integer('pickup_office_id')->unsigned();
             $table->foreign('pickup_office_id')->references('id')->on('irentcar__offices')->onDelete('restrict');
