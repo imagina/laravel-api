@@ -47,6 +47,8 @@ abstract class CoreFormRequest extends FormRequest
      */
     protected function getValidatorInstance(): Validator
     {
+        $this->prepareForValidation();
+
         $factory = $this->container->make('Illuminate\Validation\Factory');
         if (method_exists($this, 'validator')) {
             return $this->container->call([$this, 'validator'], compact('factory'));

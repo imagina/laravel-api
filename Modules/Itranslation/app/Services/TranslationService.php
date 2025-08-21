@@ -7,7 +7,7 @@ use Modules\Itranslation\Repositories\TranslationRepository;
 class TranslationService
 {
 
-    public function get(string $key, array $replace = [], string $locale)
+    public function get(string $key, array $replace = [], ?string $locale = null): mixed
     {
 
         $translation = $this->getFromDatabase($key, $replace, $locale);
@@ -20,7 +20,7 @@ class TranslationService
         return $translation;
     }
 
-    private function getFromDatabase(string $key, array $replace, string $locale)
+    private function getFromDatabase(string $key, array $replace, string $locale): mixed
     {
         $translation = app(TranslationRepository::class)->getItem(
             $key,
