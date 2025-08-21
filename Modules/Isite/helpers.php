@@ -10,14 +10,13 @@ if (!function_exists('getConversionRates')) {
     function getConversionRates()
     {
 
+        $key = 'conversion_rates';
+        $ttl = 86400; // 1 day
+
         if (config('app.cache')) {
-            return Cache::remember(
-                'conversion_rates',
-                config('cache.time', 2592000),
-                function () {
-                    return fetchConversionRates();
-                }
-            );
+            return Cache::remember($key, $ttl, function () {
+                return fetchConversionRates();
+            });
         }
 
         return fetchConversionRates();
@@ -30,9 +29,8 @@ if (!function_exists('getConversionRates')) {
 if (!function_exists('fetchConversionRates')) {
     function fetchConversionRates()
     {
-        $response = Http::withHeaders([
-            'app_token' => env('IMAGINA_RATES_TOKEN'),
-        ])->get(config('isite.urlConversionRate'));
+        $response = Http::withHeaders(['app_token' => env('IMAGINA_RATES_TOKEN')])
+            ->get(config('isite.urlConversionRate'));
 
         if ($response->successful()) {
             return $response->json();
