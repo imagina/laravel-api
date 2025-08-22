@@ -11,6 +11,12 @@ class IrentcarDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            InitialOfficesSeeder::class,
+            InitialGammasSeeder::class,
+            InitialExtrasSeeder::class,
+            InitialGammaOfficeSeeder::class,
+            InitialGammaOfficeExtraSeeder::class,
+        ]);
     }
 }
