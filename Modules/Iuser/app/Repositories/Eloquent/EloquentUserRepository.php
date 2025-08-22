@@ -70,6 +70,18 @@ class EloquentUserRepository extends EloquentCoreRepository implements UserRepos
             });
         }
 
+        //add filter by search
+        if (!empty($filter->search)) {
+            //find search in columns Customer_name and Customer_Last_Name
+            $query->where(function ($query) use ($filter) {
+                $query->where('iuser__users.id', 'like', '%' . $filter->search . '%')
+                    ->orWhere('first_name', 'like', '%' . $filter->search . '%')
+                    ->orWhereRaw('CONCAT(first_name,\' \',last_name) like ?', ['%' . $filter->search . '%'])
+                    ->orWhere('last_name', 'like', '%' . $filter->search . '%')
+                    ->orWhere('email', 'like', '%' . $filter->search . '%');
+            });
+        }
+
         //Response
         return $query;
     }
