@@ -37,7 +37,10 @@ class AuthApiController extends CoreApiController
             $this->validateWithModelRules($data, 'login');
 
             //Get user by email
-            $params = json_decode(json_encode(["filter" => ["field" => "email"]]));
+            $params = json_decode(json_encode([
+              "filter" => ["field" => "email"],
+              "include" => ["roles.translations"]
+            ]));
             $user = $this->modelRepository->getItem($data['email'], $params);
 
             //Validate user and password
@@ -47,7 +50,7 @@ class AuthApiController extends CoreApiController
 
             //Get
             $tokenData = $this->authService->getToken("password", $data);
-
+            $user->makeVisible('permissions');
             $response = ['data' => [
                 'user' => new UserTransformer($user),
                 'token' => $tokenData
