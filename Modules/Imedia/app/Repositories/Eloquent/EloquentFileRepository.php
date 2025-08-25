@@ -13,7 +13,7 @@ class EloquentFileRepository extends EloquentCoreRepository implements FileRepos
      * Filter names to replace
      * @var array
      */
-    protected array $replaceFilters = [];
+    protected array $replaceFilters = ['folderId'];
 
     /**
      * Relation names to replace
@@ -55,6 +55,14 @@ class EloquentFileRepository extends EloquentCoreRepository implements FileRepos
             $query->where('visibility', 'public');
         }
 
+        //filter by folderId
+        if(isset($filter->folderId)){
+            if(!$filter->folderId){
+                $query->whereNull('folder_id');
+            } else {
+                $query->where('folder_id', $filter->folderId);
+            }
+        }
 
         //Response
         return $query;

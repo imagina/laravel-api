@@ -38,7 +38,7 @@ class FileStoreService
         $fileData['originalName'] = $file->getClientOriginalName();
         $fileData['size'] = $file->getFileInfo()->getSize();
         $fileData['visibility'] = $data['visibility'] ?? 'public';
-        $fileData['parent_id'] = $data['parent_id'] ?? null;
+        $fileData['folder_id'] = (int)($data['folder_id'] ?? 0) ? $data['folder_id'] : null;
         //General Method
         return $this->processAndStore($file->getRealPath(), $file->getClientOriginalExtension(), $file->getMimeType(), $options, $fileData);
     }
@@ -97,7 +97,7 @@ class FileStoreService
         $generateThumbnails = $options['thumbnails'] ?? true;
 
         //Exist other with the same name
-        $fileName = $this->checkFilenameExist($fileName, $fileData['parent_id'], $disk);
+        $fileName = $this->checkFilenameExist($fileName, $fileData['folder_id'], $disk);
 
         // Resize if image and max size defined
         if (str_starts_with($mimetype, 'image')) {
@@ -120,7 +120,7 @@ class FileStoreService
         }
 
         //Get Data to Path
-        $path = FileHelper::makePath($fileName, $fileData['parent_id']);
+        $path = FileHelper::makePath($fileName, $fileData['folder_id']);
 
         //Create in DB
         $dataToSave = [
@@ -129,7 +129,7 @@ class FileStoreService
             'extension' => substr(strrchr($fileName, '.'), 1),
             'mimetype' => $mimetype,
             'filesize' => $fileData['size'],
-            'folder_id' => $fileData['parent_id'],
+            'folder_id' => $fileData['folder_id'],
             'is_folder' => 0,
             'disk' => $disk,
             'visibility' => $fileData['visibility']
