@@ -6,4 +6,5 @@ use Imagina\Icore\Repositories\CoreRepository;
 
 interface TranslationRepository extends CoreRepository
 {
+  public function getAllTranslations($params): mixed;
 }
