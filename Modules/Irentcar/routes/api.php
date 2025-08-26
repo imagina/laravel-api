@@ -16,7 +16,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'offices',
         'controller' => OfficeApiController::class,
         'permission' => 'irentcar.offices',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....
@@ -31,7 +31,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'gammas',
         'controller' => GammaApiController::class,
         'permission' => 'irentcar.gammas',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....
@@ -46,7 +46,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'extras',
         'controller' => ExtraApiController::class,
         'permission' => 'irentcar.extras',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....

@@ -16,9 +16,7 @@ class InitialCategoriesSeedSeeder extends Seeder
     if (Category::count() === 0) {
       $categories = [
         [
-          'show_menu' => true,
           'featured' => true,
-          'internal' => false,
           'en' => [
             'title' => 'News',
             'slug' => 'news',
@@ -39,9 +37,7 @@ class InitialCategoriesSeedSeeder extends Seeder
           ]
         ],
         [
-          'show_menu' => true,
           'featured' => false,
-          'internal' => false,
           'en' => [
             'title' => 'Updates',
             'slug' => 'updates',

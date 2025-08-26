@@ -79,7 +79,7 @@ class Post extends CoreModel
 
   public function categories()
   {
-    return $this->belongsToMany(Category::class, 'iblog__post__category');
+    return $this->belongsToMany(Category::class, 'iblog__post_category');
   }
 
   public function category()

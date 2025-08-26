@@ -12,7 +12,7 @@ class DeleteCategoryRequest extends CoreFormRequest
     public function rules(): array
     {
         return [
-            'id' => [new DeleteFunctionRule('iblog__post__category', $this->id, 'category_id', itrans('iblog::common.messages.deleteValidation'), 'Modules\Iblog\Repositories\PostRepository', 'post_id')]
+            'id' => [new DeleteFunctionRule('iblog__post_category', $this->id, 'category_id', itrans('iblog::common.messages.deleteValidation'), 'Modules\Iblog\Repositories\PostRepository', 'post_id')]
         ];
     }
 

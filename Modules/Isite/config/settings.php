@@ -7,7 +7,7 @@ return [
    * SITE - isite
    * =======================================
    */
-  'site-name' => [
+  'siteName' => [
     'name' => 'isite::site-name',
     'default' => 'My Site',
     'isTranslatable' => true,
@@ -20,7 +20,7 @@ return [
       ]
     ]
   ],
-  'site-name-mini' => [
+  'siteNameMini' => [
     'name' => 'isite::site-name-mini',
     'default' => 'my site',
     'isTranslatable' => true,
@@ -32,12 +32,13 @@ return [
       ],
     ]
   ],
-  'site-description' => [
+  'siteDescription' => [
     'name' => 'isite::site-description',
     'default' => null,
     'isTranslatable' => true,
     'dynamicField' => [
       'type' => 'input',
+      'columns' => 'col-12',
       'props' => [
         'label' => 'isite::settings.site-description',
         'type' => 'textarea',
@@ -86,11 +87,9 @@ return [
     'name' => 'isite::logo1',
     'isMedia' => 'media_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
-      'quickSetting' => true,
       'props' => [
         'label' => 'isite::settings.logo1',
         'zone' => 'mainimage',
@@ -105,7 +104,6 @@ return [
     'name' => 'isite::logo2',
     'isMedia' => 'media_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
@@ -122,7 +120,6 @@ return [
     'name' => 'isite::logo3',
     'isMedia' => 'media_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
@@ -139,7 +136,6 @@ return [
     'name' => 'isite::logoIadmin',
     'isMedia' => 'media_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
@@ -156,7 +152,6 @@ return [
     'name' => 'isite::logoIadminSM',
     'isMedia' => 'media_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
@@ -173,7 +168,6 @@ return [
     'name' => 'isite::favicon',
     'isMedia' => 'medias_single',
     'dynamicField' => [
-      'fakeFieldName' => 'mainimage',
       'type' => 'media',
       'groupName' => 'media',
       'groupTitle' => 'isite::settings.groups.media.title',
