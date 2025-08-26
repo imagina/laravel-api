@@ -35,5 +35,14 @@ Route::prefix('/iblog/v1')->group(function () {
       //  ]
       // ]
     ]);
+    /**
+     * STATICS CLASS
+     */
+    Route::apiCrud([
+      'module' => 'iblog',
+      'prefix' => 'statuses',
+      'staticEntity' => 'Modules\Iblog\Models\Status',
+      'middleware' => ['index' => [], 'show' => []]
+    ]);
 // append
 });
