@@ -17,8 +17,7 @@ class UpdateCategoryRequest extends CoreFormRequest
     {
         return [
             'title' => 'required|min:1',
-            'slug' => ['required', new UniqueSlugRule('iblog__category_translations', null, null,
-                itrans('iblog::category.messages.sameSlug', ['slug' => $this->input(app()->getLocale() . '.slug')])), 'min:1', "alpha_dash:ascii"],
+            'slug' => ['required', 'min:1', "alpha_dash:ascii"],
             'description' => 'min:1',
         ];
     }
