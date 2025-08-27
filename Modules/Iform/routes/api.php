@@ -5,7 +5,7 @@ use Modules\Iform\Http\Controllers\Api\BlockApiController;
 use Modules\Iform\Http\Controllers\Api\FieldApiController;
 use Modules\Iform\Http\Controllers\Api\FormApiController;
 use Modules\Iform\Http\Controllers\Api\LeadApiController;
-use Modules\Iform\Http\Controllers\Api\TypeApiController;
+// add-use-controller
 
 Route::prefix('/iform/v1')->group(function () {
     Route::apiCrud([

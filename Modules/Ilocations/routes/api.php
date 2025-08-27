@@ -5,6 +5,7 @@ use Modules\Ilocations\Http\Controllers\Api\CountryApiController;
 use Modules\Ilocations\Http\Controllers\Api\ProvinceApiController;
 use Modules\Ilocations\Http\Controllers\Api\CityApiController;
 use Modules\Ilocations\Http\Controllers\Api\LocatableApiController;
+// add-use-controller
 
 Route::prefix('/ilocations/v1')->group(function () {
     Route::apiCrud([
