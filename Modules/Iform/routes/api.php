@@ -6,7 +6,6 @@ use Modules\Iform\Http\Controllers\Api\FieldApiController;
 use Modules\Iform\Http\Controllers\Api\FormApiController;
 use Modules\Iform\Http\Controllers\Api\LeadApiController;
 use Modules\Iform\Http\Controllers\Api\TypeApiController;
-
 // add-use-controller
 
 Route::prefix('/iform/v1')->group(function () {
@@ -31,14 +30,13 @@ Route::prefix('/iform/v1')->group(function () {
     'controller' => FieldApiController::class,
     'permission' => 'iform.fields',
     'middleware' => ['index' => [], 'show' => []],
-    // 'customRoutes' => [ // Include custom routes if needed
-    //  [
-    //    'method' => 'post', // get,post,put....
-    //    'path' => '/some-path', // Route Path
-    //    'uses' => 'ControllerMethodName', //Name of the controller method to use
-    //    'middleware' => [] // if not set up middleware, auth:api will be the default
-    //  ]
-    // ]
+    'customRoutes' => [
+      [
+        'method' => 'post', // get,post,put....
+        'path' => '/updateOrders', // Route Path
+        'uses' => 'batchUpdate' //Name of the controller method to use
+      ]
+    ]
   ]);
   Route::apiCrud([
     'module' => 'iform',
