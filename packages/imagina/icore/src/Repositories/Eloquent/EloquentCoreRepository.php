@@ -289,13 +289,13 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
     public function bulkOrder(array $data, ?object $params = null): Collection
     {
         //Instance the orderField
-        $orderField = $params->filter->field ?? 'position';
+        $orderField = $params->filter->field ?? 'sort_order';
         //loop through data to update the position according to index data
-        foreach ($data as $key => $item) {
-            $this->model->query()->find($item['id'])->update([$orderField => ++$key]);
+        foreach ($data as $item) {
+          $this->updateBy($item['id'], [$orderField => $item[$orderField]]);
         }
         //Response
-        return $this->model->query()->whereIn('id', array_column($data, "id"))->get();
+        return $this->getItemsBy((object)['filter' => (object)['id' => array_column($data, "id")]]);
     }
 
     /**
