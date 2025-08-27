@@ -429,4 +429,16 @@ return [
       ]
     ]
   ],
+  'enableDynamicFieldsCache' => [
+    'name' => 'isite::enableDynamicFieldsCache',
+    'default' => "0",
+    'dynamicField' => [
+      'type' => 'checkbox',
+      'props' => [
+        'label' => 'isite::common.settings.enableDynamicFieldsCache',
+        'trueValue' => "1",
+        'falseValue' => "0",
+      ]
+    ]
+  ],
 ];
