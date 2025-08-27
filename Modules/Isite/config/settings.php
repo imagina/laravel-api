@@ -383,4 +383,50 @@ return [
       ]
     ]
   ],
+
+
+  'iadminTheme' => [
+    'name' => 'isite::iadminTheme',
+    'default' => '1',
+    'dynamicField' => [
+      'type' => 'select',
+      'props' => [
+        'label' => 'isite::common.settings.cms.iadminTheme.title',
+        'options' => [
+          ['label' => 'isite::common.settings.cms.iadminTheme.theme1', 'value' => '1'],
+          ['label' => 'isite::common.settings.cms.iadminTheme.theme2', 'value' => '2'],
+        ]
+      ]
+    ]
+  ],
+  'showGoToSiteButton' => [
+    'name' => 'isite::showGoToSiteButton',
+    'default' => '1',
+    'dynamicField' => [
+      'type' => 'select',
+      'props' => [
+        'label' => 'isite::common.settings.cms.showGoToSiteButton',
+        'options' => [
+          ['label' => 'isite::common.yes', 'value' => '1'],
+          ['label' => 'isite::common.no', 'value' => '0'],
+        ]
+      ],
+    ]
+  ],
+  'offline' => [
+    'name' => 'isite::offline',
+    'default' => '0',
+    'dynamicField' => [
+      'type' => 'select',
+      'groupName' => 'cms',
+      'groupTitle' => 'isite::common.settingGroups.cms',
+      'props' => [
+        'label' => 'isite::common.settings.cms.offline',
+        'options' => [
+          ['label' => 'isite::common.yes', 'value' => '1'],
+          ['label' => 'isite::common.no', 'value' => '0'],
+        ]
+      ]
+    ]
+  ],
 ];
