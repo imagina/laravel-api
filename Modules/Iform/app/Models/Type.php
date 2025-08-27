@@ -111,7 +111,7 @@ class Type extends CoreStaticModel
 
 
     /*
-    * GET id by value (email,phone......) | Important: Lo utilizan en un filtro
+    * GET id by value (email,phone......) | Important: It is used in a filter
     */
     public function getIdByValue($value)
     {
