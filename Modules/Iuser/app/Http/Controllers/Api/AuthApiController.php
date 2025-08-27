@@ -2,6 +2,7 @@
 
 namespace Modules\Iuser\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Imagina\Icore\Http\Controllers\CoreApiController;
@@ -14,230 +15,222 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Iuser\Transformers\UserTransformer;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
-use Exception;
+
 
 class AuthApiController extends CoreApiController
 {
 
-    protected AuthService $authService;
+  protected $authService;
 
-    public function __construct(User $model, UserRepository $modelRepository, AuthService $authService)
-    {
-        parent::__construct($model, $modelRepository);
-        $this->authService = $authService;
+  public function __construct(User $model, UserRepository $modelRepository, AuthService $authService)
+  {
+    parent::__construct($model, $modelRepository);
+    $this->authService = $authService;
+  }
+
+  /**
+   * Login User
+   */
+  public function login(Request $request): JsonResponse
+  {
+    try {
+      //Validate request
+      $data = $request->input('attributes') ?? [];
+      $this->validateWithModelRules($data, 'login');
+
+      //Get user by email
+      $user = $this->authService->getUserData($data['email'], 'email');
+
+      //Validate user and password
+      if (!$user || !Hash::check($data['password'], $user->password)) {
+        throw new \Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
+      }
+
+      //Get
+      $tokenData = $this->authService->getToken("password", $data);
+      $response = ['data' => [
+        'user' => new UserTransformer($user),
+        'token' => $tokenData
+      ]];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
     }
 
-    /**
-     * Login User
-     */
-    public function login(Request $request): JsonResponse
-    {
-        try {
-            //Validate request
-            $data = $request->input('attributes') ?? [];
-            $this->validateWithModelRules($data, 'login');
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
 
-            //Get user by email
-            $params = json_decode(json_encode([
-              "filter" => ["field" => "email"],
-              "include" => ["roles.translations"]
-            ]));
-            $user = $this->modelRepository->getItem($data['email'], $params);
+  /**
+   * Login Client
+   * You can create some logins to diferents clients
+   * This token only can access with a especific Middleware (EnsureClientIsResourceOwner::class)
+   */
+  public function loginClient(Request $request): JsonResponse
+  {
+    try {
 
-            //Validate user and password
-            if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw new Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
-            }
+      $data = $request->input('attributes') ?? [];
 
-            //Get
-            $tokenData = $this->authService->getToken("password", $data);
-            $user->makeVisible('permissions');
-            $response = ['data' => [
-                'user' => new UserTransformer($user),
-                'token' => $tokenData
-            ]];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
+      //Add data
+      $dataVal = [
+        'clientId' => $data['client_id'] ?? env('PASSPORT_CLIENT_ID') ?? null,
+        'clientSecret' => $data['client_secret'] ?? env('PASSPORT_CLIENT_SECRET') ?? null
+      ];
+
+      //Validation
+      if (is_null($dataVal['clientId']) || is_null($dataVal['clientSecret'])) {
+        throw new \Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
+      }
+
+      //Get
+      $tokenData = $this->authService->getToken("client_credentials", $dataVal);
+
+      $response = ['data' => [$tokenData]];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
+    }
+
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
+
+  /**
+   * Refresh Token
+   */
+  public function refreshToken(Request $request): JsonResponse
+  {
+    try {
+
+      //Validate request
+      $data = $request->input('attributes') ?? [];
+      $this->validateWithModelRules($data, 'refreshToken');
+
+      //Get
+      $tokenData = $this->authService->getToken("refresh_token", $data);
+
+      $response = ['data' => $tokenData];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
+    }
+
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
+
+  /**
+   * Logout
+   */
+  public function logout(Request $request): JsonResponse
+  {
+    try {
+
+      $user = Auth::user();
+      $user->token()->revoke(); //Revoke the token
+
+      $response = ['data' => 'Logout successful'];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
+    }
+
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
+
+  /**
+   * Reset Password
+   */
+  public function reset(Request $request): JsonResponse
+  {
+    try {
+
+      //Validate request
+      $data = $request->input('attributes') ?? [];
+      $this->validateWithModelRules($data, 'resetPassword');
+
+      //Process reset password
+      $result = Password::sendResetLink(['email' => $data['email']]);
+
+      //TODO: Traducciones
+      if ($result === Password::ResetLinkSent) {
+        //status = passwords.sent
+        $message = "We have emailed your password reset link";
+      } else {
+        //status = passwords.throttled
+        $message = "Please wait before retrying";
+      }
+
+      $response = ['data' => $message];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
+    }
+
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
+
+  /**
+   * Reset Password Complete
+   */
+  public function resetComplete(Request $request): JsonResponse
+  {
+    try {
+
+      //Validate request
+      $data = $request->input('attributes') ?? [];
+      $this->validateWithModelRules($data, 'resetPasswordComplete');
+
+      //Process reset password complete
+      $result = Password::reset(
+        $data,
+        function ($model, string $password) {
+          $model->forceFill([
+            'password' => $password
+          ])->setRememberToken(\Str::random(60));
+
+          $model->save();
         }
+      );
 
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
+      //TODO: Traducciones
+      if ($result === Password::PasswordReset) {
+        //status = passwords.reset
+        $message = "Password reset successfully.";
+      } else {
+        //status = passwords.token
+        $message = "Invalid information";
+      }
+
+      $response = ['data' => $message];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
     }
 
-    /**
-     * Login Client
-     * You can create some logins to different clients
-     * This token only can access with a specific Middleware (EnsureClientIsResourceOwner::class)
-     */
-    public function loginClient(Request $request): JsonResponse
-    {
-        try {
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
 
-            $data = $request->input('attributes') ?? [];
+  /**
+   * Information about user logged
+   */
+  public function me(Request $request): JsonResponse
+  {
+    try {
+      $userId = Auth::id();
+      if (!$userId) {
+        throw new \Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
+      }
 
-            //Add data
-            $dataVal = [
-                'clientId' => $data['client_id'] ?? env('PASSPORT_CLIENT_ID') ?? null,
-                'clientSecret' => $data['client_secret'] ?? env('PASSPORT_CLIENT_SECRET') ?? null
-            ];
+      $user = $this->authService->getUserData($userId, 'id');
 
-            //Validation
-            if (is_null($dataVal['clientId']) || is_null($dataVal['clientSecret'])) {
-                throw new Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
-            }
+      //Not clear cache | TODO: From v10
+      //app()->instance('clearResponseCache', false);
 
-            //Get
-            $tokenData = $this->authService->getToken("client_credentials", $dataVal);
-
-            $response = ['data' => [$tokenData]];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
+      $response = ['data' => new UserTransformer($user)];
+    } catch (\Exception $e) {
+      [$status, $response] = $this->getErrorResponse($e);
     }
 
-    /**
-     * Refresh Token
-     */
-    public function refreshToken(Request $request): JsonResponse
-    {
-        try {
-
-            //Validate request
-            $data = $request->input('attributes') ?? [];
-            $this->validateWithModelRules($data, 'refreshToken');
-
-            //Get
-            $tokenData = $this->authService->getToken("refresh_token", $data);
-
-            $response = ['data' => $tokenData];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
-    }
-
-    /**
-     * Logout
-     */
-    public function logout(Request $request): JsonResponse
-    {
-        try {
-
-            $user = Auth::user();
-            $user->token()->revoke(); //Revoke the token
-
-            $response = ['data' => 'Logout successful'];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
-    }
-
-    /**
-     * Reset Password
-     */
-    public function reset(Request $request): JsonResponse
-    {
-        try {
-
-            //Validate request
-            $data = $request->input('attributes') ?? [];
-            $this->validateWithModelRules($data, 'resetPassword');
-
-            //Process reset password
-            $result = Password::sendResetLink(['email' => $data['email']]);
-
-            //TODO: Translations
-            if ($result === Password::ResetLinkSent) {
-                //status = passwords.sent
-                $message = "We have emailed your password reset link";
-            } else {
-                //status = passwords.throttled
-                $message = "Please wait before retrying";
-            }
-
-            $response = ['data' => $message];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
-    }
-
-    /**
-     * Reset Password Complete
-     */
-    public function resetComplete(Request $request): JsonResponse
-    {
-        try {
-
-            //Validate request
-            $data = $request->input('attributes') ?? [];
-            $this->validateWithModelRules($data, 'resetPasswordComplete');
-
-            //Process reset password complete
-            $result = Password::reset(
-                $data,
-                function ($model, string $password) {
-                    $model->forceFill([
-                        'password' => $password
-                    ])->setRememberToken(Str::random(60));
-
-                    $model->save();
-                }
-            );
-
-            //TODO: Translations
-            if ($result === Password::PasswordReset) {
-                //status = passwords.reset
-                $message = "Password reset successfully.";
-            } else {
-                //status = passwords.token
-                $message = "Invalid information";
-            }
-
-            $response = ['data' => $message];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
-    }
-
-    /**
-     * Information about user logged
-     */
-    public function me(Request $request): JsonResponse
-    {
-        try {
-            $user = Auth::user();
-
-            if (!$user) {
-                throw new Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
-            }
-
-            $user->makeVisible('permissions');
-
-            //Not clear cache | TODO: From v10
-            //app()->instance('clearResponseCache', false);
-
-            $response = ['data' => new UserTransformer($user)];
-        } catch (Exception $e) {
-            [$status, $response] = $this->getErrorResponse($e);
-        }
-
-        //Return response
-        return response()->json($response, $status ?? Response::HTTP_OK);
-    }
+    //Return response
+    return response()->json($response, $status ?? Response::HTTP_OK);
+  }
 }

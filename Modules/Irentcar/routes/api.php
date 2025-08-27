@@ -61,7 +61,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'gamma-office',
         'controller' => GammaOfficeApiController::class,
         'permission' => 'irentcar.gammaoffices',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....
@@ -76,7 +76,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'daily-availabilities',
         'controller' => DailyAvailabilityApiController::class,
         'permission' => 'irentcar.dailyavailabilities',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....
@@ -91,7 +91,7 @@ Route::prefix('/irentcar/v1')->group(function () {
         'prefix' => 'gamma-office-extra',
         'controller' => GammaOfficeExtraApiController::class,
         'permission' => 'irentcar.gammaofficeextras',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+        'middleware' => ['index' => [], 'show' => []],
         // 'customRoutes' => [ // Include custom routes if needed
         //  [
         //    'method' => 'post', // get,post,put....
@@ -132,25 +132,25 @@ Route::prefix('/irentcar/v1')->group(function () {
         'module' => 'irentcar',
         'prefix' => 'statuses',
         'staticEntity' => 'Modules\Irentcar\Models\Status',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
+      'middleware' => ['index' => [], 'show' => []],
     ]);
     Route::apiCrud([
         'module' => 'irentcar',
         'prefix' => 'transmission-types',
         'staticEntity' => 'Modules\Irentcar\Models\TransmissionType',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
+      'middleware' => ['index' => [], 'show' => []],
     ]);
     Route::apiCrud([
         'module' => 'irentcar',
         'prefix' => 'fuel-types',
         'staticEntity' => 'Modules\Irentcar\Models\FuelType',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
+      'middleware' => ['index' => [], 'show' => []],
     ]);
     Route::apiCrud([
         'module' => 'irentcar',
         'prefix' => 'vehicle-types',
         'staticEntity' => 'Modules\Irentcar\Models\VehicleType',
-        //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
+      'middleware' => ['index' => [], 'show' => []],
     ]);
     Route::apiCrud([
         'module' => 'irentcar',
