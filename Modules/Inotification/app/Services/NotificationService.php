@@ -12,7 +12,7 @@ class NotificationService
      * get Data Example to test notification layout (email)
      * @param mixed $request
      */
-    public function getDataExample($request)
+    public function getDataExample(mixed $request): mixed
     {
         $to = $request->query('email');
         $config = $request->query('config');

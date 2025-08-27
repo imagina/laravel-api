@@ -2,7 +2,7 @@
 
 //Return the list of the ignored fields
 if (!function_exists('getIgnoredFields')) {
-    function getIgnoredFields()
+    function getIgnoredFields(): array
     {
         return array_merge(
             [//Ever ignore this fields

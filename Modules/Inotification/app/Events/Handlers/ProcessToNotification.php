@@ -7,7 +7,7 @@ use Modules\Inotification\Services\NotificationDispatcherService;
 class ProcessToNotification
 {
 
-    public function handle($event)
+    public function handle($event): void
     {
         // All params Event
         $params = $event->params;
@@ -21,9 +21,9 @@ class ProcessToNotification
         if (method_exists($model, 'getNotificableParams')) {
             $notificableParams = $model->getNotificableParams();
             if (isset($extraData['event'])) {
-                //Get get params notification from Model
+                //Get params notification from Model
                 $paramsNotification = $notificableParams[$extraData['event']];
-                //Executte Notification Dispatcher
+                //Execute Notification Dispatcher
                 app(NotificationDispatcherService::class)->execute($paramsNotification);
             }
         } else {

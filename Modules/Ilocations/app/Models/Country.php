@@ -5,6 +5,7 @@ namespace Modules\Ilocations\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Country extends CoreModel
 {
@@ -45,22 +46,22 @@ class Country extends CoreModel
     'status'
   ];
 
-  public function provinces()
+  public function provinces(): HasMany
   {
     return $this->hasMany(Province::class);
   }
 
-  public function children()
+  public function children(): HasMany
   {
     return $this->hasMany(Province::class)->with("children");
   }
 
-  public function cities()
+  public function cities(): HasMany
   {
     return $this->hasMany(City::class);
   }
 
-  public function name()
+  public function name(): Attribute
   {
     return Attribute::get(function () {
       $currentTranslations = $this->getTranslation(locale());
@@ -77,7 +78,7 @@ class Country extends CoreModel
     });
   }
 
-  public function flagUrl()
+  public function flagUrl(): Attribute
   {
     return Attribute::get(function () {
       //Default
@@ -94,7 +95,7 @@ class Country extends CoreModel
 
   }
 
-  public function iconUrl()
+  public function iconUrl(): Attribute
   {
     return Attribute::get(function () {
       //Default

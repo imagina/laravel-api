@@ -16,6 +16,8 @@ use Laravel\Passport\Contracts\OAuthenticatable;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\Iuser\Traits\RolePermissionTrait;
+use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable implements OAuthenticatable
 {
@@ -23,9 +25,9 @@ class User extends Authenticatable implements OAuthenticatable
     use HasApiTokens, HasFactory, Notifiable, HasOptionalTraits, hasEventsWithBindings, RolePermissionTrait;
 
     protected $table = 'iuser__users';
-    public $transformer = 'Modules\Iuser\Transformers\UserTransformer';
-    public $repository = 'Modules\Iuser\Repositories\UserRepository';
-    public $requestValidation = [
+    public string $transformer = 'Modules\Iuser\Transformers\UserTransformer';
+    public string $repository = 'Modules\Iuser\Repositories\UserRepository';
+    public array $requestValidation = [
         'create' => 'Modules\Iuser\Http\Requests\CreateUserRequest',
         'update' => 'Modules\Iuser\Http\Requests\UpdateUserRequest',
         'login' => 'Modules\Iuser\Http\Requests\LoginUserRequest',
@@ -34,7 +36,7 @@ class User extends Authenticatable implements OAuthenticatable
         'resetPasswordComplete' => 'Modules\Iuser\Http\Requests\ResetPasswordCompleteUserRequest',
     ];
     //Instance external/internal events to dispatch with extraData
-    public $dispatchesEventsWithBindings = [
+    public array $dispatchesEventsWithBindings = [
         //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
         'created' => [
             ['path' => 'Modules\Ifillable\Events\CreateField']
@@ -59,7 +61,7 @@ class User extends Authenticatable implements OAuthenticatable
         'is_guest'
     ];
 
-    public $modelRelations = [
+    public array $modelRelations = [
         'roles' => 'belongsToMany'
     ];
 
@@ -111,7 +113,7 @@ class User extends Authenticatable implements OAuthenticatable
 
             $permissions = [];
             //Get All Modules
-            $allModules = \Module::allEnabled();
+            $allModules = Module::allEnabled();
             foreach ($allModules as $moduleName => $data) {
                 //Get All Permission from Module
                 $modulePermissions = config($moduleName . '.permissions');
@@ -153,7 +155,7 @@ class User extends Authenticatable implements OAuthenticatable
     {
 
         $url = env('APP_URL') . "/reset-password?token=" . $token;
-        \Log::info("Iuser::User||Token: " . $token);
+        Log::info("Iuser::User||Token: " . $token);
 
         //$this->notify(new ResetPasswordNotification($url));
     }

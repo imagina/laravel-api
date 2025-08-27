@@ -5,6 +5,7 @@ namespace Modules\Imenu\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MenuItem extends CoreModel
 {
@@ -42,7 +43,7 @@ class MenuItem extends CoreModel
     'class',
   ];
 
-  public function menu()
+  public function menu(): BelongsTo
   {
     return $this->belongsTo(Menu::class);
   }

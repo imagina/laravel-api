@@ -4,7 +4,7 @@ namespace Modules\Ilocations\Events\Handlers;
 
 class StoreLocatable
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $params = $event->params;
 
@@ -18,7 +18,7 @@ class StoreLocatable
         }
     }
 
-    public function syncExtraFillable($params, $model)
+    public function syncExtraFillable($params, $model): void
     {
         $cityId = $params['locatable']['city_id'] ?? null;
         $countryId = $params['locatable']['country_id'] ?? null;

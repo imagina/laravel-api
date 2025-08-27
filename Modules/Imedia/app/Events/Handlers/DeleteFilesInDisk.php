@@ -8,22 +8,22 @@ class DeleteFilesInDisk
 {
 
 
-    public function handle($event)
-    {
+  public function handle($event): void
+  {
 
-        // All params Event
-        $params = $event->params;
-        // Extra data custom event entity
-        //$extraData = $params['extraData'];
+    // All params Event
+    $params = $event->params;
+    // Extra data custom event entity
+    //$extraData = $params['extraData'];
 
-        $model = $params['model'];
+    $model = $params['model'];
 
-        //Validation Folder
-        if ($model->is_folder) {
-            Storage::disk($model->disk)->deleteDirectory($model->path);
-        }
-
-        //Delete File (Main File) and Delete Thumbnails if is an Image
-        $delete = app('Modules\Imedia\Services\ThumbnailService')->deleteThumbnails($model);
+    //Validation Folder
+    if ($model->is_folder) {
+      Storage::disk($model->disk)->deleteDirectory($model->path);
     }
+
+    //Delete File (Main File) and Delete Thumbnails if is an Image
+    $delete = app('Modules\Imedia\Services\ThumbnailService')->deleteThumbnails($model);
+  }
 }

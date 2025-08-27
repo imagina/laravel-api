@@ -5,7 +5,7 @@ namespace Modules\Ilocations\Events;
 
 class CreateLocation
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

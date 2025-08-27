@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Modules\Islider\Http\Controllers\Api\SliderApiController;
 use Modules\Islider\Http\Controllers\Api\SlideApiController;
 
-
 Route::prefix('/islider/v1')->group(function () {
     Route::apiCrud([
       'module' => 'islider',
@@ -37,7 +36,5 @@ Route::prefix('/islider/v1')->group(function () {
       // ]
     ]);
 // append
-
-
 
 });

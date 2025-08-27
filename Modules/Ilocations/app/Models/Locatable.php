@@ -25,7 +25,6 @@ class Locatable extends CoreModel
     'deleting' => [],
     'deleted' => []
   ];
-  public array $translatedAttributes = [];
   protected $fillable = [
     'entity_id',
     'entity_type',

@@ -2,7 +2,6 @@
 
 namespace Modules\Ifillable\Models;
 
-use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 
 class ModelFillable extends CoreModel

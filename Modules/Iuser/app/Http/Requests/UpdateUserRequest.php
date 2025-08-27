@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class UpdateUserRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [];
     }
@@ -17,12 +17,12 @@ class UpdateUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

@@ -75,8 +75,6 @@ Route::prefix('/iuser/v1')->group(function () {
             ->name($locale . '.api.iuser.auth.me')
             ->middleware('auth-can');
     });
-
-
     // append
 
 });

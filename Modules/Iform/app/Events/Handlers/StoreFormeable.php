@@ -4,7 +4,7 @@ namespace Modules\Iform\Events\Handlers;
 
 class StoreFormeable
 {
-    public function handle($event)
+    public function handle($event): void
     {
         // All params Event
         $params = $event->params;
@@ -22,7 +22,7 @@ class StoreFormeable
     /**
      * Handle syncing of the form to the model
      */
-    private function handleForm($data, $model)
+    private function handleForm($data, $model): void
     {
 
         if (!empty($data['form_id'])) {

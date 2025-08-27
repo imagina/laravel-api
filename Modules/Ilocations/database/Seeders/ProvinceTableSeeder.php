@@ -12,7 +12,7 @@ class ProvinceTableSeeder extends Seeder
   /**
    * Run the database seeds.
    */
-  public function run()
+  public function run(): void
   {
     Model::unguard();
     if (Province::count() == 0) {

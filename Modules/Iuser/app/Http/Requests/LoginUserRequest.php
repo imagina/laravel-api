@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class LoginUserRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => 'required|email',
@@ -20,12 +20,12 @@ class LoginUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

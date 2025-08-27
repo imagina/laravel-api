@@ -5,8 +5,6 @@ use Modules\Imenu\Http\Controllers\Api\MenuApiController;
 use Modules\Imenu\Http\Controllers\Api\MenuItemApiController;
 // add-use-controller
 
-
-
 Route::prefix('/imenu/v1')->group(function () {
     Route::apiCrud([
       'module' => 'imenu',
@@ -39,6 +37,4 @@ Route::prefix('/imenu/v1')->group(function () {
       // ]
     ]);
 // append
-
-
 });

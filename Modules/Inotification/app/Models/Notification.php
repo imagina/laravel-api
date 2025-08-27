@@ -3,6 +3,8 @@
 namespace Modules\Inotification\Models;
 
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Notification extends CoreModel
 {
@@ -55,19 +57,19 @@ class Notification extends CoreModel
     /**
      * Relations
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo("Modules\\Iuser\\Models\\User");
     }
 
-    public function recipientUser()
+    public function recipientUser(): BelongsTo
     {
         return $this->belongsTo("Modules\\Iuser\\Models\\User", "recipient");
     }
 
     /**
      * Return the created time in difference for humans (2 min ago)
-     * @return string
+     * @return attribute
      */
     protected function timeAgo(): Attribute
     {

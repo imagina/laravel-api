@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
   /**
@@ -9,7 +10,7 @@ return new class extends Migration {
    *
    * @return void
    */
-  public function up()
+  public function up(): void
   {
     Schema::create('iblog__category_translations', function (Blueprint $table) {
       $table->engine = 'InnoDB';
@@ -22,7 +23,7 @@ return new class extends Migration {
       $table->text('meta_description')->nullable();
       $table->text('meta_keywords')->nullable();
       $table->json('translatable_options')->nullable();
-      $table->unique(['slug', 'locale'])->change();
+      $table->unique(['slug', 'locale']);
 
       $table->integer('category_id')->unsigned();
       $table->string('locale')->index();
@@ -36,7 +37,7 @@ return new class extends Migration {
    *
    * @return void
    */
-  public function down()
+  public function down(): void
   {
     Schema::table('iblog__category_translations', function (Blueprint $table) {
       $table->dropForeign(['category_id']);

@@ -43,7 +43,7 @@ class MediaPath
     /**
      * Get the URL depending on configured disk
      */
-    public function getUrl($disk = null, $organizationId = null)
+    public function getUrl($disk = null, $organizationId = null): string
     {
         $path = ltrim($this->path, '/');
         $disk = is_null($disk) ? is_null($this->disk) ? setting('media::filesystem', null, config('imedia.filesystem')) : $this->disk : $disk;

@@ -5,6 +5,9 @@ namespace Modules\Iblog\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Modules\Iuser\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Post extends CoreModel
 {
@@ -67,7 +70,7 @@ class Post extends CoreModel
 
   /**
    * Relation Media
-   * Make the Many To Many Morph
+   * Make the Many-To-Many Morph
    */
   public function files()
   {
@@ -77,22 +80,22 @@ class Post extends CoreModel
     return new \Imagina\Icore\Relations\EmptyRelation();
   }
 
-  public function categories()
+  public function categories(): BelongsToMany
   {
     return $this->belongsToMany(Category::class, 'iblog__post_category');
   }
 
-  public function category()
+  public function category(): BelongsTo
   {
     return $this->belongsTo(Category::class);
   }
 
-  public function user()
+  public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
   }
 
-  public function url($locale = null)
+  public function url($locale = null): Attribute
   {
     return Attribute::get(function () use ($locale) {
       if (empty($this->slug)) {

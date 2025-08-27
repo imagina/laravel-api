@@ -41,7 +41,7 @@ class DeleteCategoryRequest extends CoreFormRequest
         return $this->getValidatorInstance();
     }
 
-    public function validationData()
+    public function validationData(): array
     {
         return array_merge($this->all(), [
             'id' => $this->query('id'),

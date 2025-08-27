@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Iuser\Transformers\UserTransformer;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
+use Exception;
 
 class AuthApiController extends CoreApiController
 {
 
-    protected $authService;
+    protected AuthService $authService;
 
     public function __construct(User $model, UserRepository $modelRepository, AuthService $authService)
     {
@@ -29,7 +32,7 @@ class AuthApiController extends CoreApiController
     /**
      * Login User
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         try {
             //Validate request
@@ -45,7 +48,7 @@ class AuthApiController extends CoreApiController
 
             //Validate user and password
             if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw new \Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
+                throw new Exception(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
             }
 
             //Get
@@ -55,7 +58,7 @@ class AuthApiController extends CoreApiController
                 'user' => new UserTransformer($user),
                 'token' => $tokenData
             ]];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -65,10 +68,10 @@ class AuthApiController extends CoreApiController
 
     /**
      * Login Client
-     * You can create some logins to diferents clients
-     * This token only can access with a especific Middleware (EnsureClientIsResourceOwner::class)
+     * You can create some logins to different clients
+     * This token only can access with a specific Middleware (EnsureClientIsResourceOwner::class)
      */
-    public function loginClient(Request $request)
+    public function loginClient(Request $request): JsonResponse
     {
         try {
 
@@ -82,14 +85,14 @@ class AuthApiController extends CoreApiController
 
             //Validation
             if (is_null($dataVal['clientId']) || is_null($dataVal['clientSecret'])) {
-                throw new \Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
+                throw new Exception('Client ID and Client Secret are required.', Response::HTTP_BAD_REQUEST);
             }
 
             //Get
             $tokenData = $this->authService->getToken("client_credentials", $dataVal);
 
             $response = ['data' => [$tokenData]];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -100,7 +103,7 @@ class AuthApiController extends CoreApiController
     /**
      * Refresh Token
      */
-    public function refreshToken(Request $request)
+    public function refreshToken(Request $request): JsonResponse
     {
         try {
 
@@ -112,7 +115,7 @@ class AuthApiController extends CoreApiController
             $tokenData = $this->authService->getToken("refresh_token", $data);
 
             $response = ['data' => $tokenData];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -123,7 +126,7 @@ class AuthApiController extends CoreApiController
     /**
      * Logout
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         try {
 
@@ -131,7 +134,7 @@ class AuthApiController extends CoreApiController
             $user->token()->revoke(); //Revoke the token
 
             $response = ['data' => 'Logout successful'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -142,7 +145,7 @@ class AuthApiController extends CoreApiController
     /**
      * Reset Password
      */
-    public function reset(Request $request)
+    public function reset(Request $request): JsonResponse
     {
         try {
 
@@ -153,7 +156,7 @@ class AuthApiController extends CoreApiController
             //Process reset password
             $result = Password::sendResetLink(['email' => $data['email']]);
 
-            //TODO: Traducciones
+            //TODO: Translations
             if ($result === Password::ResetLinkSent) {
                 //status = passwords.sent
                 $message = "We have emailed your password reset link";
@@ -163,7 +166,7 @@ class AuthApiController extends CoreApiController
             }
 
             $response = ['data' => $message];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -174,7 +177,7 @@ class AuthApiController extends CoreApiController
     /**
      * Reset Password Complete
      */
-    public function resetComplete(Request $request)
+    public function resetComplete(Request $request): JsonResponse
     {
         try {
 
@@ -188,13 +191,13 @@ class AuthApiController extends CoreApiController
                 function ($model, string $password) {
                     $model->forceFill([
                         'password' => $password
-                    ])->setRememberToken(\Str::random(60));
+                    ])->setRememberToken(Str::random(60));
 
                     $model->save();
                 }
             );
 
-            //TODO: Traducciones
+            //TODO: Translations
             if ($result === Password::PasswordReset) {
                 //status = passwords.reset
                 $message = "Password reset successfully.";
@@ -204,7 +207,7 @@ class AuthApiController extends CoreApiController
             }
 
             $response = ['data' => $message];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 
@@ -215,13 +218,13 @@ class AuthApiController extends CoreApiController
     /**
      * Information about user logged
      */
-    public function me(Request $request)
+    public function me(Request $request): JsonResponse
     {
         try {
             $user = Auth::user();
 
             if (!$user) {
-                throw new \Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
+                throw new Exception('Unauthenticated', Response::HTTP_UNAUTHORIZED);
             }
 
             $user->makeVisible('permissions');
@@ -230,7 +233,7 @@ class AuthApiController extends CoreApiController
             //app()->instance('clearResponseCache', false);
 
             $response = ['data' => new UserTransformer($user)];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             [$status, $response] = $this->getErrorResponse($e);
         }
 

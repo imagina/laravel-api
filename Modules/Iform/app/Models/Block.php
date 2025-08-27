@@ -4,6 +4,7 @@ namespace Modules\Iform\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Block extends CoreModel
 {
@@ -41,7 +42,7 @@ class Block extends CoreModel
         'options' => 'json',
     ];
 
-    public function form()
+    public function form(): BelongsTo
     {
         return $this->belongsTo(Form::class);
     }

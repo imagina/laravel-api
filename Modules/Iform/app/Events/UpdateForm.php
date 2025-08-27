@@ -5,7 +5,7 @@ namespace Modules\Iform\Events;
 
 class UpdateForm
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

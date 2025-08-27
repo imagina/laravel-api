@@ -5,7 +5,7 @@ namespace Modules\Imedia\Events;
 
 class UpdateMedia
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

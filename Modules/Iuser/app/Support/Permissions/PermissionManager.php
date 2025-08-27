@@ -31,8 +31,4 @@ class PermissionManager
 
         return $permissions;
     }
-
-
-
-
 }

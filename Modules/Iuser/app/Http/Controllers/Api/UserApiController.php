@@ -9,25 +9,22 @@ use Illuminate\Http\Request;
 //Model
 use Modules\Iuser\Models\User;
 use Modules\Iuser\Repositories\UserRepository;
-use Modules\Iuser\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class UserApiController extends CoreApiController
 {
 
-    private $userService;
-
-    public function __construct(User $model, UserRepository $modelRepository, UserService $userService)
+    public function __construct(User $model, UserRepository $modelRepository)
     {
         parent::__construct($model, $modelRepository);
-        $this->userService = $userService;
     }
 
     /**
      * Register a new user
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         DB::beginTransaction();
         try {

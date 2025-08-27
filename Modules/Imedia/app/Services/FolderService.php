@@ -3,9 +3,8 @@
 namespace Modules\Imedia\Services;
 
 
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-
 use Modules\Imedia\Repositories\FileRepository;
 use Modules\Imedia\Support\FileHelper;
 
@@ -48,7 +47,7 @@ class FolderService
     /**
      * Validations
      */
-    private function checkValidations($data)
+    private function checkValidations($data): void
     {
         $request = new \Modules\Imedia\Http\Requests\CreateFolderRequest($data);
         $validator = Validator::make($request->all(), $request->rules(), $request->messages());

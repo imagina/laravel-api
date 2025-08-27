@@ -5,7 +5,7 @@ namespace Modules\Iform\Events;
 
 class CreateForm
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

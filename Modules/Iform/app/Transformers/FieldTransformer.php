@@ -3,6 +3,7 @@
 namespace Modules\Iform\Transformers;
 
 use Imagina\Icore\Transformers\CoreResource;
+use Illuminate\Support\Str;
 
 class FieldTransformer extends CoreResource
 {
@@ -27,7 +28,7 @@ class FieldTransformer extends CoreResource
       $fieldType = $this->type["value"] ?? "";
 
       $vIf = true;
-      if(isset($filter->renderLocation) && !empty($filter->renderLocation)){
+      if(!empty($filter->renderLocation)){
           if(Str::contains($this->system_type,$filter->renderLocation)){
               if(Str::contains($this->system_type, 'internalHidden'))
                   $vIf = false;
