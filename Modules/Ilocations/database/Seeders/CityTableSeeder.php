@@ -13,7 +13,7 @@ class CityTableSeeder extends Seeder
   /**
    * Run the database seeds.
    */
-  public function run()
+  public function run(): void
   {
     Model::unguard();
     if (City::count() == 0) {

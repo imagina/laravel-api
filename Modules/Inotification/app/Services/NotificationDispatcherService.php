@@ -20,8 +20,8 @@ class NotificationDispatcherService
         try {
 
             //Default
-            $title = isset($params['title']) ? $params['title'] : itrans("inotification::notification.email.default.title");
-            $message = isset($params['message']) ? $params['message'] : itrans("inotification::notification.email.default.message");
+            $title = $params['title'] ?? itrans("inotification::notification.email.default.title");
+            $message = $params['message'] ?? itrans("inotification::notification.email.default.message");
 
             //Destinations
             if (isset($params['email'])) $to['email'] = $params['email'];

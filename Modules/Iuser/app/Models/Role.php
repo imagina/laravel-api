@@ -3,6 +3,7 @@
 namespace Modules\Iuser\Models;
 
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Imagina\Icore\Models\CoreModel;
 
 class Role extends CoreModel
@@ -12,14 +13,14 @@ class Role extends CoreModel
     public $useAudit = false;
 
     protected $table = 'iuser__roles';
-    public $transformer = 'Modules\Iuser\Transformers\RoleTransformer';
-    public $repository = 'Modules\Iuser\Repositories\RoleRepository';
-    public $requestValidation = [
+    public string $transformer = 'Modules\Iuser\Transformers\RoleTransformer';
+    public string $repository = 'Modules\Iuser\Repositories\RoleRepository';
+    public array $requestValidation = [
         'create' => 'Modules\Iuser\Http\Requests\CreateRoleRequest',
         'update' => 'Modules\Iuser\Http\Requests\UpdateRoleRequest',
     ];
     //Instance external/internal events to dispatch with extraData
-    public $dispatchesEventsWithBindings = [
+    public array $dispatchesEventsWithBindings = [
         //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
         'created' => [
             ['path' => 'Modules\Iform\Events\CreateForm']
@@ -49,7 +50,7 @@ class Role extends CoreModel
         ];
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'iuser__role_user');
     }

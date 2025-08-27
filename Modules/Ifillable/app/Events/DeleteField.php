@@ -5,7 +5,7 @@ namespace Modules\Ifillable\Events;
 
 class DeleteField
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

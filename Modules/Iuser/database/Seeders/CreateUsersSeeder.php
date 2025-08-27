@@ -10,8 +10,8 @@ use Modules\Iuser\Repositories\RoleRepository;
 class CreateUsersSeeder extends Seeder
 {
 
-    private $userRepository;
-    private $roleRepository;
+    private UserRepository $userRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {

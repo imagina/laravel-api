@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class ResetPasswordUserRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => 'required|email'
@@ -19,12 +19,12 @@ class ResetPasswordUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

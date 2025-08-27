@@ -122,7 +122,7 @@ class File extends CoreModel
   /**
    * METHODS
    */
-  public function isImage()
+  public function isImage(): bool
   {
     //TODO - EL Setting no funca
     //$imageExtensions = (array)json_decode(setting('imedia::allowedImageTypes', null, config("imedia.allowedImageTypes")));
@@ -137,7 +137,7 @@ class File extends CoreModel
     }
   }
 
-  public function isVideo()
+  public function isVideo(): bool
   {
     return str_starts_with($this->mimetype, 'video/');
   }

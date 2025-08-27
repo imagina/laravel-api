@@ -5,7 +5,7 @@ namespace Modules\Inotification\Events;
 
 class SendNotification
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

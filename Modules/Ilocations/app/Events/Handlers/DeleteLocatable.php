@@ -7,7 +7,7 @@ namespace Modules\Ilocations\Events\Handlers;
 class DeleteLocatable
 {
 
-    public function handle($event)
+    public function handle($event): void
     {
 
         $params = $event->params;

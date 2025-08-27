@@ -12,9 +12,9 @@ use Modules\Iuser\Support\Permissions\PermissionManager;
 class CreateRolesSeeder extends Seeder
 {
 
-    private $schedule;
-    private $roleRepository;
-    private $permissions;
+    private Schedule $schedule;
+    private RoleRepository $roleRepository;
+    private PermissionManager $permissions;
 
     public function __construct(
         Schedule $schedule,
@@ -52,7 +52,7 @@ class CreateRolesSeeder extends Seeder
             'es' => ['title' => itrans("iuser::roles.types.super admin", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name' => 'super-admin'], $roleData);
+        $this->roleRepository->updateOrCreate(['system_name' => 'super-admin'], $roleData);
     }
 
     /**
@@ -66,7 +66,7 @@ class CreateRolesSeeder extends Seeder
             'es' => ['title' => itrans("iuser::roles.types.user", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name' => 'user'], $roleData);
+        $this->roleRepository->updateOrCreate(['system_name' => 'user'], $roleData);
     }
 
     /**
@@ -81,7 +81,7 @@ class CreateRolesSeeder extends Seeder
             'es' => ['title' => itrans("iuser::roles.types.admin", [], "es")]
         ];
 
-        $role = $this->roleRepository->updateOrCreate(['system_name' => 'admin'], $roleData);
+        $this->roleRepository->updateOrCreate(['system_name' => 'admin'], $roleData);
 
         //Set all permissions
         //$this->setAllPermissions($role);

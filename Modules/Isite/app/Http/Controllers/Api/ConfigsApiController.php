@@ -3,8 +3,8 @@
 namespace Modules\Isite\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Imagina\Icore\Traits\Controller\CoreApiControllerHelpers;
+use Illuminate\Http\JsonResponse;
 
 class ConfigsApiController
 {
@@ -18,7 +18,7 @@ class ConfigsApiController
   }
 
   //Return fields
-  public function index(Request $request)
+  public function index(Request $request): JsonResponse
   {
 
     try {
@@ -62,7 +62,7 @@ class ConfigsApiController
   }
 
   /** Return the modules information */
-  public function modulesInfo(Request $request)
+  public function modulesInfo(Request $request): JsonResponse
   {
     try {
       $params = $this->getParamsRequest($request); //Get Parameters from URL.

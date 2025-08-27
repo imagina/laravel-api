@@ -3,7 +3,10 @@
 namespace Modules\Ilocations\Models;
 
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Province extends CoreModel
 {
@@ -34,37 +37,32 @@ class Province extends CoreModel
     'country_id',
   ];
 
-  public function country()
+  public function country(): BelongsTo
   {
     return $this->belongsTo(Country::class);
   }
 
-  public function cities()
+  public function cities(): HasMany
   {
     return $this->hasMany(City::class);
   }
 
 
-  public function children()
+  public function children(): HasMany
   {
     return $this->hasMany(City::class);
   }
 
-  public function name()
+  public function name(): Attribute
   {
-
-    $currentTranslations = $this->getTranslation(locale());
-
-    if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
-
-      $model = $this->getTranslation(app()->getLocale());
-
-      if (empty($model)) return "";
-      return $model->toArray()["name"] ?? "";
-    }
-
-    return $currentTranslations->toArray()["name"];
-
+    return Attribute::get(function () {
+      $currentTranslations = $this->getTranslation(locale());
+      if (empty($currentTranslations) || empty($currentTranslations->toArray()["name"])) {
+        $model = $this->getTranslation(app()->getLocale());
+        if (empty($model)) return "";
+        return $model->toArray()["name"] ?? "";
+      }
+      return $currentTranslations->toArray()["name"];
+    });
   }
-
 }

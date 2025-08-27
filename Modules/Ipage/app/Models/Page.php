@@ -72,7 +72,7 @@ class Page extends CoreModel
 
   /**
    * Relation Media
-   * Make the Many To Many Morph
+   * Make the Many-To-Many Morph
    */
   public function files()
   {

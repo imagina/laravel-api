@@ -2,6 +2,7 @@
 
 namespace Modules\Iuser\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Imagina\Icore\Http\Controllers\CoreApiController;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Iuser\Transformers\UserTransformer;
+
 
 class AuthApiController extends CoreApiController
 {
@@ -29,7 +31,7 @@ class AuthApiController extends CoreApiController
   /**
    * Login User
    */
-  public function login(Request $request)
+  public function login(Request $request): JsonResponse
   {
     try {
       //Validate request
@@ -63,7 +65,7 @@ class AuthApiController extends CoreApiController
    * You can create some logins to diferents clients
    * This token only can access with a especific Middleware (EnsureClientIsResourceOwner::class)
    */
-  public function loginClient(Request $request)
+  public function loginClient(Request $request): JsonResponse
   {
     try {
 
@@ -95,7 +97,7 @@ class AuthApiController extends CoreApiController
   /**
    * Refresh Token
    */
-  public function refreshToken(Request $request)
+  public function refreshToken(Request $request): JsonResponse
   {
     try {
 
@@ -118,7 +120,7 @@ class AuthApiController extends CoreApiController
   /**
    * Logout
    */
-  public function logout(Request $request)
+  public function logout(Request $request): JsonResponse
   {
     try {
 
@@ -137,7 +139,7 @@ class AuthApiController extends CoreApiController
   /**
    * Reset Password
    */
-  public function reset(Request $request)
+  public function reset(Request $request): JsonResponse
   {
     try {
 
@@ -169,7 +171,7 @@ class AuthApiController extends CoreApiController
   /**
    * Reset Password Complete
    */
-  public function resetComplete(Request $request)
+  public function resetComplete(Request $request): JsonResponse
   {
     try {
 
@@ -210,7 +212,7 @@ class AuthApiController extends CoreApiController
   /**
    * Information about user logged
    */
-  public function me(Request $request)
+  public function me(Request $request): JsonResponse
   {
     try {
       $userId = Auth::id();

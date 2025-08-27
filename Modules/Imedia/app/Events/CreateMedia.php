@@ -5,7 +5,7 @@ namespace Modules\Imedia\Events;
 
 class CreateMedia
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

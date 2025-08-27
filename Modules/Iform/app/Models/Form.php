@@ -5,12 +5,12 @@ namespace Modules\Iform\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Form extends CoreModel
 {
     use Translatable;
-
-    //use Translatable, IsQreable;
 
     protected $table = 'iform__forms';
     public string $transformer = 'Modules\Iform\Transformers\FormTransformer';
@@ -50,27 +50,27 @@ class Form extends CoreModel
         'destination_email' => 'array'
     ];
 
-    public function fields()
+    public function fields(): HasMany
     {
         return $this->hasMany(Field::class)->with('translations')->orderBy('order', 'asc');
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo('Modules\Iform\Models\Form', 'parent_id');
     }
 
-    public function leads()
+    public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);
     }
 
-    public function blocks()
+    public function blocks(): HasMany
     {
         return $this->hasMany(Block::class)->orderBy('sort_order', 'asc');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo("Modules\\Iuser\\Models\\User", 'user_id');
     }

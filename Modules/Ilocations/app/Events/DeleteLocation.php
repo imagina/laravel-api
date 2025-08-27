@@ -5,7 +5,7 @@ namespace Modules\Ilocations\Events;
 
 class DeleteLocation
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

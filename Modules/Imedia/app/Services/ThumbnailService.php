@@ -22,7 +22,7 @@ class ThumbnailService
     /**
      * Create Thumbnails
      */
-    public function generateThumbnails(File $file)
+    public function generateThumbnails(File $file): void
     {
 
         //Get Base Data

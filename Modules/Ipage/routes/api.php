@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Modules\Ipage\Http\Controllers\Api\PageApiController;
 // add-use-controller
 
-
 Route::prefix('/ipage/v1')->group(function () {
     Route::apiCrud([
       'module' => 'ipage',
@@ -22,5 +21,4 @@ Route::prefix('/ipage/v1')->group(function () {
       // ]
     ]);
 // append
-
 });

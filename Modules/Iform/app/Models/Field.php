@@ -5,6 +5,7 @@ namespace Modules\Iform\Models;
 use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Field extends CoreModel
 {
@@ -57,17 +58,17 @@ class Field extends CoreModel
         'rules' => 'json',
     ];
 
-    public function form()
+    public function form(): BelongsTo
     {
         return $this->belongsTo(Form::class);
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo('Modules\Iform\Models\Field', 'parent_id');
     }
 
-    public function block()
+    public function block(): BelongsTo
     {
         return $this->belongsTo(Block::class);
     }
@@ -76,7 +77,7 @@ class Field extends CoreModel
     {
         return Attribute::set(function (?array $value) {
             $rules = $value;
-            if (isset($rules["mimes"]) && !empty($rules["mimes"])) {
+            if (!empty($rules["mimes"])) {
                 foreach ($rules["mimes"] as $index => $availableExtension) {
                     $rules["mimes"][$index] = Str::replace('.', '', $availableExtension);
                 }
@@ -92,7 +93,7 @@ class Field extends CoreModel
         return Attribute::get(function () {
             $rules = $this->rules;
             $accept = "";
-            if (isset($rules->mimes) && !empty($rules->mimes)) {
+            if (!empty($rules->mimes)) {
                 $accept = join(",", array_map(
                     function ($valor) {
                         return "." . $valor;
@@ -113,7 +114,7 @@ class Field extends CoreModel
         });
     }
 
-    public function label()
+    public function label(): Attribute
     {
         return Attribute::get(function (?string $value) {
             return $value . ($this->required ? config('asgard.iforms.config.requiredFieldLabel') : '');

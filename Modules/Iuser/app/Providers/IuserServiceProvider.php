@@ -37,7 +37,7 @@ class IuserServiceProvider extends ServiceProvider
 
     protected string $nameLower = 'iuser';
 
-    protected $middleware = [
+    protected array $middleware = [
         'auth-can' =>  AuthCan::class
     ];
 
@@ -59,7 +59,7 @@ class IuserServiceProvider extends ServiceProvider
     /**
      * Register the middleware.
      */
-    private function registerMiddleware()
+    private function registerMiddleware(): void
     {
         foreach ($this->middleware as $name => $class) {
             $this->app['router']->aliasMiddleware($name, $class);

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class RefreshTokenUserRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'token' => 'required|string',
@@ -19,12 +19,12 @@ class RefreshTokenUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

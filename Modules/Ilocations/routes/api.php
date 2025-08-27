@@ -7,17 +7,13 @@ use Modules\Ilocations\Http\Controllers\Api\CityApiController;
 use Modules\Ilocations\Http\Controllers\Api\LocatableApiController;
 // add-use-controller
 
-
-
-
-
 Route::prefix('/ilocations/v1')->group(function () {
     Route::apiCrud([
       'module' => 'ilocations',
       'prefix' => 'countries',
       'controller' => CountryApiController::class,
       'permission' => 'ilocations.countries',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -32,7 +28,7 @@ Route::prefix('/ilocations/v1')->group(function () {
       'prefix' => 'provinces',
       'controller' => ProvinceApiController::class,
       'permission' => 'ilocations.provinces',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -47,7 +43,7 @@ Route::prefix('/ilocations/v1')->group(function () {
       'prefix' => 'cities',
       'controller' => CityApiController::class,
       'permission' => 'ilocations.cities',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -62,7 +58,7 @@ Route::prefix('/ilocations/v1')->group(function () {
       'prefix' => 'locatables',
       'controller' => LocatableApiController::class,
       'permission' => 'ilocations.locatables',
-      //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+      'middleware' => ['index' => [], 'show' => []],
       // 'customRoutes' => [ // Include custom routes if needed
       //  [
       //    'method' => 'post', // get,post,put....
@@ -73,8 +69,4 @@ Route::prefix('/ilocations/v1')->group(function () {
       // ]
     ]);
 // append
-
-
-
-
 });

@@ -5,7 +5,7 @@ namespace Modules\Ilocations\Events;
 
 class UpdateLocation
 {
-    public $params;
+    public mixed $params;
 
     public function __construct($params = null)
     {

@@ -5,6 +5,7 @@ namespace Modules\Ilocations\Models;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Imagina\Icore\Models\CoreModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class City extends CoreModel
 {
@@ -36,17 +37,17 @@ class City extends CoreModel
     'country_id'
   ];
 
-  public function country()
+  public function country(): BelongsTo
   {
     return $this->belongsTo(Country::class);
   }
 
-  public function province()
+  public function province(): BelongsTo
   {
     return $this->belongsTo(Province::class);
   }
 
-  public function name()
+  public function name(): Attribute
   {
     return Attribute::get(function () {
 

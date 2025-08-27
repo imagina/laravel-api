@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class CreateRoleRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'system_name' => 'required|unique:iuser__roles,system_name'
@@ -21,12 +21,12 @@ class CreateRoleRequest extends CoreFormRequest
         ];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

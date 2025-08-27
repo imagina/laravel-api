@@ -12,30 +12,30 @@ use Modules\Imedia\Services\ThumbnailService;
 
 class CreateThumbnails implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels, Queueable, Dispatchable;
+  use InteractsWithQueue, SerializesModels, Queueable, Dispatchable;
 
 
-    /**
-     * @var mixed|null
-     */
-    private $file;
-    private $thumbnailService;
+  /**
+   * @var mixed|null
+   */
+  private $file;
+  private $thumbnailService;
 
 
-    public function __construct(File $file)
-    {
-        $this->file = $file;
-        $this->queue = "media";
-        $this->thumbnailService = new ThumbnailService();
-    }
+  public function __construct(File $file)
+  {
+    $this->file = $file;
+    $this->queue = "media";
+    $this->thumbnailService = new ThumbnailService();
+  }
 
-    public function handle()
-    {
+  public function handle(): void
+  {
 
-        $this->thumbnailService->generateThumbnails($this->file);
+    $this->thumbnailService->generateThumbnails($this->file);
 
-        //update attribute has_thumbnails
-        $this->file->has_thumbnails = true;
-        $this->file->update();
-    }
+    //update attribute has_thumbnails
+    $this->file->has_thumbnails = true;
+    $this->file->update();
+  }
 }

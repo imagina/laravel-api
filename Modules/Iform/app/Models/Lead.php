@@ -2,9 +2,9 @@
 
 namespace Modules\Iform\Models;
 
-use Astrotomic\Translatable\Translatable;
 use Imagina\Icore\Models\CoreModel;
 use Modules\Iuser\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lead extends CoreModel
 {
@@ -41,12 +41,12 @@ class Lead extends CoreModel
         'values' => 'array'
     ];
 
-    public function form()
+    public function form(): BelongsTo
     {
         return $this->belongsTo(Form::class);
     }
 
-    public function assignedTo()
+    public function assignedTo(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to_id');
     }
@@ -54,7 +54,7 @@ class Lead extends CoreModel
     /**
      * Notification Params
      */
-    public function getNotificableParams()
+    public function getNotificableParams(): array
     {
         //Process to get Email (Example: From entity, or settings, etc)
         $email = 'emailto@example.com';

@@ -5,8 +5,6 @@ use Modules\Imedia\Http\Controllers\Api\FileApiController;
 use Modules\Imedia\Http\Controllers\Api\ZoneApiController;
 // add-use-controller
 
-
-
 Route::prefix('/imedia/v1')->group(function () {
     Route::apiCrud([
       'module' => 'imedia',

@@ -4,7 +4,7 @@ namespace Modules\Inotification\Services;
 
 use Modules\Inotification\Mail\NotificationMailable;
 use Illuminate\Support\Facades\Mail;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 use Modules\Inotification\Repositories\NotificationRepository;
 use Modules\Inotification\Repositories\ProviderRepository;
@@ -41,7 +41,7 @@ class NotificationManagerService
      * @param string $icon
      * @param string|null $link
      */
-    public function push($params = [])
+    public function push($params = []): void
     {
         \Log::info($this->log . 'Push');
 
@@ -142,7 +142,7 @@ class NotificationManagerService
     /**
      * Valid the Recipient and Send the Notification
      */
-    private function send()
+    private function send(): void
     {
         \Log::info($this->log . 'Send');
 

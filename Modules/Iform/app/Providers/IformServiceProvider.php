@@ -28,12 +28,6 @@ use Modules\Iform\Repositories\Eloquent\EloquentTypeRepository;
 use Modules\Iform\Repositories\Cache\CacheTypeDecorator;
 use Modules\Iform\Repositories\TypeRepository;
 use Modules\Iform\Models\Type;
-// append-use-bindings
-
-
-
-
-
 
 class IformServiceProvider extends ServiceProvider
 {

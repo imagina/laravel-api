@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class CreateUserRequest extends CoreFormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => ['required', 'email', new UniqueRule('iuser__users', null, null, trans('iuser::users.messages.unavailableUserName'))],
@@ -22,12 +22,12 @@ class CreateUserRequest extends CoreFormRequest
         return [];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [];
     }

@@ -21,9 +21,9 @@ class UserService
 
     /**
      * Create a new user with the provided data.
-     * @param $checkUserExists | Used By UserApiController and CreateUsersSeeder
+     * @param true $checkUserExists | Used By UserApiController and CreateUsersSeeder
      */
-    public function createUser($data,$checkUserExists = true)
+    public function createUser($data, bool $checkUserExists = true): mixed
     {
 
         //Check if user already exists
@@ -39,19 +39,9 @@ class UserService
             'last_name' => $data['last_name'] ?? '',
             'email' => strtolower($data['email']),
             'password' =>  $data['password'], //Hash::make($data['password'])
-            'roles' => isset($data['roles']) ? $data['roles'] : [2], //Default role is 2 (user)
+            'roles' => $data['roles'] ?? [2], //Default role is 2 (user)
         ];
 
-        $user = $this->userRepository->create($dataToCreate);
-
-
-
-        return $user;
-
-
+      return $this->userRepository->create($dataToCreate);
     }
-
-
-
-
 }

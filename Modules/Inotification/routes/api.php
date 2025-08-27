@@ -7,10 +7,6 @@ use Modules\Inotification\Http\Controllers\Api\NotificationTypeApiController;
 use Modules\Inotification\Http\Controllers\Api\DeviceApiController;
 // add-use-controller
 
-
-
-
-
 Route::prefix('/inotification/v1')->group(function () {
     Route::apiCrud([
       'module' => 'inotification',
@@ -73,8 +69,4 @@ Route::prefix('/inotification/v1')->group(function () {
       // ]
     ]);
 // append
-
-
-
-
 });
