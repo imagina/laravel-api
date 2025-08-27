@@ -31,7 +31,7 @@ class InitialSliderDataSeeder extends Seeder
         foreach (range(1, 3) as $i) {
           $slideRepository->create([
             'slider_id' => $slider->id,
-            'position' => $i,
+            'sort_order' => $i,
             'target' => '_blank',
             'type' => 'image',
             'active' => true,

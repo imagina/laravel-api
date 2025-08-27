@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('slider_id')->unsigned();
             $table->foreign('slider_id')->references('id')->on('islider__sliders')->onDelete('cascade');
             $table->integer('page_id')->unsigned()->nullable();
-            $table->integer('position')->unsigned()->default(0);
+            $table->integer('sort_order')->unsigned()->default(0);
             $table->string('target', 10)->nullable();
             $table->json('options')->nullable();
             $table->text('external_image_url')->nullable();

@@ -44,7 +44,7 @@ class Slide extends CoreModel
   protected $fillable = [
     'slider_id',
     'page_id',
-    'position',
+    'sort_order',
     'target',
     'title',
     'caption',

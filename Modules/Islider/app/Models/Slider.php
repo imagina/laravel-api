@@ -39,7 +39,7 @@ class Slider extends CoreModel
 
   public function slides()
   {
-    return $this->hasMany(Slide::class)->with('translations')->orderBy('position', 'asc');
+    return $this->hasMany(Slide::class)->with('translations')->orderBy('sort_order', 'asc');
   }
 
 }
