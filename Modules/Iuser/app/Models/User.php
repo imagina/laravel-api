@@ -80,6 +80,8 @@ class User extends Authenticatable implements OAuthenticatable
     'profile' => 'single'
   ];
 
+  protected $appends = ['full_name'];
+
   /**
    * Get the attributes that should be cast.
    *
@@ -102,6 +104,14 @@ class User extends Authenticatable implements OAuthenticatable
     return Attribute::make(
       set: fn(string $value) => strtolower($value)
     );
+  }
+
+  /**
+   * Get the user's full name.
+   */
+  protected function fullName(): Attribute
+  {
+    return Attribute::get(fn () => trim("{$this->first_name} {$this->last_name}"));
   }
 
   /**
