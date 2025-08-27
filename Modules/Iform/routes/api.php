@@ -6,9 +6,7 @@ use Modules\Iform\Http\Controllers\Api\FieldApiController;
 use Modules\Iform\Http\Controllers\Api\FormApiController;
 use Modules\Iform\Http\Controllers\Api\LeadApiController;
 use Modules\Iform\Http\Controllers\Api\TypeApiController;
-
 // add-use-controller
-
 
 Route::prefix('/iform/v1')->group(function () {
   Route::apiCrud([
@@ -16,7 +14,7 @@ Route::prefix('/iform/v1')->group(function () {
     'prefix' => 'blocks',
     'controller' => BlockApiController::class,
     'permission' => 'iform.blocks',
-    //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+    'middleware' => ['index' => [], 'show' => []],
     // 'customRoutes' => [ // Include custom routes if needed
     //  [
     //    'method' => 'post', // get,post,put....
@@ -31,7 +29,7 @@ Route::prefix('/iform/v1')->group(function () {
     'prefix' => 'fields',
     'controller' => FieldApiController::class,
     'permission' => 'iform.fields',
-    //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+    'middleware' => ['index' => [], 'show' => []],
     'customRoutes' => [
       [
         'method' => 'post', // get,post,put....
@@ -45,7 +43,7 @@ Route::prefix('/iform/v1')->group(function () {
     'prefix' => 'forms',
     'controller' => FormApiController::class,
     'permission' => 'iform.forms',
-    //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []],
+    'middleware' => ['index' => [], 'show' => []],
     // 'customRoutes' => [ // Include custom routes if needed
     //  [
     //    'method' => 'post', // get,post,put....
@@ -69,6 +67,15 @@ Route::prefix('/iform/v1')->group(function () {
     //    'middleware' => [] // if not set up middleware, auth:api will be the default
     //  ]
     // ]
+  ]);
+  /**
+   * STATICS CLASS
+   */
+  Route::apiCrud([
+    'module' => 'iform',
+    'prefix' => 'types',
+    'staticEntity' => 'Modules\Iform\Models\Type',
+    'middleware' => ['index' => [], 'show' => []]
   ]);
 // append
 });

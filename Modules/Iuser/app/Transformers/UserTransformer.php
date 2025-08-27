@@ -19,7 +19,9 @@ class UserTransformer extends CoreResource
   */
   public function modelAttributes($request):array
   {
-      $attributes = [];
+      $attributes = [
+        'files' => $this->whenLoaded('files', fn() => $this->files->byZones($this->mediaFillable, $this))
+      ];
 
       if ($this->resource->relationLoaded('fields')) {
           $translations = [];
