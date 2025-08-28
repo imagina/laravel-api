@@ -1,1 +1,0 @@
-<h3 style="font-size: 14px; margin-top: 20px; color: #000000;">Términos y condiciones del contrato de alquiler</h3>

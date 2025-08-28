@@ -1,2 +1,0 @@
-use Modules\$MODULE_NAME$\Http\Controllers\Api\$CLASS_NAME$ApiController;
-// add-use-controller
