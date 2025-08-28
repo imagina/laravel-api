@@ -1,0 +1,28 @@
+{
+    "name": "imagina/ilocation",
+    "description": "",
+    "authors": [
+        {
+            "name": "Imagina Colombia",
+            "email": "soporte@imaginacolombia.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Ilocation\\": "app/",
+            "Modules\\Ilocation\\Database\\Factories\\": "database/factories/",
+            "Modules\\Ilocation\\Database\\Seeders\\": "database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Ilocation\\Tests\\": "tests/"
+        }
+    }
+}

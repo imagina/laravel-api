@@ -1,0 +1,12 @@
+
+{
+    "name": "Ilocation",
+    "alias": "ilocation",
+    "description": "manage ilocation",
+    "keywords": ["ilocation"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ilocation\\Providers\\IlocationsServiceProvider"
+    ],
+    "files": []
+}
