@@ -1,0 +1,22 @@
+{
+  "require": {
+     "imagina/icore": "12.x-dev",
+     "imagina/iworkshop": "12.x-dev"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "./packages/imagina/iworkshop",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./packages/imagina/icore",
+      "options": {
+        "symlink": true
+      }
+    }
+  ]
+}

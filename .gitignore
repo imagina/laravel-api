@@ -24,3 +24,11 @@ Homestead.yaml
 npm-debug.log
 Thumbs.db
 yarn-error.log
+
+# Ignore local dev overrides
+/composer.local.json
+/composer.local.lock
+
+# Ignore local cloned modules/packages
+/Modules/
+/packages/imagina/

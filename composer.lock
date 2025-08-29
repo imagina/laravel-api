@@ -4,93 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3113f5ded3b45cb93a2aae31eac3d240",
+    "content-hash": "a35c5a962bf72534a8c681edefa578fe",
     "packages": [
-        {
-            "name": "astrotomic/laravel-translatable",
-            "version": "v11.16.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Astrotomic/laravel-translatable.git",
-                "reference": "3edd5a3083b45948942af83903845954c3352652"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Astrotomic/laravel-translatable/zipball/3edd5a3083b45948942af83903845954c3352652",
-                "reference": "3edd5a3083b45948942af83903845954c3352652",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/database": "^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/support": "^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "larastan/larastan": "^2.0 || ^3.0",
-                "laravel/legacy-factories": "^1.0.4",
-                "laravel/pint": "^1.0",
-                "mockery/mockery": "^1.3.3",
-                "orchestra/testbench": "^7.0 || ^8.0 || ^9.0 || ^10.0",
-                "phpunit/phpunit": "^10.0 || ^11.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Astrotomic\\Translatable\\TranslatableServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Astrotomic\\Translatable\\": "src/Translatable/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tom Witkowski",
-                    "email": "gummibeer@astrotomic.info",
-                    "homepage": "https://gummibeer.de",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Dimitrios Savvopoulos",
-                    "email": "ds@dimsav.com",
-                    "homepage": "http://dimsav.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A Laravel package for multilingual models",
-            "homepage": "https://astrotomic.info",
-            "keywords": [
-                "database",
-                "language",
-                "laravel",
-                "translation"
-            ],
-            "support": {
-                "docs": "https://docs.astrotomic.info/laravel-translatable",
-                "email": "dev@astrotomic.info",
-                "issues": "https://github.com/Astrotomic/laravel-translatable/issues",
-                "source": "https://github.com/Astrotomic/laravel-translatable"
-            },
-            "funding": [
-                {
-                    "url": "https://forest.astrotomic.info",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/Gummibeer",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-07-09T14:05:02+00:00"
-        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.2.7",
@@ -147,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.356.6",
+            "version": "3.356.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "079d1936bef94cb7d76113b62e993f2996db6e24"
+                "reference": "6b44237a218485bf43a0015600aebf43cb726d4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/079d1936bef94cb7d76113b62e993f2996db6e24",
-                "reference": "079d1936bef94cb7d76113b62e993f2996db6e24",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6b44237a218485bf43a0015600aebf43cb726d4e",
+                "reference": "6b44237a218485bf43a0015600aebf43cb726d4e",
                 "shasum": ""
             },
             "require": {
@@ -238,9 +153,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.7"
             },
-            "time": "2025-08-27T18:06:10+00:00"
+            "time": "2025-08-28T18:14:39+00:00"
         },
         {
             "name": "brick/math",
@@ -1418,82 +1333,6 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
-        },
-        {
-            "name": "imagina/icore",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "./packages/imagina/icore",
-                "reference": "074516c1015c5d15a039975082238480e1afb8f1"
-            },
-            "require": {
-                "astrotomic/laravel-translatable": "11.*"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Imagina\\Icore\\Providers\\IcoreServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Imagina\\Icore\\": "src"
-                },
-                "files": [
-                    "src/Support/helpers.php"
-                ]
-            },
-            "authors": [
-                {
-                    "name": "msolanogithub",
-                    "email": "msolano@imaginacolombia.com"
-                }
-            ],
-            "description": "Shared CRUD base for Imagina modules",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "imagina/iworkshop",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "./packages/imagina/iworkshop",
-                "reference": "41a7885910c6b34b54caa8c83faf9e38f9febfbb"
-            },
-            "require": {
-                "illuminate/support": "10.x|11.x|^12.0",
-                "laravel/prompts": "^0.1.15|^0.3"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Imagina\\Iworkshop\\Providers\\WorkshopServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Imagina\\Iworkshop\\": "src/"
-                }
-            },
-            "authors": [
-                {
-                    "name": "msolanogithub",
-                    "email": "msolano@imaginacolombia.com"
-                }
-            ],
-            "description": "CLI tool to scaffold Imagina base packages",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
         },
         {
             "name": "intervention/gif",
@@ -10357,10 +10196,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "imagina/icore": 20,
-        "imagina/iworkshop": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
