@@ -35,7 +35,7 @@ class ImaginaInstall extends Command
     $mode = select(
       label: 'Which environment do you want to install?',
       options: ['dev', 'prod'],
-      default: 'prod'
+      default: 'dev'
     );
 
     if ($mode === 'dev') {
@@ -84,6 +84,9 @@ class ImaginaInstall extends Command
     // Run update + dump again
     $this->runComposer(['update --no-scripts']);
     $this->runComposer(['dump-autoload']);
+
+    //Finish modules
+    $this->finalizeModules();
   }
 
   protected function cloneRepo($gitUrl, $destination): void
@@ -103,4 +106,18 @@ class ImaginaInstall extends Command
     $this->info("Running: $cmd");
     passthru($cmd);
   }
+
+  protected function finalizeModules(): void
+  {
+    $this->info('Finalizing all modules...');
+
+    $this->call('config:clear');
+    $this->call('module:enable', ['--all' => true]);
+    $this->call('module:migrate', ['--all' => true]);
+    $this->call('module:seed', ['--all' => true]);
+    $this->call('module:publish', ['--all' => true]);
+
+    $this->info('✔ All modules finalized');
+  }
+
 }
