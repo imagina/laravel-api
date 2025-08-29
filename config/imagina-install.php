@@ -31,12 +31,14 @@ return [
     [
       'name' => 'icore',
       'git' => 'https://github.com/imagina/imaginacms-icore.git',
-      'path' => 'packages/imagina/icore'
+      'path' => 'packages/imagina/icore',
+      'prodPackage' => 'imagina/icore=v12.x-dev'
     ],
     [
       'name' => 'iworkshop',
       'git' => 'https://github.com/imagina/imaginacms-iworkshop.git',
-      'path' => 'packages/imagina/iworkshop'
+      'path' => 'packages/imagina/iworkshop',
+      'prodPackage' => 'imagina/iworkshop=v12.x-dev'
     ],
   ],
 
@@ -49,72 +51,86 @@ return [
     [
       'name' => 'iblog',
       'git' => 'https://github.com/imagina/imaginacms-iblog.git',
-      'path' => 'Modules/Iblog'
+      'path' => 'Modules/Iblog',
+      'prodPackage' => 'imagina/iblog-module=v12.x-dev'
     ],
     [
       'name' => 'ifillable',
       'git' => 'https://github.com/imagina/imaginacms-ifillable.git',
-      'path' => 'Modules/Ifillable'
+      'path' => 'Modules/Ifillable',
+      'prodPackage' => 'imagina/ifillable-module=v12.x-dev'
     ],
     [
       'name' => 'iform',
       'git' => 'https://github.com/imagina/imaginacms-iform.git',
-      'path' => 'Modules/Iform'
+      'path' => 'Modules/Iform',
+      'prodPackage' => 'imagina/iform-module=v12.x-dev'
     ],
     [
       'name' => 'ilocation',
       'git' => 'https://github.com/imagina/imaginacms-ilocation.git',
-      'path' => 'Modules/Ilocation'
+      'path' => 'Modules/Ilocation',
+      'prodPackage' => 'imagina/ilocation-module=v12.x-dev'
     ],
     [
       'name' => 'imedia',
       'git' => 'https://github.com/imagina/imaginacms-imedia.git',
-      'path' => 'Modules/Imedia'
+      'path' => 'Modules/Imedia',
+      'prodPackage' => 'imagina/imedia-module=v12.x-dev'
     ],
     [
       'name' => 'imenu',
       'git' => 'https://github.com/imagina/imaginacms-imenu.git',
-      'path' => 'Modules/Imenu'
+      'path' => 'Modules/Imenu',
+      'prodPackage' => 'imagina/imenu-module=v12.x-dev'
     ],
     [
       'name' => 'inotification',
       'git' => 'https://github.com/imagina/imaginacms-inotification.git',
-      'path' => 'Modules/Inotification'
+      'path' => 'Modules/Inotification',
+      'prodPackage' => 'imagina/inotification-module=v12.x-dev'
     ],
     [
       'name' => 'ipage',
       'git' => 'https://github.com/imagina/imaginacms-ipage.git',
-      'path' => 'Modules/Ipage'
+      'path' => 'Modules/Ipage',
+      'prodPackage' => 'imagina/ipage-module=v12.x-dev'
     ],
     [
       'name' => 'irentcar',
       'git' => 'https://github.com/imagina/imaginacms-irentcar.git',
-      'path' => 'Modules/Irentcar'
+      'path' => 'Modules/Irentcar',
+      'prodPackage' => 'imagina/irentcar-module=v12.x-dev'
     ],
     [
       'name' => 'isetting',
       'git' => 'https://github.com/imagina/imaginacms-isetting.git',
-      'path' => 'Modules/Isetting'
+      'path' => 'Modules/Isetting',
+      'prodPackage' => 'imagina/isetting-module=v12.x-dev'
     ],
     [
       'name' => 'isite',
       'git' => 'https://github.com/imagina/imaginacms-isite.git',
-      'path' => 'Modules/Isite'
+      'path' => 'Modules/Isite',
+      'prodPackage' => 'imagina/isite-module=v12.x-dev'
     ],
     [
       'name' => 'islider',
       'git' => 'https://github.com/imagina/imaginacms-islider.git',
-      'path' => 'Modules/Islider'
+      'path' => 'Modules/Islider',
+      'prodPackage' => 'imagina/islider-module=v12.x-dev'
     ],
     [
       'name' => 'itranslation',
       'git' => 'https://github.com/imagina/imaginacms-itranslation.git',
-      'path' => 'Modules/Itranslation'
+      'path' => 'Modules/Itranslation',
+      'prodPackage' => 'imagina/itranslation-module=v12.x-dev'
     ],
     [
       'name' => 'iuser',
       'git' => 'https://github.com/imagina/imaginacms-iuser.git',
-      'path' => 'Modules/Iuser'
+      'path' => 'Modules/Iuser',
+      'prodPackage' => 'imagina/iuser-module=v12.x-dev'
     ],
   ]
 ];

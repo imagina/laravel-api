@@ -41,7 +41,7 @@ class ImaginaInstall extends Command
     if ($mode === 'dev') {
       $this->installDev();
     } else {
-      //$this->installProd();
+      $this->installProd();
     }
   }
 
@@ -67,14 +67,9 @@ class ImaginaInstall extends Command
     }
 
     // Let user pick optional modules
-    $moduleOptions = array_column($this->config['optional'], 'name');
-    $choices = multiselect(
-      label: 'Select modules to install',
-      options: ['ALL', ...$moduleOptions]
-    );
+    $choices = $this->selectModules();
 
     // If ALL is chosen → override with all module names
-    if (in_array('ALL', $choices)) $choices = $moduleOptions;
     foreach ($this->config['optional'] as $module) {
       if (in_array($module['name'], $choices)) {
         $this->cloneRepo($module['git'], base_path($module['path']));
@@ -88,6 +83,55 @@ class ImaginaInstall extends Command
     //Finish modules
     $this->finalizeModules();
   }
+
+  protected function installProd(): void
+  {
+    $this->info('Installing in PROD mode...');
+
+    // Always install default modules
+    foreach ($this->config['default'] as $module) {
+      $this->requirePackage($module['prodPackage']);
+    }
+
+    // Let user pick optional modules
+    $choices = $this->selectModules();
+
+    // If ALL is chosen → override with all module names
+    foreach ($this->config['optional'] as $module) {
+      if (in_array($module['name'], $choices)) {
+        $this->requirePackage($module['prodPackage']);
+      }
+    }
+
+    // Run dump autoload (no need for update)
+    $this->runComposer(['dump-autoload']);
+
+    // Finalize modules
+    $this->finalizeModules();
+  }
+
+  protected function selectModules(): array
+  {
+    // Let user pick optional modules
+    $moduleOptions = array_column($this->config['optional'], 'name');
+    $choices = multiselect(
+      label: 'Select optional modules to install',
+      options: ['ALL', ...$moduleOptions]
+    );
+
+    // If ALL is chosen → override with all module names
+    if (in_array('ALL', $choices)) $choices = $moduleOptions;
+
+    //response
+    return $choices;
+  }
+
+  protected function requirePackage(string $prodPackage): void
+  {
+    $cmd = "composer require $prodPackage --no-scripts";
+    passthru($cmd);
+  }
+
 
   protected function cloneRepo($gitUrl, $destination): void
   {
