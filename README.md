@@ -1,77 +1,80 @@
-# 🚀 Imagina Backend — Local Development
+# 🚀 Laravel Wrapper
 
-This project is a modular Laravel backend powered by Docker.
+This project is a **Laravel wrapper** that comes with preconfigured setup and utilities, including:
 
-## 🧰 Requirements
-
-- [Docker](https://www.docker.com/get-started) installed and running
-- No need for Composer, PHP, or Node on your host machine
+- **Passport** authentication preconfigured.
+- **Laravel Modules** for modular architecture.
+- Custom configuration files centralized in `config/`.
+- Installation script (`php artisan imagina:setup`) for first-time setup.
+- Ready-to-use Docker environment with support for **PHP-FPM** and **Laravel Octane**.
+- Integrated services: **Nginx**, **MySQL**, **Memcached**.
 
 ---
 
-## 🔧 First-Time Setup
+## 🐳 Build Docker (Optional)
 
-If you're running the project for the first time on a new device:
+This project includes a Docker environment ready for development.
 
-1. Make sure the init scripts are executable:
+1. Build and start containers
 
 ```bash
-chmod +x scripts/*
+docker-compose up -d --build
 ```
 
-2. Then run the setup script:
+This will start:
 
-```bash
-./scripts/init.sh
-```
+- **nginx** → Web server (http://localhost:8081)
+- **mysql** → Database (port 3307)
+- **memcached** → Cache
+- **laravel_api_fpm** → PHP-FPM container (for development)
+- **laravel_api_octane** → Laravel Octane container (for performance testing)
 
-This will:
+2. Bash
+   Recommended for daily development with hot-reloading:
+   ```bash
+   docker exec -it laravel_api_fpm bash
+   ```
+   
+---
 
-- Copy `.env.example` to `.env` if it doesn't exist
-- Build and start Docker containers
-- Install Composer dependencies inside the container
-- Generate the Laravel app key
-- Run database migrations
-- Link the Laravel `storage` folder
-- Drop you into the container for development
+## 📦 Installation
+
+1. Install PHP dependencies:
+   ```bash
+   composer install
+   ```
+
+2. Run the setup command:
+   ```bash
+   php artisan imagina:setup
+   ```
+
+- `all` → runs the full setup in one go (DB, S3, Passport, modules, etc.)
+- Or choose to run specific setups:
 
 ---
 
-## 💻 Daily Workflow
+## 📝 Notes
 
-To start working after setup:
-
-```bash
-./scripts/bash.sh
-```
-
-This opens a terminal inside the running Laravel container.
-
-If your containers are not running, start them first:
-
-```bash
-docker-compose up -d
-```
+- The `php artisan imagina:setup` command handles both the initial configuration and the installation of modules (no
+  need to install them manually).
+- You can choose between **PHP-FPM** or **Octane** depending on your workflow:
+- FPM for everyday development with code changes applied instantly.
+- Octane for testing performance and compatibility.
 
 ---
 
-## 🐳 Common Docker Commands
+## 📜 Useful Commands
 
-| Action              | Command                              |
-|---------------------|---------------------------------------|
-| Start containers    | `docker-compose up -d`               |
-| Stop containers     | `docker-compose down`                |
-| Rebuild containers  | `docker-compose up -d --build`       |
-| Access app shell    | `docker exec -it base_backend_app bash` |
-
----
-
-## ✅ Tips
-
-- Add more scripts (e.g. `migrate.sh`, `seed.sh`) in the `scripts/` folder for shared workflows.
-- Keep `.env` values in sync with your Docker setup (DB host = `mysql`, port = `3306`).
-- Run `php artisan` commands inside the container.
-
----
-
-Happy building! 🚀
+- **Restart services**
+  ```bash
+  docker-compose restart
+  ```
+- **Enter PHP-FPM container**
+  ```bash
+  docker exec -it laravel_api_fpm bash
+  ```
+- **Enter Octane container**
+  ```bash
+  docker exec -it laravel_api_octane bash
+  ```

@@ -92,9 +92,11 @@ class imaginaSetup extends Command
     $appName = text(label: "$prefix Which is your app Name?", required: true);
     if ($this->mode === 'docker') {
       $appUrl = 'http://nginx';
+      $memcachedHost = 'memcached';
     } else {
       //Get APP data
       $appUrl = text(label: "$prefix Which is your app URL?", required: true);
+      $memcachedHost = '127.0.0.1';
     }
     // Set up in .env
     $this->updateEnv([
@@ -102,6 +104,7 @@ class imaginaSetup extends Command
       'APP_URL' => $appUrl,
       'APP_DEBUG' => $this->mode === 'prod' ? 'false' : 'true',
       'APP_ENV' => $this->mode === 'prod' ? 'production' : 'local',
+      'MEMCACHED_HOST' => $memcachedHost,
     ]);
   }
 
@@ -156,8 +159,8 @@ class imaginaSetup extends Command
 
     // Save it in .env
     $this->updateEnv([
-      'PASSPORT_PASSWORD_CLIENT_ID' => $client->id,
-      'PASSPORT_PASSWORD_CLIENT_SECRET' => $client->secret,
+      'PASSPORT_PASSWORD_CLIENT_ID' => $client->getAttribute('id'),
+      'PASSPORT_PASSWORD_CLIENT_SECRET' => $client->getAttribute('secret'),
     ]);
   }
 
