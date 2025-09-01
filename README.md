@@ -52,6 +52,11 @@ This will start:
 - `all` → runs the full setup in one go (DB, S3, Passport, modules, etc.)
 - Or choose to run specific setups:
 
+3. Create Access User
+   ```bash
+   php artisan iuser:create-user
+   ```
+
 ---
 
 ## 📝 Notes
