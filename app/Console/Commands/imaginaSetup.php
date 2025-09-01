@@ -187,9 +187,9 @@ class imaginaSetup extends Command
     $prefix = '[MODULES]';
     $this->info("$prefix Installing Modules");
     $modules = $this->config['default_modules'];
-    // Choose  the origin to install modules
+    // Choose the origin to install modules
     $origin = select(label: 'Install Modules using:', options: ['composer', 'git']);
-    // User pick optional modules
+    // The user chooses optional modules
     $moduleOptions = array_column($this->config['optional_modules'], 'name');
     $choices = multiselect(label: "$prefix Select Modules", options: ['ALL', ...$moduleOptions]);
     if (in_array('ALL', $choices)) $choices = $moduleOptions;
@@ -213,22 +213,20 @@ class imaginaSetup extends Command
         if (is_dir($destination)) continue;
         $devBranch = $this->config['prod_version'];
         $this->info("Cloning $gitUrl → [$devBranch] → $destination");
-        exec("git clone -b $devBranch $gitUrl $destination");
+        passthru("git clone -b $devBranch $gitUrl $destination");
       } else {
         passthru("composer require " . $module['prodPackage'] . " --no-scripts");
       }
+      // Post install each module
+      passthru('php artisan config:clear');
+      passthru("php artisan module:enable $module[name]");
+      passthru("php artisan module:migrate $module[name]");
+      passthru("php artisan module:seed $module[name]");
+      passthru("php artisan module:publish $module[name]");
     }
 
     // COMPOSER - Run update + dump again
-    if ($origin === 'git') exec('composer update --no-scripts');
-    exec('composer dump-autoload');
-
-    //post stall commands
-    $this->info("$prefix Running post install commands");
-    exec('php artisan config:clear');
-    exec('php artisan module:enable --all');
-    exec('php artisan module:migrate --all');
-    exec('php artisan module:seed --all');
-    exec('php artisan module:publish --all');
+    if ($origin === 'git') passthru('composer update --no-scripts');
+    passthru('composer dump-autoload');
   }
 }
