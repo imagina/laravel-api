@@ -36,6 +36,13 @@ return [
       'type' => 'package'
     ],
     [
+      'name' => 'itranslation',
+      'git' => 'https://github.com/imagina/imaginacms-itranslation.git',
+      'path' => 'Modules/Itranslation',
+      'prodPackage' => 'imagina/itranslation-module=v12.x-dev',
+      'type' => 'module'
+    ],
+    [
       'name' => 'iuser',
       'git' => 'https://github.com/imagina/imaginacms-iuser.git',
       'path' => 'Modules/Iuser',
@@ -50,19 +57,12 @@ return [
       'type' => 'module'
     ],
     [
-      'name' => 'itranslation',
-      'git' => 'https://github.com/imagina/imaginacms-itranslation.git',
-      'path' => 'Modules/Itranslation',
-      'prodPackage' => 'imagina/itranslation-module=v12.x-dev',
-      'type' => 'module'
-    ],
-    [
       'name' => 'imedia',
       'git' => 'https://github.com/imagina/imaginacms-imedia.git',
       'path' => 'Modules/Imedia',
       'prodPackage' => 'imagina/imedia-module=v12.x-dev',
       'type' => 'module'
-    ],
+    ]
   ],
 
   /*

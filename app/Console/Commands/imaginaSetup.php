@@ -67,7 +67,9 @@ class imaginaSetup extends Command
     // .env
     if (!File::exists(base_path('.env'))) {
       File::copy(base_path('.env.example'), base_path('.env'));
-      $this->info('.env created from .env.example');
+      $this->info('.env created, please re-run the imagina:setup command');
+      exit;
+
     } else {
       $this->warn('.env Already exist');
     }
@@ -217,16 +219,28 @@ class imaginaSetup extends Command
       } else {
         passthru("composer require " . $module['prodPackage'] . " --no-scripts");
       }
-      // Post install each module
-      passthru('php artisan config:clear');
-      passthru("php artisan module:enable $module[name]");
-      passthru("php artisan module:migrate $module[name]");
-      passthru("php artisan module:seed $module[name]");
-      passthru("php artisan module:publish $module[name]");
+      $this->info("$prefix ---------- $module[name] Installed");
     }
 
     // COMPOSER - Run update + dump again
     if ($origin === 'git') passthru('composer update --no-scripts');
     passthru('composer dump-autoload');
+    passthru('php artisan config:clear');
+
+    // First migrate all modules
+    foreach ($modules as $module) {
+      if ($module['type'] == 'module') {
+        passthru("php artisan module:enable $module[name]");
+        passthru("php artisan module:migrate $module[name]");
+      }
+    }
+
+    // Run seed and publish
+    foreach ($modules as $module) {
+      if ($module['type'] == 'module') {
+        passthru("php artisan module:seed $module[name]");
+        passthru("php artisan module:publish $module[name]");
+      }
+    }
   }
 }
