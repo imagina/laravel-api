@@ -24,7 +24,7 @@ class StoreFillable
   {
 
     //Validate data fields
-    $dataFields = $this->validateExtraFillable($params, $model);
+    $dataFields = $this->validateExtraFillable($model, $params);
 
     if (empty($dataFields['base']) && empty($dataFields['translated'])) {
       return;
