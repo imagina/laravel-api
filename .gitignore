@@ -17,6 +17,7 @@
 /public/hot
 /public/storage
 /public/modules
+/public/iadmin
 /storage/*.key
 /storage/pail
 /vendor
@@ -32,5 +33,5 @@ yarn-error.log
 
 # Ignore local cloned modules/packages
 /Modules/
-/packages/imagina/
+/packages/
 modules_statuses.json
