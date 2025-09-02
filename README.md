@@ -57,6 +57,11 @@ This will start:
    php artisan iuser:create-user
    ```
 
+4. Publish CMS
+   ```bash
+   php artisan icmss:publish
+   ```
+
 ---
 
 ## 📝 Notes
