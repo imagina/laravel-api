@@ -161,8 +161,8 @@ class imaginaSetup extends Command
 
     // Save it in .env
     $this->updateEnv([
-      'PASSPORT_PASSWORD_CLIENT_ID' => $client->getAttribute('id'),
-      'PASSPORT_PASSWORD_CLIENT_SECRET' => $client->getAttribute('secret'),
+      'PASSPORT_PASSWORD_CLIENT_ID' => $client->getKey(),
+      'PASSPORT_PASSWORD_CLIENT_SECRET' => $client->plainSecret,
     ]);
   }
 
@@ -222,12 +222,18 @@ class imaginaSetup extends Command
       $this->info("$prefix ---------- $module[name] Installed");
     }
 
+    //Post install
+    $this->postInstallModules($origin, $modules);
+  }
+
+  public function postInstallModules(string $origin, array $modules): void
+  {
     // COMPOSER - Run update + dump again
     if ($origin === 'git') passthru('composer update --no-scripts');
     passthru('composer dump-autoload');
     passthru('php artisan config:clear');
 
-    // First migrate all modules
+    // Migrate all modules
     foreach ($modules as $module) {
       if ($module['type'] == 'module') {
         passthru("php artisan module:enable $module[name]");

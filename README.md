@@ -59,7 +59,7 @@ This will start:
 
 4. Publish CMS
    ```bash
-   php artisan icmss:publish
+   php artisan icms:publish
    ```
 
 ---
