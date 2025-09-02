@@ -36,6 +36,13 @@ return [
       'type' => 'package'
     ],
     [
+      'name' => 'icms',
+      'git' => 'https://github.com/imagina/imaginacms-icms.git',
+      'path' => 'packages/imagina/icms',
+      'prodPackage' => 'imagina/icms=v12.x-dev',
+      'type' => 'package'
+    ],
+    [
       'name' => 'itranslation',
       'git' => 'https://github.com/imagina/imaginacms-itranslation.git',
       'path' => 'Modules/Itranslation',
