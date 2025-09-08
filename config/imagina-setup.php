@@ -148,5 +148,12 @@ return [
       'prodPackage' => 'imagina/islider-module=v12.x-dev',
       'type' => 'module'
     ],
+    [
+      'name' => 'icontact',
+      'git' => 'https://github.com/imagina/imaginacms-icontact.git',
+      'path' => 'Modules/Icontact',
+      'prodPackage' => 'imagina/icontact-module=v12.x-dev',
+      'type' => 'module'
+    ],
   ]
 ];
