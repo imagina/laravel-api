@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: laravel_api_fpm
+    container_name: torino_api_fpm
     ports:
       - "9000:9000"  # PHP-FPM port
     volumes:
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: laravel_api_octane
+    container_name: torino_api_octane
     ports:
       - "8000:8000"
     volumes:
@@ -40,13 +40,13 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: laravel_api_db
+    container_name: torino_api_db
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel-api
-      MYSQL_USER: laravel-api
-      MYSQL_PASSWORD: laravel-api
+      MYSQL_DATABASE: torino-api
+      MYSQL_USER: torino-api
+      MYSQL_PASSWORD: torino-api
     ports:
       - "3307:3306"
     volumes:
@@ -57,7 +57,7 @@ services:
 
   memcached:
     image: memcached:alpine
-    container_name: laravel_api_memcached
+    container_name: torino_api_memcached
     ports:
       - "11211:11211"
     networks:
