@@ -1,0 +1,7 @@
+# Local Laravel modules are gitignored but required for codebase search and AI context.
+!Modules/
+!Modules/*/
+!Modules/**/*
+
+# Each module is its own git clone; skip nested .git metadata.
+Modules/**/.git/
